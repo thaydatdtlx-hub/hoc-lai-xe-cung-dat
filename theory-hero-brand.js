@@ -73,6 +73,71 @@ function normalizeBrandNode(root){
   }
 }
 
+function ensureDrivingRefreshSkillsStyle(){
+  if(document.querySelector('link[data-driving-refresh-skills-image]'))return;
+  const link=document.createElement("link");
+  link.rel="stylesheet";
+  link.href="/driving-refresh-skills-image.css?v=20260907-1";
+  link.dataset.drivingRefreshSkillsImage="1";
+  document.head.append(link);
+}
+
+function drivingRefreshSkillsMarkup(){
+  return `<section id="noi-dung" class="refresh-skills-image" aria-labelledby="skillsTitle">
+    <div class="refresh-skills-image__inner">
+      <div class="refresh-skills-image__left">
+        <p class="refresh-skills-image__eyebrow">NỘI DUNG THỰC HÀNH</p>
+        <h2 id="skillsTitle">Bạn muốn tự tin hơn ở kỹ năng nào?</h2>
+        <p class="refresh-skills-image__desc">Chọn trong biểu mẫu để Học Lái Xe Cùng Đạt chuẩn bị buổi luyện phù hợp.</p>
+        <div class="refresh-skills-image__signature"><span>Tự tin cầm lái</span><strong>vững vàng tương lai</strong></div>
+        <div class="refresh-skills-image__wheel" aria-hidden="true"></div>
+        <div class="refresh-skills-image__road" aria-hidden="true"></div>
+      </div>
+      <div class="refresh-skills-image__right">
+        <article class="refresh-skill-image-card">
+          <div class="refresh-skill-image-card__icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18"/><path d="M5 18l2-8h10l2 8"/><path d="M9 14h6"/></svg></div>
+          <div class="refresh-skill-image-card__content"><h3>Làm quen &amp; kiểm soát xe</h3><p>Vô lăng, chân ga, chân phanh và cảm nhận kích thước xe.</p></div><span class="refresh-skill-image-card__arrow">›</span>
+        </article>
+        <article class="refresh-skill-image-card">
+          <div class="refresh-skill-image-card__icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V4h6v16"/><path d="M14 20V8h6v12"/><path d="M2 20h20"/><path d="M7 8h.01M7 12h.01M17 12h.01M17 16h.01"/></svg></div>
+          <div class="refresh-skill-image-card__content"><h3>Lái xe trong đô thị</h3><p>Chuyển làn, qua giao lộ và giữ khoảng cách trong đường đông.</p></div><span class="refresh-skill-image-card__arrow">›</span>
+        </article>
+        <article class="refresh-skill-image-card">
+          <div class="refresh-skill-image-card__icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15h10M8 11h8M6 19v2M18 19v2"/></svg></div>
+          <div class="refresh-skill-image-card__content"><h3>Ghép xe &amp; đỗ xe</h3><p>Ghép dọc, ghép ngang, lùi chuồng và căn khoảng cách an toàn.</p></div><span class="refresh-skill-image-card__arrow">›</span>
+        </article>
+        <article class="refresh-skill-image-card">
+          <div class="refresh-skill-image-card__icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 9 4h6l5 16"/><path d="M8 13h8M10 8h4"/></svg></div>
+          <div class="refresh-skill-image-card__content"><h3>Đường trường</h3><p>Kiểm soát tốc độ, vượt xe, chuyển hướng và xử lý đường dài.</p></div><span class="refresh-skill-image-card__arrow">›</span>
+        </article>
+      </div>
+    </div>
+    <div class="refresh-skills-image__footer">
+      <div class="refresh-skills-image__footer-left"><span class="refresh-skills-image__footer-icon">→</span><div><small>BƯỚC TIẾP THEO</small><strong>Chọn loại xe và số giờ muốn học</strong></div></div>
+      <button type="button" class="refresh-skills-image__cta" data-skills-next>TÍNH CHI PHÍ <span>→</span></button>
+    </div>
+  </section>`;
+}
+
+function replaceDrivingRefreshSkills(){
+  if(location.pathname!=="/bo-tuc-tay-lai.html")return;
+  ensureDrivingRefreshSkillsStyle();
+  const current=document.getElementById("noi-dung");
+  if(!current)return;
+  if(current.classList.contains("refresh-skills-image"))return;
+
+  const oldNext=current.nextElementSibling;
+  const template=document.createElement("template");
+  template.innerHTML=drivingRefreshSkillsMarkup().trim();
+  const replacement=template.content.firstElementChild;
+  current.replaceWith(replacement);
+  if(oldNext?.matches(".refresh-view-actions.refresh-view-actions-dark"))oldNext.remove();
+
+  replacement.querySelector("[data-skills-next]")?.addEventListener("click",()=>{
+    document.querySelector('[data-refresh-step="2"]')?.click();
+  });
+}
+
 let drivingRefreshBrandObserver=null;
 function normalizeDrivingRefreshBrand(){
   if(location.pathname!=="/bo-tuc-tay-lai.html")return;
@@ -97,6 +162,7 @@ function normalizeDrivingRefreshBrand(){
 
 function initPublicBranding(){
   enhanceTheoryHero();
+  replaceDrivingRefreshSkills();
   normalizeDrivingRefreshBrand();
 }
 
