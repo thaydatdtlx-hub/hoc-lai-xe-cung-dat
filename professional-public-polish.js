@@ -16,13 +16,6 @@ function uniqueNav(){
   const seen=new Set();[...nav.querySelectorAll("a")].forEach(a=>{const key=`${a.getAttribute("href")}|${a.textContent.trim().toLowerCase()}`;if(seen.has(key))a.remove();else seen.add(key)});
   document.querySelectorAll(".site-unified-area-badge").forEach(n=>n.remove());
 }
-function addTrust(){
-  if(!isRegistrationPage()||document.querySelector(".site-professional-trust"))return;
-  const anchor=document.querySelector(".quick-features");if(!anchor)return;
-  const node=document.createElement("div");node.className="site-professional-trust";
-  node.innerHTML=`<article><b>✓</b><div><strong>Học phí rõ ràng</strong><small>Giá và ưu đãi lấy trực tiếp từ hệ thống Admin.</small></div></article><article><b>600</b><div><strong>Học lý thuyết online</strong><small>Ôn câu hỏi, thi thử và lưu tiến độ cá nhân.</small></div></article><article><b>↻</b><div><strong>Theo dõi tập trung</strong><small>Lịch học, DAT, cabin và lịch thi trong cùng hệ thống.</small></div></article><article><b>☎</b><div><strong>Hỗ trợ trực tiếp</strong><small>Hotline và Zalo luôn hiển thị rõ ràng khi cần.</small></div></article>`;
-  anchor.insertAdjacentElement("afterend",node);
-}
 function pricingCard(plan,index){
   const fees=Array.isArray(plan.fees)?plan.fees:[];
   const discount=Math.min(Number(plan.discount_amount)||0,Number(plan.tuition)||0);
@@ -55,5 +48,5 @@ function syncFaq(config){
 function updateProofVideo(){
   const proof=document.querySelector("#minh-chung-hoc-vien a[href*='youtu']");if(proof)proof.href="https://youtu.be/eBx6gAFa9a8?si=Heckare8yAd4omLJ";
 }
-function init(){uniqueNav();addTrust();updateProofVideo();setTimeout(uniqueNav,250);setTimeout(repairPricing,350)}
+function init(){uniqueNav();updateProofVideo();setTimeout(uniqueNav,250);setTimeout(repairPricing,350)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
