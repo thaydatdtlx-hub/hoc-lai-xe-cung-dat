@@ -87,12 +87,6 @@ async function mountTuition(){
     <div class="tuition-heading"><p>HỌC PHÍ & CÁC KHOẢN NỘP RIÊNG</p><h2>Bảng học phí theo từng hạng đào tạo</h2><span>Học phí và ưu đãi được cập nhật từ hệ thống quản trị Thầy Đạt. Các khoản nộp riêng được trình bày tách biệt để học viên dễ theo dõi.</span></div>
     <div class="tuition-alert"><b>!</b><span><strong>Lưu ý:</strong> Lệ phí khám sức khỏe (nếu áp dụng), sát hạch, cấp giấy phép, thi lại và tập xe cảm biến được thông báo riêng nếu phát sinh. Học phí áp dụng được xác nhận lại khi tư vấn.</span></div>
     <div class="tuition-grid">${plans.map(card).join("")}</div>
-    <div class="tuition-package">
-      <div class="tuition-package__head"><div><p>GÓI HỌC PHÍ ĐÀO TẠO</p><h3>Các nội dung thuộc chương trình đào tạo</h3></div><span>Website tiếp nhận đăng ký hạng A1, A, B số tự động, B số sàn và C1; nội dung cụ thể được xác nhận theo từng khóa.</span></div>
-      <div class="tuition-package-grid"><article><b>01</b><strong>Hồ sơ và thủ tục</strong><small>Ghi danh, kiểm tra thông tin và hướng dẫn giấy tờ.</small></article><article><b>02</b><strong>Lý thuyết</strong><small>Học theo lịch và chương trình của cơ sở đào tạo.</small></article><article><b>03</b><strong>Thực hành</strong><small>Xe tập lái, nhiên liệu, giáo viên và sân tập theo gói.</small></article><article><b>04</b><strong>Cabin điện tử</strong><small>Thực hiện theo thời lượng của chương trình đang áp dụng.</small></article><article><b>05</b><strong>Đào tạo DAT</strong><small>Ghi nhận thời gian và quãng đường thực hành theo quy định.</small></article><article><b>06</b><strong>Quản lý tiến độ</strong><small>Theo dõi lịch học, cabin, DAT và lịch thi trên hệ thống.</small></article></div>
-      <div class="tuition-extra"><article><strong>Khoản nộp riêng</strong><p>Khám sức khỏe, lệ phí sát hạch, cấp giấy phép PET và thi lại nếu phát sinh được thông báo theo mức áp dụng tại thời điểm thực hiện.</p></article><article><strong>Tập xe cảm biến</strong><p>Chi phí tập thử xe sát hạch không nằm trong học phí. Mức tham khảo do sân thi hoặc đơn vị cung cấp xe thông báo trước khi đăng ký.</p></article></div>
-      <div class="tuition-legal-note"><span><strong>Thông tin học phí:</strong> Giá và ưu đãi trên các thẻ phía trên được quản trị viên cập nhật từ hệ thống. Lệ phí nhà nước được đối chiếu tại thời điểm nộp.</span><div><a href="#dang-ky">Đăng ký tư vấn</a></div></div>
-    </div>
   </div>`;
   tuitionAnchor.insertAdjacentElement("afterend",section);
   bindButtons(section);
