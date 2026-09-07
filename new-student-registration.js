@@ -8,6 +8,7 @@ import "./registration-procedure-section.js";
 import "./tuition-details.js";
 import "./official-faq-section.js";
 import "./public-site-enhancements.js";
+import "./admin-intake-editor.js";
 
 document.querySelector(".gallery-section")?.remove();
 
