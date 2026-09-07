@@ -3,8 +3,6 @@ import "./taplai-inspired.js";
 import "./registration-backgrounds.css";
 import "./license-training-details.js";
 import "./license-eligibility-section.js";
-import "./training-video-section.js";
-import "./admin-training-video-manager.js";
 import "./registration-procedure-section.js";
 import "./tuition-details.js";
 import "./official-faq-section.js";
