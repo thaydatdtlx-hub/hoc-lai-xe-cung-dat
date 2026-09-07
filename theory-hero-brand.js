@@ -1,5 +1,7 @@
 import "./theory-hero-brand.css";
 
+const PUBLIC_BRAND="Học Lái Xe Cùng Đạt";
+
 function ensureTheoryHeroPolish(){
   if(document.querySelector('link[data-theory-hero-polish-v2]'))return;
   const link=document.createElement("link");
@@ -39,6 +41,65 @@ function enhanceTheoryHero(){
     <div class="theory-road-label">TẬP LÁI</div>`;
 }
 
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",enhanceTheoryHero,{once:true});
-else enhanceTheoryHero();
-window.addEventListener("pageshow",enhanceTheoryHero);
+function replaceBrandText(value=""){
+  return String(value).replace(/Thầy Đạt|THẦY ĐẠT/g,PUBLIC_BRAND);
+}
+
+function normalizeBrandNode(root){
+  if(!root)return;
+  if(root.nodeType===Node.TEXT_NODE){
+    if(root.parentElement?.matches("script,style,noscript"))return;
+    const next=replaceBrandText(root.nodeValue||"");
+    if(next!==root.nodeValue)root.nodeValue=next;
+    return;
+  }
+  if(root.nodeType!==Node.ELEMENT_NODE&&root.nodeType!==Node.DOCUMENT_FRAGMENT_NODE)return;
+  if(root.nodeType===Node.ELEMENT_NODE){
+    for(const attribute of ["aria-label","alt","title"]){
+      if(root.hasAttribute?.(attribute)){
+        const current=root.getAttribute(attribute)||"";
+        const next=replaceBrandText(current);
+        if(next!==current)root.setAttribute(attribute,next);
+      }
+    }
+  }
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode())){
+    if(node.parentElement?.matches("script,style,noscript"))continue;
+    const current=node.nodeValue||"";
+    const next=replaceBrandText(current);
+    if(next!==current)node.nodeValue=next;
+  }
+}
+
+let drivingRefreshBrandObserver=null;
+function normalizeDrivingRefreshBrand(){
+  if(location.pathname!=="/bo-tuc-tay-lai.html")return;
+
+  document.title=replaceBrandText(document.title);
+  document.querySelectorAll('meta[name="description"],meta[property="og:title"],meta[property="og:description"],meta[name="twitter:title"],meta[name="twitter:description"]').forEach(meta=>{
+    const current=meta.getAttribute("content")||"";
+    const next=replaceBrandText(current);
+    if(next!==current)meta.setAttribute("content",next);
+  });
+  normalizeBrandNode(document.body);
+
+  if(drivingRefreshBrandObserver||!document.body)return;
+  drivingRefreshBrandObserver=new MutationObserver(mutations=>{
+    for(const mutation of mutations){
+      if(mutation.type==="characterData")normalizeBrandNode(mutation.target);
+      mutation.addedNodes?.forEach(normalizeBrandNode);
+    }
+  });
+  drivingRefreshBrandObserver.observe(document.body,{subtree:true,childList:true,characterData:true});
+}
+
+function initPublicBranding(){
+  enhanceTheoryHero();
+  normalizeDrivingRefreshBrand();
+}
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initPublicBranding,{once:true});
+else initPublicBranding();
+window.addEventListener("pageshow",initPublicBranding);
