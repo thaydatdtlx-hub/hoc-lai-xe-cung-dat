@@ -1,4 +1,4 @@
-/* Classic driving-test workspace v4. Loaded after questions.css on purpose. */
+/* Classic driving-test workspace v5. Loaded after questions.css on purpose. */
 @supports selector(body:has(*)) {
   body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) {
     margin:0;
@@ -643,6 +643,9 @@
     }
 
     body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) .workspace-head {
+      position:relative!important;
+      top:auto!important;
+      z-index:2!important;
       min-height:63px;
       padding:6px;
     }
@@ -688,6 +691,11 @@
 
     body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) .theory-candidate-brand {
       display:none;
+    }
+
+    body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) .ai-chat-launcher,
+    body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) .ai-chat-panel {
+      display:none!important;
     }
 
     body.theory-classic-ready:has(#studyWorkspace:not(.hidden)) #paletteDialog[open] {
