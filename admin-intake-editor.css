@@ -1,0 +1,26 @@
+.site-intakes .site-upgrade-heading,.site-intakes .site-intake-card{position:relative}
+.admin-intake-pencil{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;border:1px solid #c9d8ea;background:#fff;color:#075aaa;box-shadow:0 8px 22px rgba(7,90,170,.14);cursor:pointer;z-index:5;transition:.18s ease}
+.admin-intake-pencil:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(7,90,170,.2)}
+.admin-intake-pencil svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.admin-intake-pencil--section{position:absolute;right:0;top:0}
+.admin-intake-pencil--card{position:absolute;right:16px;top:16px}
+.site-intake-card .admin-intake-pencil{padding:0;background:#fff;color:#075aaa}
+.admin-intake-editor{width:min(680px,calc(100vw - 28px));border:0;border-radius:22px;padding:0;box-shadow:0 24px 70px rgba(6,33,66,.24);overflow:hidden}
+.admin-intake-editor::backdrop{background:rgba(4,19,38,.52);backdrop-filter:blur(2px)}
+.admin-intake-editor form{margin:0;background:#fff}
+.admin-intake-editor__head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;padding:24px 26px 18px;border-bottom:1px solid #e8eef5}
+.admin-intake-editor__head p{margin:0 0 6px;font-size:12px;font-weight:800;letter-spacing:.1em;color:#0b67c2}
+.admin-intake-editor__head h2{margin:0;color:#073f6d;font-size:26px}
+.admin-intake-editor__close{width:38px;height:38px;border:0;border-radius:50%;background:#eef5fb;color:#17466f;font-size:24px;cursor:pointer}
+.admin-intake-editor__fields{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:22px 26px}
+.admin-intake-editor__fields label{display:grid;gap:7px;font-weight:700;color:#17466f;font-size:13px}
+.admin-intake-editor__fields label:has(textarea){grid-column:1/-1}
+.admin-intake-editor__fields input,.admin-intake-editor__fields textarea{width:100%;box-sizing:border-box;border:1px solid #cbd9e8;border-radius:12px;padding:12px 13px;font:inherit;color:#0a3559;background:#fbfdff}
+.admin-intake-editor__fields textarea{resize:vertical;min-height:92px}
+.admin-intake-editor__fields input:focus,.admin-intake-editor__fields textarea:focus{outline:2px solid rgba(11,103,194,.16);border-color:#0b67c2}
+.admin-intake-editor__status{min-height:20px;margin:0;padding:0 26px 10px;color:#6c7f92;font-size:13px}
+.admin-intake-editor__status.success{color:#087a4a}.admin-intake-editor__status.error{color:#b42318}
+.admin-intake-editor__actions{display:flex;justify-content:flex-end;gap:10px;padding:16px 26px 22px;border-top:1px solid #edf2f7}
+.admin-intake-editor__actions button{border:1px solid #cbd9e8;border-radius:11px;padding:11px 18px;background:#fff;color:#17466f;font-weight:800;cursor:pointer}
+.admin-intake-editor__actions .primary{border-color:#0d6fde;background:#0d6fde;color:#fff}
+@media(max-width:700px){.admin-intake-pencil--section{right:8px;top:8px}.admin-intake-pencil--card{right:10px;top:10px}.admin-intake-editor__fields{grid-template-columns:1fr}.admin-intake-editor__fields label:has(textarea){grid-column:auto}.admin-intake-editor__head h2{font-size:22px}}
