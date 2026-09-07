@@ -13,7 +13,7 @@ function loadSharedEnhancements(){
     import("./professional-public-polish.js"),
     import("./student-portal-polish.js"),
     import("./student-activity-tracker.js"),
-    import("./theory-answer-explanations.js"),
+    import("./theory-answer-explanations.js?v=2"),
     import("./theory-hero-brand.js"),
     import("./mobile-public-login.js"),
     import("./b-exam-set-picker.js"),
