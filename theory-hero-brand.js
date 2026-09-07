@@ -1,4 +1,5 @@
 import "./theory-hero-brand.css";
+import "./driving-refresh-skills-image.css";
 
 const PUBLIC_BRAND="Học Lái Xe Cùng Đạt";
 
@@ -74,12 +75,7 @@ function normalizeBrandNode(root){
 }
 
 function ensureDrivingRefreshSkillsStyle(){
-  if(document.querySelector('link[data-driving-refresh-skills-image]'))return;
-  const link=document.createElement("link");
-  link.rel="stylesheet";
-  link.href="/driving-refresh-skills-image.css?v=20260907-1";
-  link.dataset.drivingRefreshSkillsImage="1";
-  document.head.append(link);
+  // CSS is bundled through the import above so the deployed Vite build always includes it.
 }
 
 function drivingRefreshSkillsMarkup(){
