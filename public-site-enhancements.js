@@ -38,12 +38,6 @@ function mountLocation(){
   anchor.insertAdjacentElement("afterend",node);
 }
 
-function mountTrainer(){
-  if($("giang-vien-co-so"))return;const anchor=document.querySelector(".intro-section");if(!anchor)return;
-  const node=section("site-trainer","giang-vien-co-so",`<div class="site-trainer-grid"><div class="site-trainer-media"><img src="/hero-vip-navy-champagne.webp?v=2" alt="Hướng dẫn học lái xe cùng Thầy Đạt"><div><strong>Thầy Đạt · Hướng dẫn đào tạo lái xe</strong><small>Đồng hành từ hồ sơ, lý thuyết đến thực hành và các mốc đào tạo.</small></div></div><div class="site-trainer-copy"><p>NGƯỜI HƯỚNG DẪN & CƠ SỞ HỌC TẬP</p><h2>Học viên được hỗ trợ xuyên suốt trên một hệ thống</h2><span>Website tập trung vào trải nghiệm rõ ràng: biết cần chuẩn bị gì, học nội dung nào, theo dõi tiến độ ra sao và liên hệ ai khi cần hỗ trợ.</span><div class="site-facility-grid"><article><b>🚗</b><strong>Xe thực hành</strong><small>Lựa chọn số tự động hoặc số sàn theo chương trình đăng ký.</small></article><article><b>🛣️</b><strong>Sân tập</strong><small>Thực hành bài hình và kỹ năng theo từng giai đoạn.</small></article><article><b>🖥️</b><strong>Học lý thuyết online</strong><small>Ôn 600 câu, thi thử và lưu tiến độ cá nhân.</small></article><article><b>📱</b><strong>Quản lý trên điện thoại</strong><small>Xem lịch, thông báo và các mốc đào tạo tập trung.</small></article></div></div></div>`);
-  anchor.insertAdjacentElement("afterend",node);
-}
-
 function mountProof(){
   if($("minh-chung-hoc-vien"))return;const anchor=document.querySelector(".gallery-section");if(!anchor)return;
   const node=section("site-proof","minh-chung-hoc-vien",`${heading("MINH CHỨNG & KÊNH CHÍNH THỨC","Theo dõi hoạt động đào tạo thực tế","Website không tự tạo đánh giá học viên. Các nội dung công khai được dẫn đến kênh chính thức để người học tự kiểm chứng.")}<div class="site-proof-grid"><article class="site-proof-card"><span>▶️</span><strong>Video đào tạo</strong><p>Xem nội dung hướng dẫn thực tế và cách triển khai buổi học.</p><a href="${VIDEO_URL}" target="_blank" rel="noopener noreferrer">Xem trên YouTube</a></article><article class="site-proof-card"><span>♪</span><strong>TikTok Thầy Đạt</strong><p>Theo dõi video ngắn, hoạt động học viên và nội dung chia sẻ kỹ năng.</p><a href="https://www.tiktok.com/@datdidaydo99?is_from_webapp=1&sender_device=pc" target="_blank" rel="noopener noreferrer">Mở TikTok</a></article><article class="site-proof-card"><span>f</span><strong>Facebook chính thức</strong><p>Liên hệ, xem bài đăng và cập nhật hoạt động đào tạo.</p><a href="https://www.facebook.com/profile.php?id=61579863779611" target="_blank" rel="noopener noreferrer">Mở Facebook</a></article></div><p class="site-proof-note">Đánh giá, tỷ lệ đậu và kết quả học viên chỉ nên công bố khi có dữ liệu xác thực và sự đồng ý phù hợp.</p>`);
@@ -76,5 +70,5 @@ function enhanceSuccess(){
 }
 function toast(text){let el=document.querySelector(".site-upgrade-toast");if(!el){el=document.createElement("div");el.className="site-upgrade-toast";document.body.append(el)}el.innerHTML=`<strong>${text}</strong><small>Thầy Đạt · Hệ thống tuyển sinh</small>`;el.classList.add("show");clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove("show"),2600)}
 
-function boot(){mountMobileMenu();mountTrainer();mountPricing();mountLocation();mountProof();mountIntakes();enhancePrivacy();captureSource();mountLookup();enhanceSuccess()}
+function boot(){mountMobileMenu();mountPricing();mountLocation();mountProof();mountIntakes();enhancePrivacy();captureSource();mountLookup();enhanceSuccess()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
