@@ -8,7 +8,6 @@ import "./registration-procedure-section.js";
 import "./tuition-details.js";
 import "./official-faq-section.js";
 import "./public-site-enhancements.js";
-import "./new-student-practice-link.js";
 
 document.querySelector(".gallery-section")?.remove();
 
