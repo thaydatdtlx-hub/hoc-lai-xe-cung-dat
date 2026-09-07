@@ -183,7 +183,7 @@ body.site-area-registration .quick-features{
   position:relative!important;
   z-index:3!important;
   width:min(1120px,92%)!important;
-  margin:-36px auto 54px!important;
+  margin:24px auto 32px!important;
   display:grid!important;
   grid-template-columns:repeat(4,1fr)!important;
   gap:0!important;
@@ -372,7 +372,7 @@ body.site-area-registration>footer.site-unified-public-footer{
   body.site-area-registration .hero::before{inset:45% 0 0 0;clip-path:none;opacity:.2;background-position:center top}
   body.site-area-registration .hero-inner{grid-template-columns:1fr!important;gap:24px!important;padding:48px 0 60px!important}
   body.site-area-registration .hero-form-card{max-width:520px!important;margin:0!important}
-  body.site-area-registration .quick-features{grid-template-columns:1fr 1fr!important;margin-top:-28px!important}
+  body.site-area-registration .quick-features{grid-template-columns:1fr 1fr!important;margin-top:20px!important}
   body.site-area-registration .quick-features article:nth-child(2){border-right:0!important}
   body.site-area-registration .quick-features article:nth-child(-n+2){border-bottom:1px solid #edf1f5!important}
   body.site-area-registration .intro-section{grid-template-columns:1fr!important;gap:30px!important}
