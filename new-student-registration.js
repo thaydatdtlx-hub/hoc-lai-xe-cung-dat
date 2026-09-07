@@ -10,7 +10,15 @@ import "./public-site-enhancements.js";
 import "./admin-intake-editor.js";
 import "./training-roadmap-redesign.js";
 
-document.querySelector(".gallery-section")?.remove();
+function removeObsoletePublicSections(){
+  document.querySelector(".gallery-section")?.remove();
+  document.getElementById("minh-chung-hoc-vien")?.remove();
+  document.querySelector(".process-section")?.remove();
+}
+removeObsoletePublicSections();
+const obsoleteSectionObserver=new MutationObserver(removeObsoletePublicSections);
+obsoleteSectionObserver.observe(document.documentElement,{subtree:true,childList:true});
+window.setTimeout(()=>obsoleteSectionObserver.disconnect(),2500);
 
 const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
 const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
