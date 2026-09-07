@@ -144,3 +144,6 @@
 @media(prefers-reduced-motion:reduce){
   .theory-brand-hero .hero-actions button{transition:none}
 }
+
+/* Keep the portrait visible; the brand logo remains in the left column. */
+.study-hero.theory-brand-hero .theory-visual-brand{display:none!important}
