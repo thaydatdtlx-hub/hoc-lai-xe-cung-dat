@@ -1,5 +1,6 @@
 import "./theory-hero-brand.css";
 import "./driving-refresh-skills-image.css";
+import "./driving-refresh-pricing-light.css";
 
 const PUBLIC_BRAND="Học Lái Xe Cùng Đạt";
 
