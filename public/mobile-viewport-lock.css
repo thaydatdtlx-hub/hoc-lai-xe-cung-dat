@@ -1,4 +1,5 @@
 @import url('/login-force-v5.css?v=5');
+@import url('/student-dashboard-refresh-v2.css?v=1');
 
 /* Khóa tỷ lệ giao diện điện thoại, tránh tự phóng to/thu nhỏ khi nhập liệu */
 @media (max-width: 720px){
