@@ -8,6 +8,10 @@ const normalize=value=>String(value??"").trim().toLowerCase().normalize("NFD").r
 const daysBetween=(older,newer)=>Math.floor((newer-older)/86400000);
 const isCompleted=value=>normalize(value).includes("da hoan thanh");
 const warningId=(student,type)=>`${student.id}-${type}`;
+const theoryQuestionTotal=student=>{
+  const license=normalize(student?.license_class);
+  return license==="a1"||license==="a"?250:600;
+};
 
 function makeWarning(student,type,severity,title,detail,action,label){
   return{id:warningId(student,type),student_id:student.id,student_name:student.name,student_code:student.student_code||"",course:student.course||"",license_class:student.license_class||"",type,severity,title,detail,action,action_label:label};
@@ -19,7 +23,7 @@ export function buildEarlyWarnings({students=[],attendanceRecords=[],theoryProgr
     const records=attendanceRecords.filter(record=>String(record.student_id)===String(student.id));
     const attendance=attendanceSummary(records),theory=theoryProgress.find(item=>String(item.student_id)===String(student.id))||{};
     const answered=Number(theory.answered_count)||0,correct=Number(theory.correct_count)||0,exams=Number(theory.exam_count)||0,passed=Number(theory.passed_exam_count)||0;
-    const accuracy=answered?Math.round(correct/answered*100):0;
+    const accuracy=answered?Math.round(correct/answered*100):0,questionTotal=theoryQuestionTotal(student);
     const total=Math.max(0,Number(student.tuition_total)||0),paid=Math.max(0,Number(student.paid)||0),debt=Math.max(0,total-paid),debtRate=total?Math.round(debt/total*100):0;
 
     if(attendance.sessions>=EARLY_WARNING_RULES.attendanceMinSessions&&attendance.rate<EARLY_WARNING_RULES.attendanceRate){
@@ -29,10 +33,10 @@ export function buildEarlyWarnings({students=[],attendanceRecords=[],theoryProgr
     if(exams>=3&&passed===0){
       warnings.push(makeWarning(student,"theory",exams>=5?"critical":"high","Thi thử nhiều lần chưa đạt",`Đã thi ${exams} bài nhưng chưa có bài đạt. Điểm tốt nhất ${Number(theory.best_score)||0}/${Number(theory.best_total)||0}.`,"theory","Xem học & thi"));
     }else if(answered>=100&&accuracy<EARLY_WARNING_RULES.theoryAccuracy){
-      warnings.push(makeWarning(student,"theory","medium","Độ chính xác lý thuyết thấp",`Đã học ${answered}/600 câu, tỷ lệ trả lời đúng ${accuracy}%.`,"theory","Xem tiến độ"));
-    }else if(answered>0&&answered<600&&passed===0&&theory.last_activity){
+      warnings.push(makeWarning(student,"theory","medium","Độ chính xác lý thuyết thấp",`Đã học ${answered}/${questionTotal} câu, tỷ lệ trả lời đúng ${accuracy}%.`,"theory","Xem tiến độ"));
+    }else if(answered>0&&answered<questionTotal&&passed===0&&theory.last_activity){
       const last=new Date(theory.last_activity),idle=Number.isNaN(last.valueOf())?0:daysBetween(last,now);
-      if(idle>=EARLY_WARNING_RULES.theoryStaleDays)warnings.push(makeWarning(student,"theory","medium","Gián đoạn học lý thuyết",`Không có hoạt động 600 câu trong ${idle} ngày · Đã học ${answered}/600 câu.`,"theory","Nhắc học viên"));
+      if(idle>=EARLY_WARNING_RULES.theoryStaleDays)warnings.push(makeWarning(student,"theory","medium","Gián đoạn học lý thuyết",`Không có hoạt động lý thuyết trong ${idle} ngày · Đã học ${answered}/${questionTotal} câu.`,"theory","Nhắc học viên"));
     }
     if(debt>0){
       warnings.push(makeWarning(student,"finance",debtRate>=50?"high":"medium","Học phí chưa hoàn tất",`Còn nợ ${debt.toLocaleString("vi-VN")} ₫ · ${debtRate}% tổng học phí.`,"finance","Mở sổ học phí"));
