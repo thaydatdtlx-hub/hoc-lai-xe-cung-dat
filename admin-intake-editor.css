@@ -1,10 +1,163 @@
+/* Admin intake editor v2 · giao diện chỉnh sửa gọn, không che nội dung */
 .site-intakes .site-upgrade-heading,.site-intakes .site-intake-card{position:relative}
-.admin-intake-pencil{display:grid;place-items:center;width:38px;height:38px;border-radius:999px;border:1px solid #c9d8ea;background:#fff;color:#075aaa;box-shadow:0 8px 22px rgba(7,90,170,.14);cursor:pointer;z-index:5;transition:.18s ease}
+
+/* Thay toàn bộ bố cục card lịch tiếp nhận cũ bằng bản cân đối mới. */
+.site-intakes .site-intakes-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+  align-items:stretch
+}
+.site-intakes .site-intake-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:300px;
+  padding:26px 26px 22px;
+  border:1px solid #d8e5f2;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 14px 34px rgba(20,57,92,.08);
+  overflow:hidden
+}
+.site-intakes .site-intake-card>span{
+  display:inline-flex;
+  align-items:center;
+  align-self:flex-start;
+  max-width:calc(100% - 132px);
+  min-height:30px;
+  padding:0 13px;
+  border-radius:999px;
+  background:#dff7eb;
+  color:#0a8556;
+  font-size:10px;
+  line-height:1.2;
+  font-weight:900;
+  letter-spacing:.015em;
+  text-transform:uppercase;
+  white-space:normal
+}
+.site-intakes .site-intake-card h3{
+  margin:19px 0 9px;
+  color:#123d68;
+  font-size:24px;
+  line-height:1.18;
+  font-weight:900;
+  letter-spacing:-.02em
+}
+.site-intakes .site-intake-card p{
+  min-height:42px;
+  margin:0;
+  color:#6d8198;
+  font-size:13px;
+  line-height:1.6
+}
+.site-intakes .site-intake-card ul{
+  display:grid;
+  gap:10px;
+  margin:16px 0 22px;
+  padding:0;
+  list-style:none;
+  color:#3f5f7d;
+  font-size:12.5px;
+  line-height:1.45
+}
+.site-intakes .site-intake-card li{
+  position:relative;
+  padding-left:20px
+}
+.site-intakes .site-intake-card li::before{
+  content:"";
+  position:absolute;
+  left:2px;
+  top:.58em;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#0f7ae5;
+  box-shadow:0 0 0 3px rgba(15,122,229,.08)
+}
+.site-intakes .site-intake-card>button[data-intake-license]{
+  width:100%;
+  min-height:50px;
+  margin-top:auto;
+  border:0;
+  border-radius:13px;
+  background:linear-gradient(135deg,#0d6bd8,#1188f4);
+  color:#fff;
+  font-size:12.5px;
+  font-weight:900;
+  box-shadow:0 10px 20px rgba(13,107,216,.18);
+  cursor:pointer;
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease
+}
+.site-intakes .site-intake-card>button[data-intake-license]:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.04);
+  box-shadow:0 12px 24px rgba(13,107,216,.22)
+}
+
+/* Nút chỉnh sửa khu vực: nhỏ gọn, không đè lên tiêu đề. */
+.admin-intake-pencil{
+  display:grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  min-width:38px;
+  min-height:38px;
+  margin:0;
+  padding:0;
+  border-radius:999px;
+  border:1px solid #c9d8ea;
+  background:#fff;
+  color:#075aaa;
+  box-shadow:0 8px 22px rgba(7,90,170,.14);
+  cursor:pointer;
+  z-index:5;
+  transition:.18s ease
+}
 .admin-intake-pencil:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(7,90,170,.2)}
 .admin-intake-pencil svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .admin-intake-pencil--section{position:absolute;right:0;top:0}
-.admin-intake-pencil--card{position:absolute;right:16px;top:16px}
-.site-intake-card .admin-intake-pencil{padding:0;background:#fff;color:#075aaa}
+
+/* Quan trọng: selector này thắng rule .site-intake-card button cũ.
+   Nút admin không còn bị kéo thành thanh xanh 100% che nội dung. */
+.site-intakes .site-intake-card .admin-intake-pencil--card{
+  position:absolute;
+  top:20px;
+  right:20px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  width:auto;
+  min-width:112px;
+  height:40px;
+  min-height:40px;
+  margin:0;
+  padding:0 13px;
+  border:1.5px solid #69a9f6;
+  border-radius:12px;
+  background:#fff;
+  color:#0872da;
+  font-size:11.5px;
+  line-height:1;
+  font-weight:900;
+  box-shadow:0 7px 18px rgba(7,90,170,.10);
+  z-index:6
+}
+.site-intakes .site-intake-card .admin-intake-pencil--card:hover{
+  background:#f3f8ff;
+  border-color:#2388ef;
+  color:#0566c5;
+  transform:translateY(-1px);
+  box-shadow:0 9px 22px rgba(7,90,170,.14)
+}
+.site-intakes .site-intake-card .admin-intake-pencil--card svg{width:16px;height:16px;flex:0 0 auto}
+.site-intakes .site-intake-card .admin-intake-pencil--card span{display:inline;white-space:nowrap}
+
+/* Hộp chỉnh sửa */
 .admin-intake-editor{width:min(680px,calc(100vw - 28px));border:0;border-radius:22px;padding:0;box-shadow:0 24px 70px rgba(6,33,66,.24);overflow:hidden}
 .admin-intake-editor::backdrop{background:rgba(4,19,38,.52);backdrop-filter:blur(2px)}
 .admin-intake-editor form{margin:0;background:#fff}
@@ -23,4 +176,22 @@
 .admin-intake-editor__actions{display:flex;justify-content:flex-end;gap:10px;padding:16px 26px 22px;border-top:1px solid #edf2f7}
 .admin-intake-editor__actions button{border:1px solid #cbd9e8;border-radius:11px;padding:11px 18px;background:#fff;color:#17466f;font-weight:800;cursor:pointer}
 .admin-intake-editor__actions .primary{border-color:#0d6fde;background:#0d6fde;color:#fff}
-@media(max-width:700px){.admin-intake-pencil--section{right:8px;top:8px}.admin-intake-pencil--card{right:10px;top:10px}.admin-intake-editor__fields{grid-template-columns:1fr}.admin-intake-editor__fields label:has(textarea){grid-column:auto}.admin-intake-editor__head h2{font-size:22px}}
+
+@media(max-width:1100px){
+  .site-intakes .site-intakes-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:760px){
+  .site-intakes .site-intakes-grid{grid-template-columns:1fr;gap:14px}
+  .site-intakes .site-intake-card{min-height:0;padding:22px 20px 20px}
+  .site-intakes .site-intake-card .admin-intake-pencil--card{right:18px;top:18px;min-width:104px;height:38px;min-height:38px;padding-inline:11px;font-size:11px}
+  .site-intakes .site-intake-card>span{max-width:calc(100% - 116px)}
+  .admin-intake-pencil--section{right:8px;top:8px}
+  .admin-intake-editor__fields{grid-template-columns:1fr}
+  .admin-intake-editor__fields label:has(textarea){grid-column:auto}
+  .admin-intake-editor__head h2{font-size:22px}
+}
+@media(max-width:460px){
+  .site-intakes .site-intake-card .admin-intake-pencil--card{width:38px;min-width:38px;padding:0;border-radius:11px}
+  .site-intakes .site-intake-card .admin-intake-pencil--card span{display:none}
+  .site-intakes .site-intake-card>span{max-width:calc(100% - 54px)}
+}
