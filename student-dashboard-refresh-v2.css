@@ -1,0 +1,555 @@
+/* Student portal refresh v2 — presentation only. Existing IDs/data bindings remain untouched. */
+:root{
+  --student-refresh-navy:#0a2f63;
+  --student-refresh-blue:#1677e8;
+  --student-refresh-blue-2:#0b6bdc;
+  --student-refresh-line:#d5e5f3;
+  --student-refresh-soft:#f7fbff;
+  --student-refresh-muted:#7890a8;
+  --student-refresh-green:#19ad69;
+  --student-refresh-green-soft:#effaf5;
+  --student-refresh-shadow:0 18px 48px rgba(25,74,120,.08);
+}
+
+/* Chỉ làm mới ba khu vực được yêu cầu trong cổng học viên. */
+.student-main #trainingBooking,
+.student-main .portal-section[aria-labelledby="progressHeading"],
+.student-main .next-schedule-panel{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--student-refresh-line);
+  border-radius:28px;
+  background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);
+  box-shadow:var(--student-refresh-shadow);
+}
+
+.student-main #trainingBooking::after,
+.student-main .portal-section[aria-labelledby="progressHeading"]::after,
+.student-main .next-schedule-panel::after{
+  content:"";
+  position:absolute;
+  top:-86px;
+  right:-74px;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(22,119,232,.08),rgba(22,119,232,0) 68%);
+  pointer-events:none;
+}
+
+.student-main #trainingBooking .section-heading,
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading,
+.student-main .next-schedule-panel .section-heading{
+  position:relative;
+  z-index:1;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.student-main #trainingBooking .section-heading>div,
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading>div,
+.student-main .next-schedule-panel .section-heading>div{
+  position:relative;
+  min-height:58px;
+  padding-left:70px;
+  display:grid;
+  align-content:center;
+}
+
+.student-main #trainingBooking .section-heading>div::before,
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading>div::before,
+.student-main .next-schedule-panel .section-heading>div::before{
+  position:absolute;
+  left:0;
+  top:50%;
+  display:grid;
+  width:54px;
+  height:54px;
+  place-items:center;
+  transform:translateY(-50%);
+  border-radius:17px;
+  background:#e9f3ff;
+  color:var(--student-refresh-blue);
+  font-size:24px;
+  font-weight:900;
+  box-shadow:inset 0 0 0 1px rgba(22,119,232,.04);
+}
+
+.student-main #trainingBooking .section-heading>div::before{content:"▣"}
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading>div::before{content:"▥"}
+.student-main .next-schedule-panel .section-heading>div::before{content:"⌖"}
+
+.student-main #trainingBooking .section-heading p,
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading p,
+.student-main .next-schedule-panel .section-heading p{
+  margin:0 0 4px;
+  color:var(--student-refresh-blue);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.16em;
+}
+
+.student-main #trainingBooking .section-heading h2,
+.student-main .portal-section[aria-labelledby="progressHeading"] .section-heading h2,
+.student-main .next-schedule-panel .section-heading h2{
+  margin:0;
+  color:var(--student-refresh-navy);
+  font-size:clamp(24px,2.2vw,31px);
+  line-height:1.12;
+  letter-spacing:-.035em;
+}
+
+.student-main #trainingBooking .section-heading>span,
+.student-main .next-schedule-panel .section-heading>a{
+  position:relative;
+  z-index:2;
+  display:inline-flex;
+  min-height:42px;
+  align-items:center;
+  gap:7px;
+  padding:0 16px;
+  border:1px solid #d5e7fb;
+  border-radius:999px;
+  background:#edf6ff;
+  color:#1266c1;
+  font-size:11px;
+  font-weight:900;
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+.student-main #trainingBooking .section-heading>span{
+  border-color:#f3dfb8;
+  background:#fff5df;
+  color:#a76011;
+}
+
+.student-main #trainingBooking .section-heading>span::before{content:"◷";font-size:14px}
+.student-main .next-schedule-panel .section-heading>a::after{content:"→";font-size:17px;line-height:1}
+
+/* Quá trình học tập */
+.student-main .progress-grid{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.student-main .progress-card{
+  position:relative;
+  display:grid;
+  min-height:150px;
+  grid-template-columns:58px minmax(0,1fr) 24px;
+  align-items:start;
+  gap:14px;
+  padding:20px 18px 36px;
+  overflow:hidden;
+  border:1px solid #d8e6f2;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(29,79,126,.045);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+.student-main .progress-card:hover{
+  transform:translateY(-2px);
+  border-color:#bfd7ed;
+  box-shadow:0 14px 30px rgba(29,79,126,.09);
+}
+
+.student-main .progress-card>span{
+  display:grid;
+  width:58px;
+  height:58px;
+  place-items:center;
+  border-radius:17px;
+  background:#e8f2ff;
+  color:#1a72d2;
+  font-size:23px;
+  font-weight:950;
+}
+
+.student-main .progress-card:nth-child(2)>span{background:#f0e8ff;color:#6942c6}
+.student-main .progress-card:nth-child(3)>span{background:#fff0d8;color:#d6790e}
+.student-main .progress-card:nth-child(4)>span{background:#ffe8e4;color:#dc503e}
+.student-main .progress-card:nth-child(5)>span{background:#e7f2ff;color:#176bc5}
+.student-main .progress-card:nth-child(6)>span{background:#eee8ff;color:#5b42bd}
+
+.student-main .progress-card>div{
+  display:grid;
+  min-width:0;
+  gap:5px;
+  padding-top:4px;
+}
+
+.student-main .progress-card small{
+  color:#66819c;
+  font-size:11px;
+  font-weight:850;
+}
+
+.student-main .progress-card strong{
+  overflow:visible;
+  color:#123f70;
+  font-size:15px;
+  line-height:1.3;
+  text-overflow:clip;
+  white-space:normal;
+}
+
+.student-main .progress-card em{
+  color:#8296aa;
+  font-size:10px;
+  font-style:normal;
+  line-height:1.45;
+}
+
+.student-main .progress-card>i{
+  position:relative;
+  display:grid;
+  width:23px;
+  height:23px;
+  place-items:center;
+  justify-self:end;
+  border-radius:50%;
+  background:#b8c7d5;
+  color:#fff;
+  font-size:13px;
+  font-style:normal;
+  font-weight:950;
+}
+
+.student-main .progress-card.done{
+  border-color:#cae9dc;
+  background:linear-gradient(180deg,#fff 0%,#fbfffd 100%);
+}
+.student-main .progress-card.done>i{background:var(--student-refresh-green)}
+.student-main .progress-card.done>i::after{content:"✓"}
+.student-main .progress-card.doing>i{background:var(--student-refresh-blue)}
+.student-main .progress-card.fail>i{background:#df5b45}
+.student-main .progress-card.fail>i::after{content:"!"}
+
+.student-main .progress-card::before{
+  content:"";
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  left:18px;
+  height:7px;
+  border-radius:999px;
+  background:#e6edf4;
+}
+.student-main .progress-card::after{
+  content:"";
+  position:absolute;
+  bottom:18px;
+  left:18px;
+  width:0;
+  height:7px;
+  border-radius:999px;
+  background:var(--student-refresh-blue);
+}
+.student-main .progress-card.done::after{width:calc(100% - 36px);background:var(--student-refresh-green)}
+.student-main .progress-card.doing::after{width:52%}
+.student-main .progress-card.fail::after{width:calc(100% - 36px);background:#df5b45}
+
+/* Thực hành theo nhu cầu */
+.student-main #trainingBooking{
+  background:linear-gradient(145deg,#fff 0%,#f6fbff 100%);
+}
+
+.student-main #trainingBooking .booking-actions{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.student-main #trainingBooking .booking-action,
+.student-main #trainingBooking .booking-action.dat-practice{
+  grid-column:auto;
+  display:grid;
+  min-height:142px;
+  grid-template-columns:62px minmax(0,1fr) 34px;
+  align-items:center;
+  gap:15px;
+  padding:18px;
+  border:1px solid #cfe3f6;
+  border-radius:20px;
+  background:linear-gradient(145deg,#fff 0%,#f3f9ff 100%);
+  color:#113e70;
+  box-shadow:0 8px 24px rgba(29,79,126,.045);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+.student-main #trainingBooking .booking-action:hover{
+  transform:translateY(-2px);
+  border-color:#a9cff1;
+  box-shadow:0 14px 30px rgba(29,79,126,.09);
+}
+
+.student-main #trainingBooking .booking-action>span{
+  display:grid;
+  width:62px;
+  height:62px;
+  place-items:center;
+  border-radius:18px;
+  background:#ddf5fb;
+  font-size:29px;
+}
+.student-main #trainingBooking .booking-action.practice>span{background:#fff0dc}
+.student-main #trainingBooking .booking-action.dat-practice>span{background:#eeeaff}
+
+.student-main #trainingBooking .booking-action>div{display:grid;gap:5px}
+.student-main #trainingBooking .booking-action strong{font-size:15px;line-height:1.28}
+.student-main #trainingBooking .booking-action small{color:#7890a8;font-size:10px;line-height:1.45}
+.student-main #trainingBooking .booking-action>b{
+  display:grid;
+  width:34px;
+  height:34px;
+  place-items:center;
+  border-radius:50%;
+  background:#e4f1ff;
+  color:#1572d3;
+  font-size:0;
+}
+.student-main #trainingBooking .booking-action>b::after{content:"›";font-size:27px;font-weight:800;line-height:1}
+.student-main #trainingBooking .booking-action.practice>b{background:#eaf8ee;color:#14905b}
+.student-main #trainingBooking .booking-action.dat-practice>b{background:#eeeaff;color:#5947c2}
+
+.student-main #trainingBooking .booking-history-head{
+  position:relative;
+  z-index:1;
+  margin:18px 0 10px;
+  padding:17px 4px 0;
+  border-top:1px solid #e4edf5;
+}
+.student-main #trainingBooking .booking-history-head strong{color:#153d67;font-size:12px}
+.student-main #trainingBooking .booking-history-head small{color:#7d92a7;font-size:10px}
+
+.student-main #trainingBooking .booking-request-list{position:relative;z-index:1}
+.student-main #trainingBooking .booking-empty{
+  padding:22px 16px;
+  border-color:#c8ddec;
+  border-radius:15px;
+  background:#fbfdff;
+  color:#7890a8;
+  font-size:10px;
+}
+.student-main #trainingBooking .booking-request{
+  border-color:#d6e5f1;
+  border-radius:15px;
+  background:#fff;
+}
+
+/* Các mốc đào tạo — giữ nguyên các mốc/lịch do hệ thống hiện tại sinh ra, chỉ đổi cách trình bày. */
+.student-main .next-schedule-panel{
+  background:linear-gradient(180deg,#fff 0%,#fbfdff 100%);
+}
+
+.student-main .next-schedule-panel .upcoming-list{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:0;
+  padding:8px 8px 4px;
+}
+
+.student-main .next-schedule-panel .upcoming-list:has(article)::before{
+  content:"";
+  position:absolute;
+  top:35px;
+  right:16%;
+  left:16%;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#2d8bff,#b8cce1);
+}
+
+.student-main .next-schedule-panel .upcoming-list article{
+  position:relative;
+  z-index:1;
+  display:grid;
+  min-width:0;
+  grid-template-columns:1fr;
+  justify-items:center;
+  gap:8px;
+  padding:5px 13px 10px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  text-align:center;
+}
+
+.student-main .next-schedule-panel .upcoming-list article>span{
+  display:grid;
+  width:46px;
+  height:46px;
+  place-items:center;
+  border:5px solid #fff;
+  border-radius:50%;
+  box-shadow:0 0 0 2px #2c87ef,0 7px 18px rgba(27,101,182,.15);
+  font-size:18px;
+}
+
+.student-main .next-schedule-panel .upcoming-list article>div{display:grid;gap:4px;min-width:0}
+.student-main .next-schedule-panel .upcoming-list strong{color:#133e70;font-size:12px;line-height:1.35}
+.student-main .next-schedule-panel .upcoming-list small{color:#2779d6;font-size:10px;line-height:1.4}
+.student-main .next-schedule-panel .upcoming-list em{color:#8093a6;font-size:9px;line-height:1.45}
+.student-main .next-schedule-panel .no-schedule{
+  grid-column:1/-1;
+  min-height:170px;
+  border:1px dashed #cbddea;
+  border-radius:18px;
+  background:#fbfdff;
+}
+.student-main .next-schedule-panel .no-schedule>span{font-size:31px}
+.student-main .next-schedule-panel .no-schedule strong{color:#214d78;font-size:13px}
+.student-main .next-schedule-panel .no-schedule small{font-size:10px}
+
+@media(max-width:980px){
+  .student-main .progress-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .student-main #trainingBooking .booking-actions{grid-template-columns:1fr 1fr}
+  .student-main #trainingBooking .booking-action.dat-practice{grid-column:1/-1}
+}
+
+@media(max-width:720px){
+  .student-main #trainingBooking,
+  .student-main .portal-section[aria-labelledby="progressHeading"],
+  .student-main .next-schedule-panel{
+    padding:18px!important;
+    border-radius:24px!important;
+    box-shadow:0 10px 30px rgba(25,74,120,.07)!important;
+  }
+
+  .student-main #trainingBooking .section-heading,
+  .student-main .portal-section[aria-labelledby="progressHeading"] .section-heading,
+  .student-main .next-schedule-panel .section-heading{
+    flex-direction:row!important;
+    align-items:center!important;
+    gap:10px;
+    margin-bottom:18px!important;
+  }
+
+  .student-main #trainingBooking .section-heading>div,
+  .student-main .portal-section[aria-labelledby="progressHeading"] .section-heading>div,
+  .student-main .next-schedule-panel .section-heading>div{
+    min-height:50px;
+    padding-left:58px;
+  }
+
+  .student-main #trainingBooking .section-heading>div::before,
+  .student-main .portal-section[aria-labelledby="progressHeading"] .section-heading>div::before,
+  .student-main .next-schedule-panel .section-heading>div::before{
+    width:46px;
+    height:46px;
+    border-radius:15px;
+    font-size:21px;
+  }
+
+  .student-main #trainingBooking .section-heading p,
+  .student-main .portal-section[aria-labelledby="progressHeading"] .section-heading p,
+  .student-main .next-schedule-panel .section-heading p{font-size:9px!important}
+
+  .student-main #trainingBooking .section-heading h2,
+  .student-main .portal-section[aria-labelledby="progressHeading"] .section-heading h2,
+  .student-main .next-schedule-panel .section-heading h2{
+    font-size:22px!important;
+    line-height:1.12;
+  }
+
+  .student-main #trainingBooking .section-heading>span,
+  .student-main .next-schedule-panel .section-heading>a{
+    min-height:38px;
+    padding:0 12px;
+    font-size:9px;
+  }
+
+  .student-main .progress-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:11px;
+  }
+  .student-main .progress-card{
+    min-height:158px;
+    grid-template-columns:50px minmax(0,1fr) 19px;
+    gap:10px;
+    padding:15px 13px 32px;
+    border-radius:18px;
+  }
+  .student-main .progress-card>span{width:50px;height:50px;border-radius:15px;font-size:20px}
+  .student-main .progress-card small{font-size:9px}
+  .student-main .progress-card strong{font-size:12px}
+  .student-main .progress-card em{font-size:8px}
+  .student-main .progress-card>i{width:19px;height:19px;font-size:11px}
+  .student-main .progress-card::before{right:13px;bottom:15px;left:13px;height:6px}
+  .student-main .progress-card::after{bottom:15px;left:13px;height:6px}
+  .student-main .progress-card.done::after,.student-main .progress-card.fail::after{width:calc(100% - 26px)}
+
+  .student-main #trainingBooking .booking-actions{grid-template-columns:1fr!important;gap:11px}
+  .student-main #trainingBooking .booking-action,
+  .student-main #trainingBooking .booking-action.dat-practice{
+    grid-column:auto!important;
+    min-height:116px;
+    grid-template-columns:56px minmax(0,1fr) 32px;
+    gap:13px;
+    padding:15px!important;
+    border-radius:18px!important;
+  }
+  .student-main #trainingBooking .booking-action>span{width:56px;height:56px;border-radius:16px;font-size:25px}
+  .student-main #trainingBooking .booking-action strong{font-size:13px}
+  .student-main #trainingBooking .booking-action small{font-size:9px}
+  .student-main #trainingBooking .booking-history-head{align-items:flex-start;flex-direction:column;gap:5px;margin-top:16px}
+
+  .student-main .next-schedule-panel .upcoming-list{
+    display:grid;
+    width:calc(100% + 18px);
+    grid-auto-columns:minmax(190px,76vw);
+    grid-auto-flow:column;
+    grid-template-columns:none;
+    gap:10px;
+    margin-right:-18px;
+    overflow-x:auto;
+    padding:6px 18px 12px 2px;
+    scroll-snap-type:x mandatory;
+    scrollbar-width:none;
+  }
+  .student-main .next-schedule-panel .upcoming-list::-webkit-scrollbar{display:none}
+  .student-main .next-schedule-panel .upcoming-list:has(article)::before{display:none}
+  .student-main .next-schedule-panel .upcoming-list article{
+    min-height:150px;
+    align-content:center;
+    padding:15px 14px;
+    border:1px solid #d9e7f2;
+    border-radius:18px;
+    background:#fff;
+    box-shadow:0 8px 22px rgba(29,79,126,.05);
+    scroll-snap-align:start;
+  }
+  .student-main .next-schedule-panel .upcoming-list article>span{width:44px;height:44px}
+  .student-main .next-schedule-panel .upcoming-list strong{font-size:12px}
+  .student-main .next-schedule-panel .upcoming-list small{font-size:9px}
+  .student-main .next-schedule-panel .upcoming-list em{font-size:8px}
+  .student-main .next-schedule-panel .no-schedule{grid-column:auto;width:calc(100vw - 64px);min-height:150px}
+}
+
+@media(max-width:430px){
+  .student-main #trainingBooking .section-heading,
+  .student-main .next-schedule-panel .section-heading{align-items:flex-start!important;flex-direction:column!important}
+  .student-main #trainingBooking .section-heading>span,
+  .student-main .next-schedule-panel .section-heading>a{margin-left:58px}
+}
+
+@media(max-width:390px){
+  .student-main .progress-grid{grid-template-columns:1fr!important}
+  .student-main .progress-card{min-height:128px}
+  .student-main #trainingBooking .section-heading>span,
+  .student-main .next-schedule-panel .section-heading>a{margin-left:0}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .student-main .progress-card,
+  .student-main #trainingBooking .booking-action{transition:none}
+}
