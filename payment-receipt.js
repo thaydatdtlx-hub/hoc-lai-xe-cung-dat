@@ -166,7 +166,6 @@ export function buildReceiptHtml(payment){
         </div>
       </div>
       <div class="invoice-title">
-        <h1>BIÊN LAI HỌC PHÍ</h1>
         <p class="receipt-number">Số phiếu: ${escapeHtml(receiptNo)}</p>
         <p class="receipt-date">Ngày: ${escapeHtml(date)}</p>
       </div>
