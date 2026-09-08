@@ -1,0 +1,79 @@
+name: Diagnose production build
+
+on:
+  push:
+    branches:
+      - diagnostics/production-build-20260908
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate question data
+        continue-on-error: true
+        run: node scripts/validate-question-data.mjs
+
+      - name: Validate theory explanations
+        continue-on-error: true
+        run: node scripts/validate-theory-explanations.mjs
+
+      - name: Validate theory source binding
+        continue-on-error: true
+        run: node scripts/validate-theory-source-binding.mjs
+
+      - name: Validate B exam sets
+        continue-on-error: true
+        run: node scripts/validate-b-exam-sets.mjs
+
+      - name: Validate student RPC
+        continue-on-error: true
+        run: node scripts/validate-student-rpc.mjs
+
+      - name: Validate student profile render
+        continue-on-error: true
+        run: node scripts/validate-student-profile-render.mjs
+
+      - name: Validate student runtime safety
+        continue-on-error: true
+        run: node scripts/validate-student-runtime-safety.mjs
+
+      - name: Validate auth redirects
+        continue-on-error: true
+        run: node scripts/validate-auth-redirects.mjs
+
+      - name: Validate payments
+        continue-on-error: true
+        run: node scripts/validate-payments.mjs
+
+      - name: Validate professional platform
+        continue-on-error: true
+        run: node scripts/validate-professional-platform.mjs
+
+      - name: Build Vite bundle
+        continue-on-error: true
+        run: npx vite build
+
+      - name: Inject mobile login stability
+        continue-on-error: true
+        run: node scripts/inject-mobile-login-stability.mjs
+
+      - name: Validate student build
+        continue-on-error: true
+        run: node scripts/validate-student-build.mjs
