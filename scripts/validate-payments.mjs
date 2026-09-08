@@ -18,7 +18,9 @@ const receipt=receiptStudentProfile(
   {date_of_birth:"2001-03-15",cccd:"079123456789",address:"An Phú Đông, Thành phố Hồ Chí Minh"}
 );
 const html=buildReceiptHtml(receipt);
-for(const required of ["BIÊN LAI HỌC PHÍ","PT-20260801-ABC123","5.000.000 ₫","Trần Quốc Đạt","Ngày sinh:","15/03/2001","Số CCCD:","079123456789","Địa chỉ:","An Phú Đông, Thành phố Hồ Chí Minh"]){
+// Mẫu biên lai hiện tại dùng tiêu đề trang "Biên lai học phí" và nhãn hiển thị "BIÊN LAI CHO:".
+// Kiểm tra theo đúng markup đang dùng để tránh chặn production build bởi một chuỗi tiêu đề cũ không còn hiển thị.
+for(const required of ["<title>Biên lai học phí ","BIÊN LAI CHO:","PT-20260801-ABC123","5.000.000 ₫","Trần Quốc Đạt","Ngày sinh:","15/03/2001","Số CCCD:","079123456789","Địa chỉ:","An Phú Đông, Thành phố Hồ Chí Minh"]){
   if(!html.includes(required))throw new Error(`Biên lai học phí thiếu nội dung bắt buộc: ${required}`);
 }
 for(const required of [
