@@ -10,7 +10,7 @@ const DEFAULT_INTAKE={
   cards:{
     "A1":{label:"A1",status:"ĐANG NHẬN TƯ VẤN",summary:"Lịch tiếp nhận hồ sơ được xác nhận khi tư vấn.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"},
     "A":{label:"A",status:"ĐANG NHẬN TƯ VẤN",summary:"Lịch tiếp nhận hồ sơ được xác nhận khi tư vấn.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"},
-    "B số tự động":{label:"B số tự động",status:"ĐANG NHẬN TƯ VẤN",summary:"Thời gian đào tạo dự kiến 2,5–3 tháng.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"},
+    "B số tự động":{label:"B tự động",status:"ĐANG NHẬN TƯ VẤN",summary:"Thời gian đào tạo dự kiến 2,5–3 tháng.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"},
     "B số sàn":{label:"B số sàn",status:"ĐANG NHẬN TƯ VẤN",summary:"Thời gian đào tạo dự kiến 2,5–3 tháng.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"},
     "C1":{label:"C1",status:"ĐANG NHẬN TƯ VẤN",summary:"Thời gian đào tạo dự kiến 3,5–4 tháng.",start:"xác nhận khi tư vấn",deadline:"theo kế hoạch khóa",seats:"cập nhật trực tiếp",cta:"Đăng ký giữ thông tin"}
   }
@@ -26,7 +26,11 @@ async function rpc(fn,body={}){
   return data;
 }
 function escapeHtml(value=""){return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]))}
-function normalizeCard(key,input={}){return {...DEFAULT_INTAKE.cards[key],...(input&&typeof input==="object"?input:{})}}
+function normalizeCard(key,input={}){
+  const item={...DEFAULT_INTAKE.cards[key],...(input&&typeof input==="object"?input:{})};
+  if(key==="B số tự động"&&item.label==="B số tự động")item.label="B tự động";
+  return item;
+}
 function normalizeConfig(input={}){
   const source=input&&typeof input==="object"?input:{};
   return {
@@ -107,7 +111,7 @@ function addAdminControls(){
   }
   INTAKE_ORDER.forEach(key=>{
     const card=cardFor(key);if(!card||card.querySelector("[data-intake-edit-card]"))return;
-    const button=document.createElement("button");button.type="button";button.className="admin-intake-pencil admin-intake-pencil--card";button.dataset.intakeEditCard=key;button.innerHTML=pencilIcon();button.title=`Admin: chỉnh sửa ${key}`;button.setAttribute("aria-label",`Chỉnh sửa nội dung ${key}`);button.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openCardEditor(key)});card.append(button);
+    const button=document.createElement("button");button.type="button";button.className="admin-intake-pencil admin-intake-pencil--card";button.dataset.intakeEditCard=key;button.innerHTML=`${pencilIcon()}<span>Chỉnh sửa</span>`;button.title=`Admin: chỉnh sửa ${key}`;button.setAttribute("aria-label",`Chỉnh sửa nội dung ${key}`);button.addEventListener("click",event=>{event.preventDefault();event.stopPropagation();openCardEditor(key)});card.append(button);
   });
   section.classList.add("admin-intake-editable");
 }
