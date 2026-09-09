@@ -17,7 +17,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Replace old profile interface
+      - name: Replace current profile interface
         shell: bash
         run: |
           rm -f sitecustomize.py
@@ -36,14 +36,14 @@ jobs:
           hero = match.group(1)
 
           html, count = re.subn(
-              r'<section class="student-hero">.*?</section>',
+              r'<section class="student-hero[^"]*">.*?</section>',
               lambda _: hero,
               html,
               count=1,
               flags=re.S,
           )
           if count != 1:
-              raise SystemExit(f'Không tìm thấy đúng 1 giao diện hồ sơ cũ (found={count})')
+              raise SystemExit(f'Không tìm thấy đúng 1 giao diện hồ sơ hiện tại (found={count})')
 
           required = [
               'id="studentPhoto"', 'id="studentPhotoPlaceholder"',
