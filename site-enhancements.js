@@ -37,7 +37,7 @@ function ensureAdminProfileModules(){if(document.getElementById("adminProfileSum
 function watchAdminProfile(){ensureAdminProfileModules();if(adminProfileObserver)return;const root=document.getElementById("app")||document.body;adminProfileObserver=new MutationObserver(()=>ensureAdminProfileModules());adminProfileObserver.observe(root,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class"]});window.addEventListener("pageshow",ensureAdminProfileModules);document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")ensureAdminProfileModules()})}
 
 function ensureStyleLink(href,dataAttribute){if(document.querySelector(`link[${dataAttribute}]`)||document.querySelector(`link[href="${href}"]`))return;const link=document.createElement("link");link.rel="stylesheet";link.href=href;link.setAttribute(dataAttribute,"true");document.head.append(link)}
-function ensureAdminLayoutStyles(){if(!document.getElementById("app"))return;ensureStyleLink("/admin-profile.css?v=3","data-admin-profile-base");ensureStyleLink("/admin-desktop-layout.css?v=3","data-admin-desktop-layout");ensureStyleLink("/admin-account-size-fix.css?v=1","data-admin-account-size-fix");ensureStyleLink("/admin-toolbar-colorful.css?v=1","data-admin-toolbar-colorful")}
+function ensureAdminLayoutStyles(){if(!document.getElementById("app"))return;ensureStyleLink("/admin-profile.css?v=3","data-admin-profile-base")}
 function ensureMobileViewportStyles(){ensureStyleLink("/mobile-viewport-lock.css?v=3","data-mobile-viewport-lock")}
 function ensureLoginIsolatedStyle(){
   if(!document.getElementById("login"))return;

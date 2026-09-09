@@ -1,7 +1,32 @@
 import "./overlay-safety.css";
 
 const isStudentPortal=()=>location.pathname==="/hoc-vien.html";
-const professionalUiPromise=import("./platform-professional.js?v=20260825-1").catch(error=>console.warn("[professional-ui] Không thể tải giao diện dùng chung.",error));
+const isAdminPortal=()=>Boolean(document.getElementById("app"));
+
+function removeLegacyAdminUi(){
+  if(!isAdminPortal())return;
+  const app=document.getElementById("app");
+  app?.querySelectorAll(":scope > .professional-sidebar,#professionalAdminCommandCenter").forEach(node=>node.remove());
+  document.querySelectorAll(".coccoc-sidebar-tooltip").forEach(node=>node.remove());
+  document.body.classList.remove("professional-admin-shell","professional-tools-open","coccoc-sidebar-expanded","coccoc-sidebar-collapsed");
+  document.body.removeAttribute("data-admin-sidebar");
+}
+
+function guardLegacyAdminUi(){
+  if(!isAdminPortal())return;
+  removeLegacyAdminUi();
+  const app=document.getElementById("app");
+  if(app){
+    new MutationObserver(removeLegacyAdminUi).observe(app,{childList:true});
+  }
+  new MutationObserver(removeLegacyAdminUi).observe(document.body,{attributes:true,attributeFilter:["class","data-admin-sidebar"]});
+  [0,120,350,800,1600,3200].forEach(delay=>window.setTimeout(removeLegacyAdminUi,delay));
+}
+
+guardLegacyAdminUi();
+const professionalUiPromise=isAdminPortal()
+  ?Promise.resolve(null)
+  :import("./platform-professional.js?v=20260825-1").catch(error=>console.warn("[professional-ui] Không thể tải giao diện dùng chung.",error));
 let sharedEnhancementsPromise=null;
 
 function loadSharedEnhancements(){
@@ -52,7 +77,7 @@ if(document.getElementById("app")){
 const DISMISS_KEY="thay_dat_pwa_install_dismissed";
 const DISMISS_DAYS=7;
 const PUBLIC_MARKETING_PATHS=new Set(["/dang-ky-hoc-lai-xe.html","/600-cau-hoi.html","/bo-tuc-tay-lai.html","/chinh-sach-bao-mat.html"]);
-const SW_REFRESH_KEY="hoclaixecungdat_sw_refresh_v50";
+const SW_REFRESH_KEY="hoclaixecungdat_sw_refresh_v52";
 let deferredInstallPrompt=null;
 let installBanner=null;
 
