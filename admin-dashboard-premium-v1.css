@@ -1,0 +1,710 @@
+/* Premium Admin Dashboard 2026
+   UI-only override. All existing DOM nodes, IDs, values, handlers and data bindings remain unchanged. */
+
+#app #financeDashboard,
+#app #theoryDashboard,
+#app #attendanceDashboard{
+  --dash-navy:#0b2d62;
+  --dash-copy:#355a82;
+  --dash-muted:#7a90a8;
+  --dash-line:#d8e7f5;
+  --dash-blue:#116df3;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  margin:22px 0;
+  padding:28px;
+  border:1px solid rgba(187,211,235,.82);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at 96% -8%,rgba(85,183,255,.18) 0,rgba(85,183,255,0) 31%),
+    radial-gradient(circle at 76% 116%,rgba(87,217,187,.10) 0,rgba(87,217,187,0) 30%),
+    linear-gradient(135deg,rgba(255,255,255,.98) 0%,rgba(248,252,255,.97) 58%,rgba(241,248,255,.96) 100%);
+  box-shadow:
+    0 20px 52px rgba(29,77,124,.11),
+    inset 0 1px 0 rgba(255,255,255,.92);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;
+}
+
+#app #financeDashboard::before,
+#app #theoryDashboard::before,
+#app #attendanceDashboard::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:-120px;
+  right:-90px;
+  width:380px;
+  height:380px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(102,181,255,.13) 0 38%,rgba(102,181,255,0) 68%);
+  pointer-events:none;
+}
+
+#app #financeDashboard::after,
+#app #theoryDashboard::after,
+#app #attendanceDashboard::after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  right:0;
+  width:42%;
+  height:100%;
+  opacity:.42;
+  background:
+    linear-gradient(132deg,transparent 0 38%,rgba(181,217,249,.18) 38.2% 49%,transparent 49.2% 62%,rgba(211,233,252,.16) 62.2% 72%,transparent 72.2%);
+  pointer-events:none;
+}
+
+/* Headings */
+#app #financeDashboard .finance-dashboard-head,
+#app #theoryDashboard .theory-dashboard-head,
+#app #attendanceDashboard .attendance-dashboard-head{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+#app #financeDashboard .finance-kicker,
+#app #theoryDashboard .theory-dashboard-head p,
+#app #attendanceDashboard .attendance-dashboard-head p{
+  margin:0 0 7px;
+  color:#0872dc;
+  font-size:10px;
+  font-weight:900;
+  line-height:1.2;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+}
+
+#app #attendanceDashboard .attendance-dashboard-head p{color:#087b65}
+
+#app #financeDashboard h2,
+#app #theoryDashboard .theory-dashboard-head h2,
+#app #attendanceDashboard .attendance-dashboard-head h2{
+  margin:0;
+  color:var(--dash-navy);
+  font-size:clamp(25px,2vw,31px);
+  font-weight:850;
+  line-height:1.12;
+  letter-spacing:-.035em;
+}
+
+/* Finance header actions */
+#app #financeDashboard .finance-head-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+#app #financeDashboard .finance-head-actions button,
+#app #financeDashboard .finance-head-actions a,
+#app #financeDashboard .finance-head-actions>span{
+  display:inline-flex;
+  min-height:44px;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin:0;
+  padding:0 16px;
+  border-radius:13px;
+  font-size:11px;
+  font-weight:850;
+  line-height:1;
+  text-decoration:none;
+  white-space:nowrap;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+
+#app #financeDashboard .payment-ledger-btn{
+  border:1px solid #bde4d5;
+  background:linear-gradient(135deg,#effcf7,#e6f8f0);
+  color:#08775a;
+  box-shadow:0 7px 16px rgba(20,128,93,.08);
+}
+
+#app #financeDashboard .finance-head-actions a{
+  border:1px solid #ddcef8;
+  background:linear-gradient(135deg,#f7f1ff,#f0e8ff);
+  color:#6a35c4;
+  box-shadow:0 7px 16px rgba(106,53,196,.08);
+}
+
+#app #financeDashboard .finance-head-actions>span{
+  border:1px solid #d5e5f6;
+  background:rgba(255,255,255,.78);
+  color:#155da9;
+}
+
+#app #financeDashboard .finance-head-actions button:hover,
+#app #financeDashboard .finance-head-actions a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 24px rgba(26,79,132,.14);
+}
+
+/* Finance KPI cards */
+#app #financeDashboard .finance-grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+
+#app #financeDashboard .finance-card{
+  position:relative;
+  display:flex;
+  min-width:0;
+  min-height:144px;
+  align-items:center;
+  gap:18px;
+  overflow:hidden;
+  padding:22px 23px;
+  border:1px solid #cfe2f7;
+  border-radius:20px;
+  background:linear-gradient(135deg,#f8fbff 0%,#eef6ff 100%);
+  box-shadow:
+    0 10px 28px rgba(39,91,143,.07),
+    inset 0 1px 0 rgba(255,255,255,.95);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+
+#app #financeDashboard .finance-card::before{
+  content:"";
+  position:absolute;
+  top:-54px;
+  right:-42px;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  background:rgba(255,255,255,.46);
+  pointer-events:none;
+}
+
+#app #financeDashboard .finance-card::after{
+  content:"";
+  position:absolute;
+  right:24px;
+  bottom:20px;
+  width:86px;
+  height:44px;
+  opacity:.25;
+  border-radius:4px;
+  background:
+    linear-gradient(to top,rgba(17,109,243,.75) 0 100%) 0 100%/10px 18px no-repeat,
+    linear-gradient(to top,rgba(17,109,243,.75) 0 100%) 18px 100%/10px 27px no-repeat,
+    linear-gradient(to top,rgba(17,109,243,.75) 0 100%) 36px 100%/10px 35px no-repeat,
+    linear-gradient(to top,rgba(17,109,243,.75) 0 100%) 54px 100%/10px 25px no-repeat,
+    linear-gradient(to top,rgba(17,109,243,.75) 0 100%) 72px 100%/10px 42px no-repeat;
+  pointer-events:none;
+}
+
+#app #financeDashboard .finance-paid{
+  border-color:#c8e9dc;
+  background:linear-gradient(135deg,#f2fcf8 0%,#eaf9f3 100%);
+}
+
+#app #financeDashboard .finance-debt{
+  border-color:#f3d8b8;
+  background:linear-gradient(135deg,#fffaf4 0%,#fff1e3 100%);
+}
+
+#app #financeDashboard .finance-paid::after{
+  background:
+    linear-gradient(to top,rgba(7,151,99,.78) 0 100%) 0 100%/10px 18px no-repeat,
+    linear-gradient(to top,rgba(7,151,99,.78) 0 100%) 18px 100%/10px 27px no-repeat,
+    linear-gradient(to top,rgba(7,151,99,.78) 0 100%) 36px 100%/10px 35px no-repeat,
+    linear-gradient(to top,rgba(7,151,99,.78) 0 100%) 54px 100%/10px 25px no-repeat,
+    linear-gradient(to top,rgba(7,151,99,.78) 0 100%) 72px 100%/10px 42px no-repeat;
+}
+
+#app #financeDashboard .finance-debt::after{
+  background:
+    linear-gradient(to top,rgba(238,126,24,.82) 0 100%) 0 100%/10px 18px no-repeat,
+    linear-gradient(to top,rgba(238,126,24,.82) 0 100%) 18px 100%/10px 27px no-repeat,
+    linear-gradient(to top,rgba(238,126,24,.82) 0 100%) 36px 100%/10px 35px no-repeat,
+    linear-gradient(to top,rgba(238,126,24,.82) 0 100%) 54px 100%/10px 25px no-repeat,
+    linear-gradient(to top,rgba(238,126,24,.82) 0 100%) 72px 100%/10px 42px no-repeat;
+}
+
+#app #financeDashboard .finance-card:hover{
+  transform:translateY(-3px);
+  border-color:#a9ccef;
+  box-shadow:0 18px 38px rgba(28,81,134,.13),inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+#app #financeDashboard .finance-icon{
+  position:relative;
+  z-index:2;
+  display:grid;
+  width:66px;
+  height:66px;
+  min-width:66px;
+  place-items:center;
+  border:8px solid rgba(62,139,238,.13);
+  border-radius:50%;
+  background:linear-gradient(145deg,#3397ff,#075ed9);
+  color:#fff;
+  font-size:26px;
+  font-weight:950;
+  line-height:1;
+  box-shadow:0 10px 22px rgba(22,102,210,.21);
+}
+
+#app #financeDashboard .finance-paid .finance-icon{
+  border-color:rgba(16,167,111,.13);
+  background:linear-gradient(145deg,#22c789,#078b5d);
+  box-shadow:0 10px 22px rgba(8,139,93,.18);
+}
+
+#app #financeDashboard .finance-debt .finance-icon{
+  border-color:rgba(242,143,50,.15);
+  background:linear-gradient(145deg,#ffad42,#eb6e08);
+  box-shadow:0 10px 22px rgba(225,109,19,.18);
+}
+
+#app #financeDashboard .finance-card>div{
+  position:relative;
+  z-index:2;
+  display:grid;
+  min-width:0;
+  gap:4px;
+  padding-right:68px;
+}
+
+#app #financeDashboard .finance-card small{
+  color:#45698f;
+  font-size:12px;
+  font-weight:800;
+  line-height:1.3;
+}
+
+#app #financeDashboard .finance-card strong{
+  color:#071f4e;
+  font-size:clamp(25px,2vw,34px);
+  font-weight:900;
+  line-height:1.05;
+  letter-spacing:-.035em;
+  white-space:nowrap;
+}
+
+#app #financeDashboard .finance-card em{
+  color:#64819f;
+  font-size:10px;
+  font-style:normal;
+  font-weight:650;
+  line-height:1.35;
+}
+
+/* Theory */
+#app #theoryDashboard{
+  background:
+    radial-gradient(circle at 95% 0,rgba(66,151,255,.16) 0,rgba(66,151,255,0) 29%),
+    linear-gradient(135deg,#fbfdff 0%,#f5faff 57%,#eef6ff 100%);
+}
+
+#app #theoryDashboard .theory-dashboard-head a{
+  display:inline-flex;
+  min-height:46px;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:0 18px;
+  border:1px solid #0f6fea;
+  border-radius:13px;
+  background:linear-gradient(135deg,#1682ff,#095be1);
+  color:#fff;
+  font-size:11px;
+  font-weight:850;
+  line-height:1;
+  text-decoration:none;
+  box-shadow:0 10px 24px rgba(17,101,225,.23);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+
+#app #theoryDashboard .theory-dashboard-head a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 15px 30px rgba(17,101,225,.29);
+}
+
+#app #theoryDashboard .theory-dashboard-grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+
+#app #theoryDashboard .theory-summary-card{
+  position:relative;
+  display:flex;
+  min-width:0;
+  min-height:118px;
+  align-items:center;
+  gap:16px;
+  overflow:hidden;
+  padding:19px 20px;
+  border:1px solid #d6e5f3;
+  border-radius:19px;
+  background:rgba(255,255,255,.92);
+  color:inherit;
+  text-align:left;
+  font:inherit;
+  cursor:pointer;
+  box-shadow:0 9px 24px rgba(29,76,122,.07),inset 0 1px 0 rgba(255,255,255,.96);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+
+#app #theoryDashboard .theory-summary-card::after{
+  content:"";
+  position:absolute;
+  right:48px;
+  bottom:-18px;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:rgba(62,139,238,.06);
+  pointer-events:none;
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(2){
+  background:linear-gradient(135deg,#fff 0%,#fbf8ff 100%);
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(2)::after{background:rgba(123,74,222,.07)}
+
+#app #theoryDashboard .theory-summary-card:nth-child(3){
+  background:linear-gradient(135deg,#fff 0%,#f4fdf9 100%);
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(3)::after{background:rgba(9,150,99,.07)}
+
+#app #theoryDashboard .theory-summary-card:hover{
+  transform:translateY(-3px);
+  border-color:#a8caeb;
+  box-shadow:0 17px 34px rgba(29,76,122,.13),inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+#app #theoryDashboard .theory-summary-card>span{
+  position:relative;
+  z-index:2;
+  display:grid;
+  width:62px;
+  height:62px;
+  min-width:62px;
+  place-items:center;
+  border-radius:18px;
+  background:linear-gradient(145deg,#e8f4ff,#d7eaff);
+  color:#0e67d8;
+  font-size:25px;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 #fff,0 7px 18px rgba(24,103,201,.08);
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(2)>span{
+  background:linear-gradient(145deg,#f2eaff,#e8dcff);
+  color:#6c29dc;
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(3)>span{
+  background:linear-gradient(145deg,#e3f9ef,#d1f2e2);
+  color:#07895e;
+}
+
+#app #theoryDashboard .theory-summary-card>div{
+  position:relative;
+  z-index:2;
+  display:grid;
+  min-width:0;
+  gap:3px;
+}
+
+#app #theoryDashboard .theory-summary-card small{
+  color:#496b8e;
+  font-size:11px;
+  font-weight:800;
+}
+
+#app #theoryDashboard .theory-summary-card strong{
+  color:#071f4e;
+  font-size:30px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-.03em;
+}
+
+#app #theoryDashboard .theory-summary-card em{
+  color:#1e78cd;
+  font-size:10px;
+  font-style:normal;
+  font-weight:700;
+}
+
+#app #theoryDashboard .theory-summary-card>b{
+  position:relative;
+  z-index:2;
+  display:grid;
+  width:38px;
+  height:38px;
+  min-width:38px;
+  place-items:center;
+  margin-left:auto;
+  border:1px solid #d4e6f7;
+  border-radius:50%;
+  background:rgba(255,255,255,.86);
+  color:#2479d5;
+  font-size:22px;
+  font-weight:800;
+  box-shadow:0 5px 14px rgba(34,93,148,.07);
+}
+
+#app #theoryDashboard .theory-summary-card:nth-child(2)>b{color:#7131d4;border-color:#e3d8f8}
+#app #theoryDashboard .theory-summary-card:nth-child(3)>b{color:#07895e;border-color:#cee9dc}
+
+/* Attendance */
+#app #attendanceDashboard{
+  background:
+    radial-gradient(circle at 96% 0,rgba(55,204,171,.13) 0,rgba(55,204,171,0) 30%),
+    linear-gradient(135deg,#fbfeff 0%,#f6fbff 52%,#f2fcf9 100%);
+}
+
+#app #attendanceDashboard .attendance-dashboard-head>div:last-child{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+#app #attendanceDashboard .attendance-dashboard-head button{
+  min-height:45px;
+  padding:0 17px;
+  border:1px solid #b9dfd1;
+  border-radius:13px;
+  background:linear-gradient(135deg,#f7fffc,#effbf6);
+  color:#08775a;
+  font-size:11px;
+  font-weight:850;
+  line-height:1;
+  box-shadow:0 8px 18px rgba(10,129,91,.07);
+  transition:transform .18s ease,box-shadow .18s ease;
+}
+
+#app #attendanceDashboard .attendance-dashboard-head button:last-child{
+  border-color:#0c70eb;
+  background:linear-gradient(135deg,#1884ff,#0860e1);
+  color:#fff;
+  box-shadow:0 10px 24px rgba(17,101,225,.23);
+}
+
+#app #attendanceDashboard .attendance-dashboard-head button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 14px 28px rgba(25,81,135,.14);
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article{
+  position:relative;
+  display:flex;
+  min-width:0;
+  min-height:108px;
+  align-items:center;
+  gap:14px;
+  overflow:hidden;
+  padding:18px;
+  border:1px solid #d5e6ec;
+  border-radius:18px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 8px 22px rgba(28,78,122,.065),inset 0 1px 0 rgba(255,255,255,.96);
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(1){background:linear-gradient(135deg,#fff 0%,#f1fcf7 100%)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(2){background:linear-gradient(135deg,#fff 0%,#f1f8ff 100%)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(3){background:linear-gradient(135deg,#fff 0%,#faf6ff 100%)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(4){background:linear-gradient(135deg,#fff 0%,#fff5f2 100%)}
+
+#app #attendanceDashboard .attendance-dashboard-grid article::after{
+  content:"";
+  position:absolute;
+  right:-24px;
+  bottom:-36px;
+  width:105px;
+  height:105px;
+  border-radius:50%;
+  background:rgba(49,157,226,.045);
+  pointer-events:none;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article:hover{
+  transform:translateY(-3px);
+  border-color:#accfe3;
+  box-shadow:0 16px 32px rgba(28,78,122,.12),inset 0 1px 0 rgba(255,255,255,.96);
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article>span{
+  position:relative;
+  z-index:2;
+  display:grid;
+  width:56px;
+  height:56px;
+  min-width:56px;
+  place-items:center;
+  border-radius:17px;
+  background:linear-gradient(145deg,#e3f9ef,#d5f2e4);
+  color:#07875d;
+  font-size:23px;
+  font-weight:950;
+  box-shadow:inset 0 1px 0 #fff;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(2)>span{
+  background:linear-gradient(145deg,#e8f4ff,#d9ebff);
+  color:#1167ce;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(3)>span{
+  background:linear-gradient(145deg,#f3eaff,#e9ddff);
+  color:#6a2bd1;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(4)>span{
+  background:linear-gradient(145deg,#ffece6,#ffddd4);
+  color:#cf3f2f;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid article>div{
+  position:relative;
+  z-index:2;
+  display:grid;
+  min-width:0;
+  gap:3px;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid small{
+  color:#4d6d8e;
+  font-size:10px;
+  font-weight:800;
+  line-height:1.25;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid strong{
+  color:#071f4e;
+  font-size:26px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:-.025em;
+}
+
+#app #attendanceDashboard .attendance-dashboard-grid em{
+  color:#758ca4;
+  font-size:9px;
+  font-style:normal;
+  font-weight:600;
+  line-height:1.35;
+}
+
+/* Existing database notices stay intact; only their presentation changes. */
+#app #theoryDashboard .theory-database-notice,
+#app #attendanceDashboard .attendance-database-notice{
+  position:relative;
+  z-index:3;
+  margin:14px 0 0;
+  padding:11px 13px;
+  border:1px solid #f2d4a8;
+  border-radius:11px;
+  background:#fff9ed;
+  color:#885817;
+  font-size:9px;
+  line-height:1.45;
+}
+
+/* Responsive behavior without changing any data or actions. */
+@media(max-width:1120px){
+  #app #financeDashboard .finance-grid{grid-template-columns:1fr 1fr}
+  #app #financeDashboard .finance-card:last-child{grid-column:1/-1}
+  #app #attendanceDashboard .attendance-dashboard-grid{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:900px){
+  #app #financeDashboard,
+  #app #theoryDashboard,
+  #app #attendanceDashboard{padding:22px;border-radius:24px}
+
+  #app #financeDashboard .finance-grid,
+  #app #theoryDashboard .theory-dashboard-grid{grid-template-columns:1fr}
+  #app #financeDashboard .finance-card:last-child{grid-column:auto}
+
+  #app #financeDashboard .finance-dashboard-head,
+  #app #theoryDashboard .theory-dashboard-head,
+  #app #attendanceDashboard .attendance-dashboard-head{align-items:flex-start;flex-direction:column}
+
+  #app #financeDashboard .finance-head-actions,
+  #app #attendanceDashboard .attendance-dashboard-head>div:last-child{justify-content:flex-start}
+}
+
+@media(max-width:620px){
+  #app #financeDashboard,
+  #app #theoryDashboard,
+  #app #attendanceDashboard{
+    margin:14px 0;
+    padding:17px;
+    border-radius:20px;
+    box-shadow:0 13px 34px rgba(29,77,124,.10),inset 0 1px 0 rgba(255,255,255,.9);
+  }
+
+  #app #financeDashboard h2,
+  #app #theoryDashboard .theory-dashboard-head h2,
+  #app #attendanceDashboard .attendance-dashboard-head h2{font-size:23px}
+
+  #app #financeDashboard .finance-head-actions,
+  #app #attendanceDashboard .attendance-dashboard-head>div:last-child{width:100%;display:grid;grid-template-columns:1fr}
+
+  #app #financeDashboard .finance-head-actions button,
+  #app #financeDashboard .finance-head-actions a,
+  #app #financeDashboard .finance-head-actions>span,
+  #app #theoryDashboard .theory-dashboard-head a,
+  #app #attendanceDashboard .attendance-dashboard-head button{width:100%;min-height:44px}
+
+  #app #financeDashboard .finance-card{
+    min-height:124px;
+    gap:13px;
+    padding:17px;
+    border-radius:17px;
+  }
+
+  #app #financeDashboard .finance-icon{width:54px;height:54px;min-width:54px;border-width:6px;font-size:21px}
+  #app #financeDashboard .finance-card>div{padding-right:42px}
+  #app #financeDashboard .finance-card strong{font-size:26px}
+  #app #financeDashboard .finance-card::after{right:12px;bottom:15px;transform:scale(.72);transform-origin:right bottom}
+
+  #app #theoryDashboard .theory-summary-card{min-height:105px;padding:15px;gap:12px;border-radius:17px}
+  #app #theoryDashboard .theory-summary-card>span{width:53px;height:53px;min-width:53px;border-radius:15px;font-size:22px}
+  #app #theoryDashboard .theory-summary-card strong{font-size:27px}
+  #app #theoryDashboard .theory-summary-card>b{width:34px;height:34px;min-width:34px}
+
+  #app #attendanceDashboard .attendance-dashboard-grid{grid-template-columns:1fr}
+  #app #attendanceDashboard .attendance-dashboard-grid article{min-height:96px;padding:15px;border-radius:16px}
+  #app #attendanceDashboard .attendance-dashboard-grid article>span{width:50px;height:50px;min-width:50px;border-radius:15px;font-size:21px}
+  #app #attendanceDashboard .attendance-dashboard-grid strong{font-size:24px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  #app #financeDashboard *,
+  #app #theoryDashboard *,
+  #app #attendanceDashboard *{transition:none!important}
+}
