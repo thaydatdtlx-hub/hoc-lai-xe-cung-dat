@@ -2,7 +2,7 @@
   const SUPABASE_ORIGIN="https://pkzxkvcncipfszeukpwu.supabase.co";
   const RPC_PREFIX=`${SUPABASE_ORIGIN}/rest/v1/rpc/`;
   const nativeFetch=window.fetch.bind(window);
-  const PROXY_TIMEOUT_MS=7000;
+  const PROXY_TIMEOUT_MS=3500;
   const DIRECT_TIMEOUT_MS=7000;
   const inflight=new Map();
 
@@ -25,6 +25,18 @@
   async function snapshot(response){
     const text=await response.text();
     return{status:response.status,statusText:response.statusText,headers:[...response.headers.entries()],text};
+  }
+
+  function shouldUseDirectFallback(status){
+    return status===401||status===403||status===404||status===405||status===408||status===425||status===429||status>=500;
+  }
+
+  async function directRpc(input,init,fn){
+    try{return await timedFetch(input,{...init,cache:"no-store"},DIRECT_TIMEOUT_MS)}
+    catch(error){
+      console.warn(`[rpc-preflight] direct ${fn} timed out.`,error);
+      return timeoutResponse();
+    }
   }
 
   function prefetchRpc(fn,body){
@@ -94,8 +106,8 @@
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({fn,body})
       },PROXY_TIMEOUT_MS);
-      if(proxy.status!==400){
-        if(fn==="app_login"&&proxy.ok){
+      if(proxy.ok){
+        if(fn==="app_login"){
           try{
             const payload=await proxy.clone().json();
             if(payload?.token)startAdminWarmup(payload.token);
@@ -103,20 +115,23 @@
         }
         return proxy;
       }
-      try{
-        const payload=await proxy.clone().json();
-        if(payload?.error!=="RPC not allowed")return proxy;
-      }catch{return proxy}
+
+      if(proxy.status===400){
+        try{
+          const payload=await proxy.clone().json();
+          if(payload?.error!=="RPC not allowed")return proxy;
+        }catch{return proxy}
+      }else if(!shouldUseDirectFallback(proxy.status)){
+        return proxy;
+      }
+
+      console.warn(`[rpc-preflight] same-origin ${fn} returned ${proxy.status}; using direct fallback.`);
     }catch(error){
       console.warn(`[rpc-preflight] same-origin ${fn} unavailable; using direct fallback.`,error);
     }
 
-    try{return await timedFetch(input,{...init,cache:"no-store"},DIRECT_TIMEOUT_MS)}
-    catch(error){
-      console.warn(`[rpc-preflight] direct ${fn} timed out.`,error);
-      return timeoutResponse();
-    }
+    return directRpc(input,init,fn);
   };
 
-  window.__HOCLAIXECUNGDAT_RPC_PREFLIGHT__={version:"20260901-3",active:true};
+  window.__HOCLAIXECUNGDAT_RPC_PREFLIGHT__={version:"20260909-2",active:true};
 })();
