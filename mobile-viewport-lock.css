@@ -1,5 +1,6 @@
 @import url('/login-premium-v16.css?v=1');
 @import url('/student-dashboard-refresh-v2.css?v=1');
+@import url('/admin-dashboard-premium-v1.css?v=1');
 
 /* Khóa tỷ lệ giao diện điện thoại, tránh tự phóng to/thu nhỏ khi nhập liệu */
 @media (max-width: 720px){
