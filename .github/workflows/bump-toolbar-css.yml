@@ -1,4 +1,4 @@
-name: Replace attendance UI
+name: Apply student dashboard redesign
 
 on:
   push:
@@ -17,91 +17,89 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Replace attendance interface
+      - name: Replace student hero and attendance UI
         shell: bash
         run: |
           python3 <<'PY'
           from pathlib import Path
           import re
 
-          html_path = Path('hoc-vien.html')
-          css_path = Path('student.css')
-          js_path = Path('student.js')
+          html_path=Path('hoc-vien.html')
+          css_path=Path('student.css')
+          js_path=Path('student.js')
+          html=html_path.read_text(encoding='utf-8')
+          css=css_path.read_text(encoding='utf-8')
+          js=js_path.read_text(encoding='utf-8')
 
-          html = html_path.read_text(encoding='utf-8')
-          new_section = '''<section id="studentAttendance" class="portal-section student-attendance-section attendance-v2" aria-labelledby="studentAttendanceHeading">
-            <div class="section-heading attendance-student-heading attendance-v2-heading">
-              <div>
-                <p>CHUYÊN CẦN CỦA TÔI</p>
-                <h2 id="studentAttendanceHeading">Điểm danh &amp; Giờ thực học</h2>
-                <small>Theo dõi tình trạng tham gia và thời lượng học thực tế của bạn.</small>
+          hero='''<section class="student-hero student-hero-v3">
+            <div class="student-profile-showcase">
+              <div class="student-hero-scenery" aria-hidden="true">
+                <svg viewBox="0 0 900 360" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="heroSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9f6ff"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+                    <linearGradient id="heroRoad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dcecff"/><stop offset="1" stop-color="#a9d4ff"/></linearGradient>
+                  </defs>
+                  <path d="M420 0H900V360H330c170-62 268-124 292-185C645 115 576 55 420 0Z" fill="url(#heroSky)"/>
+                  <g fill="#b9daf4" opacity=".38"><rect x="600" y="126" width="24" height="91" rx="3"/><rect x="630" y="94" width="36" height="123" rx="3"/><rect x="674" y="118" width="28" height="99" rx="3"/><rect x="710" y="76" width="43" height="141" rx="3"/><rect x="762" y="108" width="27" height="109" rx="3"/><rect x="797" y="89" width="52" height="128" rx="3"/></g>
+                  <path d="M436 360c120-80 227-121 464-141v141H436Z" fill="url(#heroRoad)" opacity=".8"/>
+                  <path d="M510 354c83-54 168-85 318-110" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-dasharray="36 27" opacity=".8"/>
+                  <g transform="translate(703 225)" opacity=".82"><path d="M18 50h118c10 0 18 8 18 18v16H0V68c0-10 8-18 18-18Z" fill="#fff" stroke="#75b3ec" stroke-width="3"/><path d="M31 50 49 20h66l20 30" fill="#eaf6ff" stroke="#75b3ec" stroke-width="3"/><path d="M54 24h53l15 25H39Z" fill="#bfe1fb"/><circle cx="30" cy="84" r="13" fill="#315e83"/><circle cx="126" cy="84" r="13" fill="#315e83"/><path d="M17 63h20M117 63h20" stroke="#3f8ed3" stroke-width="5" stroke-linecap="round"/></g>
+                </svg>
               </div>
-              <span id="studentAttendanceRate">0% chuyên cần</span>
+              <div class="student-profile-content">
+                <div class="student-photo-wrap student-photo-wrap-v3"><img id="studentPhoto" class="hidden" alt="Ảnh học viên"><span id="studentPhotoPlaceholder">HV</span><i aria-hidden="true">✓</i></div>
+                <div class="student-heading student-heading-v3">
+                  <p><span aria-hidden="true">▣</span> HỒ SƠ ĐÀO TẠO CÁ NHÂN</p>
+                  <h1 id="studentName">Học viên</h1>
+                  <div class="student-profile-facts">
+                    <span class="student-fact"><i aria-hidden="true">◎</i><small>Mã học viên</small><strong id="studentCode">Chưa có mã</strong></span>
+                    <span class="student-fact fact-course"><i aria-hidden="true">◆</i><small>Khóa học</small><strong id="studentCourse">Chưa có khóa</strong></span>
+                    <span class="student-fact fact-license"><i aria-hidden="true">▰</i><small>Hạng giấy phép</small><strong id="studentLicense">Chưa có hạng</strong></span>
+                  </div>
+                  <div class="student-hero-quote"><b>“</b><span>Chúc bạn luôn vững tay lái, tự tin trên mọi hành trình!</span></div>
+                </div>
+              </div>
+              <div class="student-hero-motto" aria-hidden="true"><b>HỌC AN TOÀN</b><span>•</span><b>LÁI VỮNG VÀNG</b><span>•</span><b>KIẾN TẠO TƯƠNG LAI</b></div>
             </div>
-            <div class="student-attendance-metrics attendance-v2-metrics">
-              <article class="attendance-metric-card metric-sessions">
-                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
-                <div><small>Tổng buổi</small><strong id="studentAttendanceSessions">0</strong></div>
-              </article>
-              <article class="attendance-metric-card metric-present">
-                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg></span>
-                <div><small>Có mặt</small><strong id="studentAttendancePresent">0</strong></div>
-              </article>
-              <article class="attendance-metric-card metric-hours">
-                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg></span>
-                <div><small>Giờ thực học</small><strong id="studentAttendanceHours">0 giờ</strong></div>
-              </article>
-              <article class="attendance-metric-card metric-absence">
-                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M14 16a5 5 0 0 1 7 4"/></svg></span>
-                <div><small>Vắng / Có phép</small><strong id="studentAttendanceAbsent">0 / 0</strong></div>
-              </article>
+            <div class="student-hero-actions student-hero-actions-v3">
+              <a class="schedule-cta hero-action-card hero-action-schedule" href="/lich-dao-tao.html"><span class="hero-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h3M13 14h3"/></svg></span><div><strong>Xem lịch đào tạo</strong><small>Lịch học và lịch thi của tôi</small></div><b class="hero-action-arrow">→</b></a>
+              <a class="schedule-cta theory-cta hero-action-card hero-action-theory" href="/600-cau-hoi.html"><span class="hero-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22V5.5ZM20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22V5.5Z"/></svg></span><div><strong>Học lý thuyết</strong><small>Ôn tập và thi thử A1 · A · B · C1</small></div><b class="hero-action-arrow">→</b></a>
+              <a id="studentDrivingRefreshCta" class="schedule-cta driving-refresh-cta student-refresh-access is-locked hero-action-card hero-action-refresh" href="/bo-tuc-tay-lai.html#tinh-chi-phi" aria-disabled="true"><span class="hero-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M4.5 10h5l2.5 2M19.5 10h-5L12 12M12 14v6"/></svg></span><div><strong>Đăng ký bổ túc tay lái</strong><small id="studentDrivingRefreshStatus">Tính năng mở khi Admin ghi nhận đã nhận bằng lái</small></div><b class="hero-action-arrow">→</b></a>
             </div>
-            <div class="attendance-history-heading">
-              <h3>Lịch sử điểm danh</h3>
-              <span id="studentAttendanceRecordCount">Hiển thị 0 bản ghi</span>
-            </div>
-            <div id="studentAttendanceList" class="student-attendance-list attendance-v2-list"></div>
-            <p id="studentAttendanceNotice" class="student-payment-history-notice hidden">Dữ liệu điểm danh đang được cập nhật.</p>
           </section>'''
 
-          pattern = r'<section id="studentAttendance" class="portal-section student-attendance-section" aria-labelledby="studentAttendanceHeading">.*?</section>'
-          html, count = re.subn(pattern, new_section, html, count=1, flags=re.S)
-          if count != 1:
-              raise SystemExit(f'Không tìm thấy đúng 1 giao diện điểm danh cũ (found={count})')
-          html = re.sub(r'href="/student\.css(?:\?[^\"]*)?"', 'href="/student.css?v=20260909-attendance-v2"', html, count=1)
-          html = re.sub(r'src="/student\.js(?:\?[^\"]*)?"', 'src="/student.js?v=20260909-attendance-v2"', html, count=1)
-          html_path.write_text(html, encoding='utf-8')
+          html,n=re.subn(r'<section class="student-hero">.*?</section>',hero,html,count=1,flags=re.S)
+          if n!=1 and 'student-hero-v3' not in html:
+              raise SystemExit(f'Không tìm thấy giao diện hồ sơ cũ (found={n})')
 
-          css = css_path.read_text(encoding='utf-8')
-          marker = '/* Bước 4: lịch sử điểm danh của học viên */'
-          start = css.find(marker)
-          if start < 0:
-              raise SystemExit('Không tìm thấy CSS điểm danh cũ')
-          end_marker = '@media(max-width:620px){.student-attendance-metrics{grid-template-columns:1fr 1fr}.student-attendance-item{grid-template-columns:1fr auto}.student-attendance-item>div{grid-column:1}.student-attendance-item>b{grid-column:2;grid-row:1/3}}'
-          end_at = css.find(end_marker, start)
-          if end_at < 0:
-              raise SystemExit('Không xác định được cuối CSS điểm danh cũ')
-          end = end_at + len(end_marker)
+          hero_css=r'''.student-hero{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(310px,.85fr);gap:16px;padding:13px;border:1px solid #d5e7f6;border-radius:26px;background:linear-gradient(135deg,#f8fcff,#edf7ff);box-shadow:0 18px 46px #164f7c18;color:#16395f}.student-profile-showcase{position:relative;min-height:315px;overflow:hidden;border:1px solid #d6e9f8;border-radius:21px;background:linear-gradient(135deg,#eff8ff 0%,#fff 50%,#eaf6ff 100%);isolation:isolate}.student-profile-showcase:before{content:"";position:absolute;left:-90px;top:-105px;width:280px;height:280px;border:40px solid #74b6f430;border-radius:50%;z-index:-1}.student-profile-showcase:after{content:"";position:absolute;left:-10%;bottom:-88px;width:62%;height:155px;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#9ed0ff70,#5eacf140);transform:rotate(3deg);z-index:-1}.student-hero-scenery{position:absolute;inset:0;z-index:-2;pointer-events:none}.student-hero-scenery svg{display:block;width:100%;height:100%}.student-profile-content{position:relative;z-index:2;display:flex;align-items:center;gap:27px;min-height:275px;padding:30px 34px 46px}.student-photo-wrap{position:relative;display:grid;width:170px;height:205px;overflow:visible;place-items:center;flex:0 0 auto;border:7px solid #fff;border-radius:28px;background:#eef7ff;color:#1974cb;font-size:27px;font-weight:950;box-shadow:0 17px 36px #185b8f24}.student-photo-wrap img{width:100%;height:100%;object-fit:cover;border-radius:20px}.student-photo-wrap>span{display:grid;width:100%;height:100%;place-items:center;border-radius:20px;background:linear-gradient(145deg,#e5f3ff,#fff)}.student-photo-wrap>i{position:absolute;right:-13px;bottom:-13px;display:grid;width:48px;height:48px;place-items:center;border:5px solid #fff;border-radius:50%;background:#2f83e8;color:#fff;font-size:17px;font-style:normal;box-shadow:0 7px 18px #1f6fb53b}.student-heading{min-width:0;flex:1}.student-heading p{display:flex;align-items:center;gap:8px;margin:0 0 11px;color:#1979db;font-size:10px;font-weight:950;letter-spacing:.13em}.student-heading p span{font-size:17px}.student-heading h1{max-width:680px;margin:0 0 18px;color:#0d2d55;font-size:clamp(29px,3.2vw,49px);line-height:1.04;letter-spacing:-.035em}.student-profile-facts{display:flex;flex-wrap:wrap;gap:9px}.student-fact{display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;min-width:145px;gap:1px 9px;padding:10px 13px;border:1px solid #d8e9f7;border-radius:15px;background:#ffffffd9;box-shadow:0 6px 17px #1c5a8d0b}.student-fact>i{display:grid;width:36px;height:36px;grid-row:1/3;place-items:center;border-radius:11px;background:#e7f2ff;color:#2077d4;font-size:16px;font-style:normal;font-weight:950}.student-fact small{align-self:end;color:#778ba0;font-size:8px;font-weight:800}.student-fact strong{align-self:start;color:#183f68;font-size:12px;white-space:nowrap}.student-fact.fact-course>i{background:#ece8ff;color:#6b53d4}.student-fact.fact-license>i{background:#ddf7ec;color:#0b9270}.student-hero-quote{display:flex;align-items:center;gap:9px;margin-top:16px;color:#3f6282;font-size:10px;font-style:italic}.student-hero-quote b{color:#91c8ff;font-family:Georgia,serif;font-size:38px;line-height:.5}.student-hero-motto{position:absolute;left:34px;bottom:16px;display:flex;align-items:center;gap:10px;color:#4280bb;font-size:7px;font-weight:900;letter-spacing:.14em}.student-hero-motto span{color:#93c7f5}.student-hero-actions{display:grid;grid-template-columns:1fr;gap:12px}.schedule-cta{display:flex;min-width:0;align-items:center;gap:14px;padding:18px 16px;border:1px solid #dce9f6;border-radius:21px;background:#fff;color:#173f68;text-decoration:none;box-shadow:0 9px 24px #1a557f0e;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.schedule-cta:hover{transform:translateY(-2px);box-shadow:0 15px 31px #1a557f1b}.schedule-cta>span.hero-action-icon{display:grid;width:58px;height:58px;place-items:center;flex:0 0 auto;border-radius:18px;background:#e7efff;color:#5a57df}.hero-action-icon svg{width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.hero-action-theory{border-color:#cfede3;background:linear-gradient(135deg,#fff,#f1fffa)}.hero-action-theory>span.hero-action-icon{background:#dff7ef;color:#078f75}.hero-action-theory .hero-action-icon svg{fill:currentColor;stroke:none}.hero-action-refresh{border-color:#eddcbd;background:linear-gradient(135deg,#fff,#fff9ef);color:#78501c}.hero-action-refresh>span.hero-action-icon{background:#fff0d4;color:#9b6115}.schedule-cta div{display:grid;min-width:0;gap:4px;flex:1}.schedule-cta strong{color:inherit;font-size:14px;line-height:1.2}.schedule-cta small{overflow:hidden;color:#71859a;font-size:9px;font-weight:700;line-height:1.4;text-overflow:ellipsis}.hero-action-arrow{display:grid;width:38px;height:38px;place-items:center;flex:0 0 auto;border-radius:50%;background:#edf5ff;color:#2078d2;font-size:20px}.hero-action-theory .hero-action-arrow{background:#e3f7ef;color:#078f75}.hero-action-refresh .hero-action-arrow{background:#fff0d7;color:#8e5a16}.student-refresh-access.is-locked{cursor:not-allowed;filter:saturate(.55);opacity:.72}.student-refresh-access.is-locked .hero-action-arrow{color:#8a969f}.student-refresh-access[aria-disabled="true"]{pointer-events:auto}
+@media(max-width:1050px){.student-hero{grid-template-columns:1fr}.student-hero-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.schedule-cta{padding:14px}.schedule-cta>span.hero-action-icon{width:46px;height:46px;border-radius:14px}.hero-action-icon svg{width:23px;height:23px}.hero-action-arrow{display:none}}
+@media(max-width:760px){.student-profile-content{align-items:flex-start;gap:18px;padding:23px 21px 52px}.student-photo-wrap{width:116px;height:142px;border-width:5px;border-radius:22px}.student-photo-wrap img,.student-photo-wrap>span{border-radius:16px}.student-photo-wrap>i{right:-9px;bottom:-9px;width:38px;height:38px;border-width:4px}.student-heading h1{font-size:30px}.student-profile-facts{display:grid;grid-template-columns:1fr 1fr}.student-fact{min-width:0}.student-fact:nth-child(3){grid-column:1/-1}.student-hero-actions{grid-template-columns:1fr}.hero-action-arrow{display:grid}}
+@media(max-width:520px){.student-hero{padding:9px;border-radius:20px}.student-profile-showcase{min-height:0;border-radius:17px}.student-profile-content{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:18px 15px 58px}.student-photo-wrap{width:92px;height:116px;border-radius:18px}.student-photo-wrap img,.student-photo-wrap>span{border-radius:13px}.student-heading p{font-size:7px;letter-spacing:.08em}.student-heading h1{margin-bottom:12px;font-size:23px}.student-profile-facts{grid-column:1/-1;grid-template-columns:1fr}.student-fact:nth-child(3){grid-column:auto}.student-hero-quote{grid-column:1/-1;margin-top:8px;font-size:8px}.student-hero-motto{left:15px;bottom:13px;gap:6px;font-size:6px}.schedule-cta{border-radius:16px}.schedule-cta strong{font-size:12px}.schedule-cta>span.hero-action-icon{width:44px;height:44px}.hero-action-arrow{width:32px;height:32px}}
+'''
+          css,n=re.subn(r'\.student-hero\{.*?(?=\.theory-account-section\{)',hero_css,css,count=1,flags=re.S)
+          if n!=1:
+              raise SystemExit(f'Không tìm thấy CSS hồ sơ cũ (found={n})')
 
-          new_css = r'''/* Bước 4: giao diện điểm danh học viên v2 */
-.student-attendance-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#ffffff 0%,#f3fffa 100%);border-color:#d8ebe5;box-shadow:0 14px 38px #1f6f5610}.student-attendance-section:before{content:"";position:absolute;right:-70px;top:-95px;width:270px;height:270px;border-radius:50%;background:radial-gradient(circle,#dff8ee 0,#effcf7 45%,transparent 70%);pointer-events:none}.attendance-v2-heading{position:relative;z-index:1;align-items:flex-start;margin-bottom:18px}.attendance-v2-heading>div{display:grid;gap:2px}.attendance-v2-heading>div>small{margin-top:4px;color:#7a8fa5;font-size:9px;font-weight:700}.attendance-v2-heading>span{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid #c7ebdd;border-radius:999px;background:#e5f8ef;color:#087759;font-size:9px;font-weight:900;box-shadow:0 5px 14px #11825c10}.attendance-v2-heading>span:before{content:"✓";display:grid;width:22px;height:22px;place-items:center;border-radius:50%;background:#12a976;color:#fff;font-size:12px;font-weight:950}.attendance-v2-metrics{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:19px}.attendance-v2-metrics .attendance-metric-card{display:flex;min-width:0;align-items:center;gap:12px;padding:15px 16px;border:1px solid #dce8ed;border-radius:16px;background:#fff;box-shadow:0 7px 20px #24557e09}.attendance-metric-card>div{display:grid;min-width:0;gap:3px}.attendance-metric-card small{color:#74899d;font-size:8px;font-weight:850}.attendance-metric-card strong{overflow:hidden;color:#153f69;font-size:19px;line-height:1.15;text-overflow:ellipsis;white-space:nowrap}.attendance-metric-icon{display:grid;width:46px;height:46px;place-items:center;flex:0 0 auto;border-radius:14px;background:#e9f3ff;color:#1976d2}.attendance-metric-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.metric-present .attendance-metric-icon{background:#e1f8ee;color:#0a9a6a}.metric-hours .attendance-metric-icon{background:#eaf4ff;color:#1778da}.metric-absence .attendance-metric-icon{background:#f1f4f8;color:#6f8195}.attendance-history-heading{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 10px;padding:0 2px}.attendance-history-heading h3{margin:0;color:#173e68;font-size:13px}.attendance-history-heading span{color:#75899d;font-size:8px;font-weight:750}.attendance-v2-list{position:relative;z-index:1;display:grid;gap:9px}.student-attendance-item{display:grid;grid-template-columns:minmax(145px,.65fr) minmax(0,2fr) minmax(115px,.55fr);align-items:center;gap:16px;padding:14px 16px;border:1px solid #dce8e5;border-left:5px solid #16ad7b;border-radius:15px;background:#fff;box-shadow:0 6px 18px #24557e07}.student-attendance-item.status-absent{border-left-color:#e06248}.student-attendance-item.status-excused{border-left-color:#d99a28}.student-attendance-date{display:grid;gap:3px;padding-right:16px;border-right:1px solid #e3ebf0}.student-attendance-date b{color:#163f69;font-size:11px}.student-attendance-date small{color:#788da1;font-size:8px}.student-attendance-item>div{display:grid;min-width:0;gap:4px}.student-attendance-item>div>strong{display:inline-flex;width:max-content;max-width:100%;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#e4f8ef;color:#087858;font-size:8px;font-weight:900}.student-attendance-item>div>strong:before{content:"✓";display:grid;width:16px;height:16px;place-items:center;border-radius:50%;background:#11a979;color:#fff;font-size:9px}.student-attendance-item.status-absent>div>strong{background:#fff0eb;color:#b84e34}.student-attendance-item.status-absent>div>strong:before{content:"×";background:#df6247}.student-attendance-item.status-excused>div>strong{background:#fff5df;color:#93610f}.student-attendance-item.status-excused>div>strong:before{content:"!";background:#d89a29}.student-attendance-item>div small{color:#71879a;font-size:8px}.student-attendance-item>div em{overflow-wrap:anywhere;color:#5e7690;font-size:8px;font-style:normal;line-height:1.5}.student-attendance-item>b{display:grid;gap:4px;padding-left:16px;border-left:1px solid #e3ebf0;color:#153f69;font-size:12px;text-align:right;white-space:nowrap}.student-attendance-item>b:before{content:"◷  Thời lượng";color:#7a8ea2;font-size:8px;font-weight:750}.student-attendance-empty{display:grid;min-height:130px;place-items:center;align-content:center;gap:5px;border:1px dashed #c9dfe0;border-radius:15px;background:#ffffffb8;color:#71879a;text-align:center}.student-attendance-empty span{font-size:27px}.student-attendance-empty strong{color:#315f82;font-size:11px}.student-attendance-empty small{font-size:8px}.student-attendance-section .student-payment-history-notice{position:relative;z-index:1}
-@media(max-width:900px){.attendance-v2-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.student-attendance-item{grid-template-columns:125px minmax(0,1fr) 105px;gap:12px}}
-@media(max-width:620px){.attendance-v2-heading{align-items:flex-start;flex-wrap:wrap}.attendance-v2-heading>span{margin-top:2px}.attendance-v2-metrics{grid-template-columns:1fr 1fr;gap:8px}.attendance-v2-metrics .attendance-metric-card{gap:9px;padding:12px}.attendance-metric-icon{width:39px;height:39px;border-radius:12px}.attendance-metric-icon svg{width:20px;height:20px}.attendance-metric-card strong{font-size:16px}.attendance-history-heading{align-items:flex-end}.student-attendance-item{grid-template-columns:1fr;padding:13px 14px;gap:10px}.student-attendance-date{padding-right:0;padding-bottom:9px;border-right:0;border-bottom:1px solid #e6edf1}.student-attendance-item>b{padding:9px 0 0;border-left:0;border-top:1px solid #e6edf1;text-align:left}.student-attendance-item>b:before{display:inline;margin-right:8px}}
-@media(max-width:390px){.attendance-v2-metrics{grid-template-columns:1fr}.attendance-v2-heading>span{width:max-content}.attendance-history-heading{display:grid;gap:3px}}'''
-          css = css[:start] + new_css + css[end:]
-          css_path.write_text(css, encoding='utf-8')
+          # Apply the previously approved attendance redesign too, if the old block is still present.
+          if 'attendance-v2' not in html:
+              attendance='''<section id="studentAttendance" class="portal-section student-attendance-section attendance-v2" aria-labelledby="studentAttendanceHeading"><div class="section-heading attendance-student-heading attendance-v2-heading"><div><p>CHUYÊN CẦN CỦA TÔI</p><h2 id="studentAttendanceHeading">Điểm danh &amp; Giờ thực học</h2><small>Theo dõi tình trạng tham gia và thời lượng học thực tế của bạn.</small></div><span id="studentAttendanceRate">0% chuyên cần</span></div><div class="student-attendance-metrics attendance-v2-metrics"><article><span>▣</span><div><small>Tổng buổi</small><strong id="studentAttendanceSessions">0</strong></div></article><article><span>✓</span><div><small>Có mặt</small><strong id="studentAttendancePresent">0</strong></div></article><article><span>◷</span><div><small>Giờ thực học</small><strong id="studentAttendanceHours">0 giờ</strong></div></article><article><span>◎</span><div><small>Vắng / Có phép</small><strong id="studentAttendanceAbsent">0 / 0</strong></div></article></div><div class="attendance-history-heading"><h3>Lịch sử điểm danh</h3><span id="studentAttendanceRecordCount">Hiển thị 0 bản ghi</span></div><div id="studentAttendanceList" class="student-attendance-list"></div><p id="studentAttendanceNotice" class="student-payment-history-notice hidden">Dữ liệu điểm danh đang được cập nhật.</p></section>'''
+              html,m=re.subn(r'<section id="studentAttendance" class="portal-section student-attendance-section" aria-labelledby="studentAttendanceHeading">.*?</section>',attendance,html,count=1,flags=re.S)
+              if m!=1: raise SystemExit(f'Không tìm thấy giao diện điểm danh cũ (found={m})')
 
-          js = js_path.read_text(encoding='utf-8')
-          needle = '  const summary=attendanceSummary(studentAttendance);\n'
-          insert = needle + '  const attendanceCountEl=$("studentAttendanceRecordCount");if(attendanceCountEl)attendanceCountEl.textContent=`Hiển thị ${studentAttendance.length} bản ghi`;\n'
+          html=re.sub(r'href="/student\.css(?:\?[^\"]*)?"','href="/student.css?v=20260909-dashboard-v3"',html,count=1)
+          html=re.sub(r'src="/student\.js(?:\?[^\"]*)?"','src="/student.js?v=20260909-dashboard-v3"',html,count=1)
+          html_path.write_text(html,encoding='utf-8')
+          css_path.write_text(css,encoding='utf-8')
+
           if 'studentAttendanceRecordCount' not in js:
-              if needle not in js:
-                  raise SystemExit('Không tìm thấy hàm renderStudentAttendance để cập nhật số bản ghi')
-              js = js.replace(needle, insert, 1)
-          js_path.write_text(js, encoding='utf-8')
+              needle='  const summary=attendanceSummary(studentAttendance);\n'
+              if needle in js:
+                  js=js.replace(needle,needle+'  const countEl=$("studentAttendanceRecordCount");if(countEl)countEl.textContent=`Hiển thị ${studentAttendance.length} bản ghi`;\n',1)
+          js_path.write_text(js,encoding='utf-8')
           PY
 
-      - name: Restore helper workflow and commit attendance UI
+      - name: Restore helper workflow and commit
         shell: bash
         run: |
           cat > .github/workflows/bump-toolbar-css.yml <<'YML'
@@ -143,5 +141,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add hoc-vien.html student.css student.js .github/workflows/bump-toolbar-css.yml
           git diff --cached --check
-          git commit -m "Xóa giao diện điểm danh cũ và thay bằng giao diện mới"
+          git commit -m "Xóa giao diện hồ sơ cũ và thay bằng giao diện mới"
           git push origin main
