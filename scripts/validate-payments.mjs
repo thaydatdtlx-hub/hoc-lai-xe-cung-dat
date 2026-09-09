@@ -14,30 +14,40 @@ if(paymentMethodLabel("bank_transfer")!=="Chuyển khoản")throw new Error("Sai
 if(receiptDate("2026-08-01")!=="01/08/2026")throw new Error("Sai định dạng ngày phiếu thu.");
 if(receiptMoney(5_000_000)!=="5.000.000 ₫")throw new Error("Sai định dạng số tiền phiếu thu.");
 const receipt=receiptStudentProfile(
-  {receipt_no:"PT-20260801-ABC123",student_id:"student-1",student_name:"Nguyễn Văn An",student_code:"HV-0001",amount:5_000_000,payment_date:"2026-08-01",payment_method:"bank_transfer"},
+  {receipt_no:"PT-20260801-ABC123",student_id:"student-1",student_name:"Nguyễn Văn An",student_code:"HV-0001",student_phone:"0984123456",amount:5_000_000,payment_date:"2026-08-01",payment_method:"bank_transfer",tuition_total:18_500_000,paid:8_500_000,note:"Thu học phí đợt 2",course:"Hạng B số tự động"},
   {date_of_birth:"2001-03-15",cccd:"079123456789",address:"An Phú Đông, Thành phố Hồ Chí Minh"}
 );
 const html=buildReceiptHtml(receipt);
-// Mẫu biên lai hiện tại dùng tiêu đề trang "Biên lai học phí" và nhãn hiển thị "BIÊN LAI CHO:".
-// Kiểm tra theo đúng markup đang dùng để tránh chặn production build bởi một chuỗi tiêu đề cũ không còn hiển thị.
-for(const required of ["<title>Biên lai học phí ","BIÊN LAI CHO:","PT-20260801-ABC123","5.000.000 ₫","Trần Quốc Đạt","Ngày sinh:","15/03/2001","Số CCCD:","079123456789","Địa chỉ:","An Phú Đông, Thành phố Hồ Chí Minh"]){
+for(const required of [
+  "<title>Biên lai học phí ",
+  "BIÊN LAI HỌC PHÍ",
+  "PHIẾU XÁC NHẬN THANH TOÁN HỌC PHÍ",
+  "PT-20260801-ABC123",
+  "5.000.000 ₫",
+  "HỌC LÁI XE CÙNG ĐẠT",
+  "0984811037",
+  "thaydat.dtlx@gmail.com",
+  "www.hoclaixecungdat.com",
+  "Nguyễn Văn An",
+  "HV-0001",
+  "15/03/2001",
+  "079123456789",
+  "An Phú Đông, Thành phố Hồ Chí Minh",
+  "Hạng B số tự động",
+  "Thu học phí đợt 2",
+  "Chuyển khoản",
+  "Người nộp tiền",
+  "Người thu tiền",
+  "Trần Quốc Đạt",
+  "@page{size:A5 landscape;margin:0}"
+]){
   if(!html.includes(required))throw new Error(`Biên lai học phí thiếu nội dung bắt buộc: ${required}`);
 }
-for(const required of [
-  '<figure class="transfer-qr">',
-  "Quét mã để chuyển khoản",
-  "/api/tuition-qr?",
-  "amount=5000000",
-  "addInfo=HP%20Van%20An%2001ABC123",
-  "Mã QR chuyển khoản học phí MB Bank"
-]){
-  if(!html.includes(required))throw new Error(`Biên lai chuyển khoản thiếu mã QR hoặc dữ liệu QR: ${required}`);
-}
-if(html.includes("Mã học viên:")||html.includes("HV-0001"))throw new Error("Biên lai học phí vẫn còn hiển thị mã học viên.");
-const cashHtml=buildReceiptHtml({...receipt,payment_method:"cash"});
-if(cashHtml.includes('<figure class="transfer-qr">')||cashHtml.includes("/api/tuition-qr?"))throw new Error("Biên lai tiền mặt không được hiển thị mã QR chuyển khoản.");
-const voidedHtml=buildReceiptHtml({...receipt,voided_at:"2026-08-02T00:00:00Z"});
-if(voidedHtml.includes('<figure class="transfer-qr">')||voidedHtml.includes("/api/tuition-qr?"))throw new Error("Phiếu thu đã hủy không được hiển thị mã QR chuyển khoản.");
+if(html.includes('<figure class="transfer-qr">')||html.includes("Quét mã để chuyển khoản"))throw new Error("Biên lai học phí mới không được hiển thị khu vực mã QR thanh toán.");
+if(html.includes("receipt-note")||html.includes("Vui lòng lưu biên lai để đối chiếu"))throw new Error("Biên lai học phí mới vẫn còn phần ghi chú cũ.");
+if(/<img[^>]+signature|chữ ký/i.test(html))throw new Error("Biên lai học phí không được nhúng sẵn chữ ký.");
+const voidedHtml=buildReceiptHtml({...receipt,voided_at:"2026-08-02T00:00:00Z",void_reason:"Nhập nhầm giao dịch"});
+if(!voidedHtml.includes("PHIẾU ĐÃ HỦY")||!voidedHtml.includes("Nhập nhầm giao dịch"))throw new Error("Phiếu thu đã hủy chưa hiển thị đúng trạng thái.");
 
 if(nextTuitionPaymentNumber(0)!==1||nextTuitionPaymentNumber(1)!==2||nextTuitionPaymentNumber(4)!==5)throw new Error("Sai số thứ tự lần đóng học phí.");
 if(tuitionTransferContent("Nguyễn Văn An",0)!=="Nguyễn Văn An HPLX lần 1")throw new Error("Sai nội dung chuyển khoản lần 1.");
@@ -135,4 +145,4 @@ const portal=readFileSync(new URL("../student.js",import.meta.url),"utf8");
 if(!admin.includes("openPaymentReceipt(item,student)"))throw new Error("Admin chưa truyền hồ sơ học viên vào biên lai.");
 if(!portal.includes("openPaymentReceipt(payment,student)"))throw new Error("Cổng học viên chưa truyền hồ sơ vào biên lai.");
 
-console.log("Học phí hợp lệ: QR cùng tên miền, popup và biên lai ổn định, cache PWA v51.");
+console.log("Học phí hợp lệ: popup QR vẫn ổn định, biên lai A5 mới đúng mẫu và không nhúng chữ ký.");
