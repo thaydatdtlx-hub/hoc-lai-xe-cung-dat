@@ -59,7 +59,7 @@ for(const required of [
   'removeLegacyAdminUi()',
   'professionalUiPromise=isAdminPortal()',
   'import("./platform-professional.js?v=20260825-1")',
-  'hoclaixecungdat_sw_refresh_v52',
+  'hoclaixecungdat_sw_refresh_v50',
   'HỌC LÁI XE CÙNG ĐẠT'
 ])if(!pwa.includes(required))throw new Error(`PWA chưa tích hợp kiến trúc giao diện mới: ${required}`);
 if(pwa.includes('import("./brand-wording-cleanup.js")'))throw new Error("PWA vẫn tải trình theo dõi thương hiệu toàn DOM cũ.");
