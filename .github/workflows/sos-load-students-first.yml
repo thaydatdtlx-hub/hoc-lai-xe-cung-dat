@@ -1,4 +1,4 @@
-name: Fix premium profile build
+name: SOS load students first
 
 on:
   push:
@@ -14,33 +14,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Restore canonical student stylesheet path
+      - name: Prioritize student data during admin boot
         shell: bash
         run: |
-          python3 -S <<'PY'
+          python - <<'PY'
           from pathlib import Path
-          p=Path('hoc-vien.html')
-          s=p.read_text(encoding='utf-8')
-          old='href="/student.css?v=20260909-hero-v3"'
-          if old not in s:
-              raise SystemExit('Không tìm thấy đường dẫn CSS cần sửa')
-          s=s.replace(old,'href="/student.css"',1)
-          p.write_text(s,encoding='utf-8')
+          path = Path('app.js')
+          text = path.read_text(encoding='utf-8')
+          old_boot = '    showApp();\n    if(me.role==="admin"){await loadUsers();await loadStudentAccounts();await loadPublicTheoryAccounts();await loadOperations();await loadPaymentFeature();await loadAttendanceFeature()}\n    await loadStudents();'
+          new_boot = '    showApp();\n    await loadStudents();\n    if(me.role==="admin"){\n      await Promise.allSettled([loadUsers(),loadStudentAccounts(),loadPublicTheoryAccounts(),loadOperations(),loadPaymentFeature(),loadAttendanceFeature()]);\n      renderStudents();\n    }'
+          if old_boot not in text:
+              raise SystemExit('Expected admin boot block not found; refusing unsafe patch')
+          text = text.replace(old_boot, new_boot, 1)
+          old_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
+          new_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    renderStudents();\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
+          if old_students not in text:
+              raise SystemExit('Expected student loading block not found; refusing unsafe patch')
+          text = text.replace(old_students, new_students, 1)
+          path.write_text(text, encoding='utf-8')
           PY
-
-      - name: Restore workflow and commit
-        shell: bash
+      - name: Validate JavaScript syntax
+        run: node --check app.js
+      - name: Commit fix
         run: |
-          GOOD=84a959399b9fd044eb8b6f4c7750646a60e0aa21
-          git checkout "$GOOD" -- .github/workflows/sos-load-students-first.yml
-          git rm -f .github/verify-premium-hero.txt || true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hoc-vien.html .github/workflows/sos-load-students-first.yml
-          git diff --cached --check
-          git commit -m "Hoàn tất giao diện hồ sơ học viên premium"
-          git pull --rebase origin main
-          git push origin main
+          git add app.js
+          git commit -m "Load student roster before admin modules"
+          git push
