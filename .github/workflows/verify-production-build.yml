@@ -1,94 +1,35 @@
-name: Apply premium student profile
+name: Verify production build
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          fetch-depth: 0
+          node-version: 22
+          cache: npm
 
-      - name: Replace old student hero with premium design
-        shell: bash
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Verify emergency login recovery is present
         run: |
-          python3 <<'PY'
-          from pathlib import Path
-          import re
-
-          p = Path('hoc-vien.html')
-          s = p.read_text(encoding='utf-8')
-
-          hero = r'''<section class="student-hero student-hero-premium">
-            <div class="student-profile-premium">
-              <div class="student-profile-art" aria-hidden="true">
-                <svg viewBox="0 0 900 360" preserveAspectRatio="none">
-                  <defs>
-                    <linearGradient id="premiumSky" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#edf7ff"/><stop offset=".58" stop-color="#ffffff"/><stop offset="1" stop-color="#dff1ff"/></linearGradient>
-                    <linearGradient id="premiumRoad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#dbeeff"/><stop offset="1" stop-color="#8fc5f4"/></linearGradient>
-                  </defs>
-                  <rect width="900" height="360" fill="url(#premiumSky)"/>
-                  <circle cx="35" cy="18" r="145" fill="none" stroke="#79b8ef" stroke-width="34" opacity=".18"/>
-                  <g fill="#87bce7" opacity=".22"><rect x="600" y="132" width="22" height="86" rx="2"/><rect x="629" y="96" width="38" height="122" rx="2"/><rect x="675" y="119" width="28" height="99" rx="2"/><rect x="711" y="73" width="45" height="145" rx="2"/><rect x="765" y="107" width="27" height="111" rx="2"/><rect x="800" y="87" width="51" height="131" rx="2"/></g>
-                  <path d="M410 360c131-82 281-126 490-143v143H410Z" fill="url(#premiumRoad)" opacity=".72"/>
-                  <path d="M505 354c93-60 190-91 326-111" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-dasharray="34 26" opacity=".9"/>
-                  <g transform="translate(715 229) scale(.86)" opacity=".88"><path d="M18 50h118c10 0 18 8 18 18v16H0V68c0-10 8-18 18-18Z" fill="#fff" stroke="#6aa8df" stroke-width="3"/><path d="M31 50 49 20h66l20 30" fill="#eef8ff" stroke="#6aa8df" stroke-width="3"/><path d="M54 24h53l15 25H39Z" fill="#c7e7ff"/><circle cx="30" cy="84" r="13" fill="#315e83"/><circle cx="126" cy="84" r="13" fill="#315e83"/><path d="M17 63h20M117 63h20" stroke="#3f8ed3" stroke-width="5" stroke-linecap="round"/></g>
-                </svg>
-              </div>
-              <div class="student-profile-main">
-                <div class="student-photo-wrap premium-photo"><img id="studentPhoto" class="hidden" alt="Ảnh học viên"><span id="studentPhotoPlaceholder">HV</span><i aria-hidden="true">✓</i></div>
-                <div class="student-heading premium-heading">
-                  <p><span aria-hidden="true">▣</span> HỒ SƠ ĐÀO TẠO CÁ NHÂN</p>
-                  <h1 id="studentName">Học viên</h1>
-                  <div class="student-premium-facts">
-                    <span class="premium-fact"><i aria-hidden="true">◎</i><small>Mã học viên</small><strong id="studentCode">Chưa có mã</strong></span>
-                    <span class="premium-fact fact-course"><i aria-hidden="true">◆</i><small>Khóa học</small><strong id="studentCourse">Chưa có khóa</strong></span>
-                    <span class="premium-fact fact-license"><i aria-hidden="true">▰</i><small>Hạng giấy phép</small><strong id="studentLicense">Chưa có hạng</strong></span>
-                  </div>
-                  <div class="premium-quote"><b>“</b><span>Chúc bạn luôn vững tay lái, tự tin trên mọi hành trình!</span></div>
-                </div>
-              </div>
-              <div class="premium-motto" aria-hidden="true"><span></span><b>HỌC AN TOÀN</b><em>•</em><b>LÁI VỮNG VÀNG</b><em>•</em><b>KIẾN TẠO TƯƠNG LAI</b></div>
-            </div>
-            <div class="student-hero-actions premium-actions">
-              <a class="schedule-cta premium-action premium-schedule" href="/lich-dao-tao.html"><span class="premium-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18M8 14h3M13 14h3"/></svg></span><div><strong>Xem lịch đào tạo</strong><small>Lịch học và lịch thi của tôi</small></div><b>→</b></a>
-              <a class="schedule-cta theory-cta premium-action premium-theory" href="/600-cau-hoi.html"><span class="premium-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22V5.5ZM20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22V5.5Z"/></svg></span><div><strong>Học lý thuyết</strong><small>Ôn tập và thi thử A1 · A · B · C1</small></div><b>→</b></a>
-              <a id="studentDrivingRefreshCta" class="schedule-cta driving-refresh-cta student-refresh-access is-locked premium-action premium-refresh" href="/bo-tuc-tay-lai.html#tinh-chi-phi" aria-disabled="true"><span class="premium-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/><path d="M4.5 10h5l2.5 2M19.5 10h-5L12 12M12 14v6"/></svg></span><div><strong>Đăng ký bổ túc tay lái</strong><small id="studentDrivingRefreshStatus">Tính năng mở khi Admin ghi nhận đã nhận bằng lái</small></div><b>→</b></a>
-            </div>
-            <style id="studentPremiumHeroStyles">
-              .student-hero.student-hero-premium{display:grid!important;grid-template-columns:minmax(0,2.15fr) minmax(320px,.85fr)!important;gap:16px!important;padding:13px!important;border:1px solid #d5e7f6!important;border-radius:26px!important;background:linear-gradient(135deg,#f8fcff,#edf7ff)!important;box-shadow:0 18px 46px #164f7c18!important;color:#16395f!important;overflow:visible!important}
-              .student-profile-premium{position:relative;min-height:315px;overflow:hidden;border:1px solid #d6e9f8;border-radius:21px;background:#fff;isolation:isolate}.student-profile-art{position:absolute;inset:0;z-index:-1}.student-profile-art svg{display:block;width:100%;height:100%}
-              .student-profile-main{position:relative;z-index:2;display:flex;align-items:center;gap:28px;min-height:275px;padding:30px 34px 47px}.student-photo-wrap.premium-photo{position:relative!important;display:grid!important;width:168px!important;height:205px!important;overflow:visible!important;place-items:center!important;flex:0 0 auto!important;border:7px solid #fff!important;border-radius:28px!important;background:#eef7ff!important;color:#1974cb!important;font-size:27px!important;font-weight:950!important;box-shadow:0 17px 36px #185b8f24!important}.premium-photo img{width:100%!important;height:100%!important;object-fit:cover!important;border-radius:20px!important}.premium-photo>span{display:grid;width:100%;height:100%;place-items:center;border-radius:20px;background:linear-gradient(145deg,#e5f3ff,#fff)}.premium-photo>i{position:absolute;right:-13px;bottom:-13px;display:grid;width:48px;height:48px;place-items:center;border:5px solid #fff;border-radius:50%;background:#2f83e8;color:#fff;font-size:17px;font-style:normal;box-shadow:0 7px 18px #1f6fb53b}
-              .premium-heading{min-width:0;flex:1}.premium-heading p{display:flex!important;align-items:center;gap:8px;margin:0 0 11px!important;color:#1979db!important;font-size:10px!important;font-weight:950!important;letter-spacing:.13em!important}.premium-heading p span{font-size:17px}.premium-heading h1{max-width:680px;margin:0 0 18px!important;color:#0d2d55!important;font-size:clamp(29px,3.2vw,49px)!important;line-height:1.04!important;letter-spacing:-.035em!important}.student-premium-facts{display:flex;flex-wrap:wrap;gap:9px}.premium-fact{display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;min-width:145px;gap:1px 9px;padding:10px 13px;border:1px solid #d8e9f7;border-radius:15px;background:#ffffffdc;box-shadow:0 6px 17px #1c5a8d0b}.premium-fact>i{display:grid;width:36px;height:36px;grid-row:1/3;place-items:center;border-radius:11px;background:#e7f2ff;color:#2077d4;font-size:16px;font-style:normal;font-weight:950}.premium-fact small{align-self:end;color:#778ba0;font-size:8px;font-weight:800}.premium-fact strong{align-self:start;color:#183f68;font-size:12px;white-space:nowrap}.premium-fact.fact-course>i{background:#ece8ff;color:#6b53d4}.premium-fact.fact-license>i{background:#ddf7ec;color:#0b9270}.premium-quote{display:flex;align-items:center;gap:9px;margin-top:16px;color:#3f6282;font-size:10px;font-style:italic}.premium-quote b{color:#91c8ff;font-family:Georgia,serif;font-size:38px;line-height:.5}.premium-motto{position:absolute;left:34px;bottom:16px;z-index:2;display:flex;align-items:center;gap:9px;color:#4280bb;font-size:7px;font-weight:900;letter-spacing:.14em}.premium-motto>span{width:34px;height:4px;border-radius:99px;background:#2887e8}.premium-motto em{color:#93c7f5;font-style:normal}
-              .student-hero-premium .premium-actions{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;min-width:0!important}.student-hero-premium .premium-action{display:flex!important;min-width:0!important;align-items:center!important;gap:14px!important;padding:18px 16px!important;border:1px solid #dce9f6!important;border-radius:21px!important;background:#fff!important;color:#173f68!important;text-decoration:none!important;box-shadow:0 9px 24px #1a557f0e!important;transition:transform .18s ease,box-shadow .18s ease!important}.student-hero-premium .premium-action:hover{transform:translateY(-2px)!important;box-shadow:0 15px 31px #1a557f1b!important}.premium-action-icon{display:grid!important;width:58px!important;height:58px!important;place-items:center!important;flex:0 0 auto!important;border-radius:18px!important;background:#e9e7ff!important;color:#5b50de!important}.premium-action-icon svg{width:29px;height:29px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.premium-action>div{display:grid;min-width:0;gap:4px;flex:1}.premium-action strong{color:inherit!important;font-size:14px!important;line-height:1.2}.premium-action small{color:#71859a!important;font-size:9px!important;font-weight:700!important;line-height:1.4}.premium-action>b{display:grid;width:38px;height:38px;place-items:center;flex:0 0 auto;border-radius:50%;background:#edf5ff;color:#2078d2;font-size:20px}.student-hero-premium .premium-theory{border-color:#cfede3!important;background:linear-gradient(135deg,#fff,#f1fffa)!important}.premium-theory .premium-action-icon{background:#ddf7ed!important;color:#078f75!important}.premium-theory .premium-action-icon svg{fill:currentColor;stroke:none}.premium-theory>b{background:#e3f7ef!important;color:#078f75!important}.student-hero-premium .premium-refresh{border-color:#eddcbd!important;background:linear-gradient(135deg,#fff,#fff9ef)!important;color:#78501c!important}.premium-refresh .premium-action-icon{background:#fff0d4!important;color:#9b6115!important}.premium-refresh>b{background:#fff0d7!important;color:#8e5a16!important}.student-hero-premium .student-refresh-access.is-locked{cursor:not-allowed;filter:saturate(.55);opacity:.72}.student-hero-premium .student-refresh-access[aria-disabled="true"]{pointer-events:auto}
-              @media(max-width:1050px){.student-hero.student-hero-premium{grid-template-columns:1fr!important}.student-hero-premium .premium-actions{grid-template-columns:repeat(3,minmax(0,1fr))!important}.student-hero-premium .premium-action{padding:14px!important}.premium-action-icon{width:46px!important;height:46px!important;border-radius:14px!important}.premium-action-icon svg{width:23px;height:23px}.premium-action>b{display:none}}
-              @media(max-width:760px){.student-profile-main{align-items:flex-start;gap:18px;padding:23px 21px 52px}.student-photo-wrap.premium-photo{width:116px!important;height:142px!important;border-width:5px!important;border-radius:22px!important}.premium-photo img,.premium-photo>span{border-radius:16px!important}.premium-photo>i{right:-9px;bottom:-9px;width:38px;height:38px;border-width:4px}.premium-heading h1{font-size:30px!important}.student-premium-facts{display:grid;grid-template-columns:1fr 1fr}.premium-fact{min-width:0}.premium-fact:nth-child(3){grid-column:1/-1}.student-hero-premium .premium-actions{grid-template-columns:1fr!important}.premium-action>b{display:grid}}
-              @media(max-width:520px){.student-hero.student-hero-premium{padding:9px!important;border-radius:20px!important}.student-profile-premium{min-height:0;border-radius:17px}.student-profile-main{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:18px 15px 59px}.student-photo-wrap.premium-photo{width:92px!important;height:116px!important;border-radius:18px!important}.premium-photo img,.premium-photo>span{border-radius:13px!important}.premium-heading p{font-size:7px!important;letter-spacing:.08em!important}.premium-heading h1{margin-bottom:12px!important;font-size:23px!important}.student-premium-facts{grid-column:1/-1;grid-template-columns:1fr}.premium-fact:nth-child(3){grid-column:auto}.premium-quote{grid-column:1/-1;margin-top:8px;font-size:8px}.premium-motto{left:15px;bottom:13px;gap:6px;font-size:6px}.premium-motto>span{width:22px}.student-hero-premium .premium-action{border-radius:16px!important}.premium-action strong{font-size:12px!important}.premium-action-icon{width:44px!important;height:44px!important}.premium-action>b{width:32px;height:32px}}
-            </style>
-          </section>'''
-
-          pattern = r'<section class="student-hero">.*?</section>'
-          s, n = re.subn(pattern, lambda m: hero, s, count=1, flags=re.S)
-          if n != 1:
-              raise SystemExit(f'Expected one old student hero, found {n}')
-          p.write_text(s, encoding='utf-8')
-          PY
-
-      - name: Restore workflows and commit website change
-        shell: bash
-        run: |
-          git checkout HEAD~1 -- .github/workflows/verify-production-build.yml
-          git checkout 84a959399b9fd044eb8b6f4c7750646a60e0aa21 -- .github/workflows/apply-toolbar-icons-v2.yml .github/workflows/bump-toolbar-css.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hoc-vien.html .github/workflows/verify-production-build.yml .github/workflows/apply-toolbar-icons-v2.yml .github/workflows/bump-toolbar-css.yml
-          git diff --cached --check
-          git commit -m "Xóa giao diện hồ sơ cũ và thay bằng giao diện mới"
-          git pull --rebase origin main
-          git push origin main
+          grep -F '/rpc-preflight.js?v=20260902-1' dist/index.html
+          grep -F 'PROXY_MARKER="same-origin-v4"' dist/rpc-preflight.js
+          grep -F 'version:"20260902-1"' dist/rpc-preflight.js

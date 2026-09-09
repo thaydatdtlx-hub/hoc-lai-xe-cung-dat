@@ -1,4 +1,4 @@
-name: Apply premium student profile
+name: SOS load students first
 
 on:
   push:
@@ -9,75 +9,36 @@ permissions:
   contents: write
 
 jobs:
-  apply:
+  fix:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Replace current profile interface
+      - name: Prioritize student data during admin boot
         shell: bash
         run: |
-          rm -f sitecustomize.py
-          python3 -S <<'PY'
+          python - <<'PY'
           from pathlib import Path
-          import re
-
-          html_path = Path('hoc-vien.html')
-          source_path = Path('.github/workflows/unify-admin-toolbar.yml')
-          html = html_path.read_text(encoding='utf-8')
-          source = source_path.read_text(encoding='utf-8')
-
-          match = re.search(r"hero=r'''(.*?)'''", source, flags=re.S)
-          if not match:
-              raise SystemExit('Không tìm thấy mẫu giao diện premium đã duyệt')
-          hero = match.group(1)
-
-          html, count = re.subn(
-              r'<section class="student-hero[^"]*">.*?</section>',
-              lambda _: hero,
-              html,
-              count=1,
-              flags=re.S,
-          )
-          if count != 1:
-              raise SystemExit(f'Không tìm thấy đúng 1 giao diện hồ sơ hiện tại (found={count})')
-
-          required = [
-              'id="studentPhoto"', 'id="studentPhotoPlaceholder"',
-              'id="studentName"', 'id="studentCode"',
-              'id="studentCourse"', 'id="studentLicense"',
-              'id="studentDrivingRefreshCta"', 'id="studentDrivingRefreshStatus"'
-          ]
-          for token in required:
-              if html.count(token) != 1:
-                  raise SystemExit(f'ID động không hợp lệ sau khi thay: {token}')
-
-          html_path.write_text(html, encoding='utf-8')
+          path = Path('app.js')
+          text = path.read_text(encoding='utf-8')
+          old_boot = '    showApp();\n    if(me.role==="admin"){await loadUsers();await loadStudentAccounts();await loadPublicTheoryAccounts();await loadOperations();await loadPaymentFeature();await loadAttendanceFeature()}\n    await loadStudents();'
+          new_boot = '    showApp();\n    await loadStudents();\n    if(me.role==="admin"){\n      await Promise.allSettled([loadUsers(),loadStudentAccounts(),loadPublicTheoryAccounts(),loadOperations(),loadPaymentFeature(),loadAttendanceFeature()]);\n      renderStudents();\n    }'
+          if old_boot not in text:
+              raise SystemExit('Expected admin boot block not found; refusing unsafe patch')
+          text = text.replace(old_boot, new_boot, 1)
+          old_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
+          new_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    renderStudents();\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
+          if old_students not in text:
+              raise SystemExit('Expected student loading block not found; refusing unsafe patch')
+          text = text.replace(old_students, new_students, 1)
+          path.write_text(text, encoding='utf-8')
           PY
-
-      - name: Restore helper files and commit
-        shell: bash
+      - name: Validate JavaScript syntax
+        run: node --check app.js
+      - name: Commit fix
         run: |
-          GOOD=84a959399b9fd044eb8b6f4c7750646a60e0aa21
-          git checkout "$GOOD" -- \
-            .github/workflows/sos-load-students-first.yml \
-            .github/workflows/unify-admin-toolbar.yml \
-            .github/workflows/verify-production-build.yml \
-            .github/workflows/apply-toolbar-icons-v2.yml \
-            .github/workflows/bump-toolbar-css.yml
-          git rm -f sitecustomize.py || true
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hoc-vien.html \
-            .github/workflows/sos-load-students-first.yml \
-            .github/workflows/unify-admin-toolbar.yml \
-            .github/workflows/verify-production-build.yml \
-            .github/workflows/apply-toolbar-icons-v2.yml \
-            .github/workflows/bump-toolbar-css.yml
-          git diff --cached --check
-          git commit -m "Xóa giao diện hồ sơ cũ và thay bằng giao diện mới"
-          git pull --rebase origin main
-          git push origin main
+          git add app.js
+          git commit -m "Load student roster before admin modules"
+          git push
