@@ -19,6 +19,8 @@ const receipt=receiptStudentProfile(
 );
 const html=buildReceiptHtml(receipt);
 for(const required of [
+  '<meta charset="UTF-8">',
+  '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">',
   "<title>Biên lai học phí ",
   "BIÊN LAI HỌC PHÍ",
   "PHIẾU XÁC NHẬN THANH TOÁN HỌC PHÍ",
@@ -39,10 +41,12 @@ for(const required of [
   "Người nộp tiền",
   "Người thu tiền",
   "Trần Quốc Đạt",
-  "@page{size:A5 landscape;margin:0}"
+  "@page{size:A4 portrait;margin:0}",
+  "In / Lưu PDF A4"
 ]){
   if(!html.includes(required))throw new Error(`Biên lai học phí thiếu nội dung bắt buộc: ${required}`);
 }
+if(html.includes("A5 landscape")||html.includes("Lưu PDF A5"))throw new Error("Biên lai vẫn còn cấu hình hoặc nội dung A5 cũ.");
 if(html.includes('<figure class="transfer-qr">')||html.includes("Quét mã để chuyển khoản"))throw new Error("Biên lai học phí mới không được hiển thị khu vực mã QR thanh toán.");
 if(html.includes("receipt-note")||html.includes("Vui lòng lưu biên lai để đối chiếu"))throw new Error("Biên lai học phí mới vẫn còn phần ghi chú cũ.");
 if(/<img[^>]+signature|chữ ký/i.test(html))throw new Error("Biên lai học phí không được nhúng sẵn chữ ký.");
@@ -145,4 +149,4 @@ const portal=readFileSync(new URL("../student.js",import.meta.url),"utf8");
 if(!admin.includes("openPaymentReceipt(item,student)"))throw new Error("Admin chưa truyền hồ sơ học viên vào biên lai.");
 if(!portal.includes("openPaymentReceipt(payment,student)"))throw new Error("Cổng học viên chưa truyền hồ sơ vào biên lai.");
 
-console.log("Học phí hợp lệ: popup QR vẫn ổn định, biên lai A5 mới đúng mẫu và không nhúng chữ ký.");
+console.log("Học phí hợp lệ: popup QR ổn định, biên lai A4 UTF-8 đúng mẫu và không còn cấu hình A5 cũ.");
