@@ -39,6 +39,7 @@
   (()=>{
     const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
     const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
+    const BOOTSTRAP_KEY="hv_manager_bootstrap_v2";
     const $=id=>document.getElementById(id);
     const messageOf=e=>e?.message||"Có lỗi xảy ra. Vui lòng thử lại.";
     async function clearLegacyWebCache(){
@@ -60,6 +61,10 @@
       for(const s of [localStorage,sessionStorage]){s.removeItem("hv_token");s.removeItem("hv_auth_kind")}
       const s=remember?localStorage:sessionStorage;s.setItem("hv_token",token);s.setItem("hv_auth_kind",kind);
     }
+    function saveManagerBootstrap(result){
+      if(!result?.token||!result?.id||!result?.username||!result?.role)return;
+      try{sessionStorage.setItem(BOOTSTRAP_KEY,JSON.stringify({token:result.token,createdAt:Date.now(),me:{id:result.id,username:result.username,role:result.role,active:result.active!==false,force_change_password:Boolean(result.force_change_password)}}))}catch{}
+    }
     const saved=localStorage.getItem("hv_saved_user")||"";if(saved){$("username").value=saved;$("rememberLogin").checked=true}
     $("togglePassword").onclick=()=>{const p=$("password"),show=p.type==="password";p.type=show?"text":"password";$("togglePassword").textContent=show?"Ẩn":"Hiện"};
     $("loginForm").onsubmit=async e=>{
@@ -76,7 +81,9 @@
         }
         if(!result?.token)throw new Error("Không nhận được phiên đăng nhập. Vui lòng thử lại.");
         saveAuth(result.token,kind,remember);if(remember)localStorage.setItem("hv_saved_user",username);else localStorage.removeItem("hv_saved_user");
-        if(kind==="public_theory")location.replace("/600-cau-hoi.html");else if(kind==="student")location.replace("/hoc-vien.html");else location.replace("/index.html");
+        if(kind==="public_theory")location.replace("/600-cau-hoi.html");
+        else if(kind==="student")location.replace("/hoc-vien.html");
+        else{saveManagerBootstrap(result);location.replace(`/index.html?login_ok=${Date.now()}`)}
       }catch(err){$("loginError").textContent=messageOf(err)}finally{button.disabled=false;button.textContent="Đăng nhập →"}
     };
   })();
