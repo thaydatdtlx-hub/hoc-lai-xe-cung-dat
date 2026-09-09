@@ -1,0 +1,60 @@
+/* Admin dashboard premium v2 - UI only. No data, IDs, JS or API changes. */
+#app #financeDashboard,#app #theoryDashboard,#app #attendanceDashboard{position:relative;overflow:hidden;margin:22px 0;padding:26px;border:1px solid #d5e5f4;border-radius:26px;background:linear-gradient(135deg,#fff 0%,#f7fbff 60%,#f1f7fd 100%);box-shadow:0 18px 46px rgba(28,72,116,.10),inset 0 1px 0 #fff;font-family:Inter,"Segoe UI",Arial,sans-serif}
+#app #financeDashboard:before,#app #theoryDashboard:before,#app #attendanceDashboard:before{content:"";position:absolute;right:-90px;top:-120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(76,160,245,.14),rgba(76,160,245,0) 68%);pointer-events:none}
+#app #financeDashboard .finance-dashboard-head,#app #theoryDashboard .theory-dashboard-head,#app #attendanceDashboard .attendance-dashboard-head{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:18px}
+#app #financeDashboard .finance-kicker,#app #theoryDashboard .theory-dashboard-head p,#app #attendanceDashboard .attendance-dashboard-head p{margin:0 0 6px;color:#0c72da;font-size:10px;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
+#app #attendanceDashboard .attendance-dashboard-head p{color:#0b8068}
+#app #financeDashboard h2,#app #theoryDashboard .theory-dashboard-head h2,#app #attendanceDashboard .attendance-dashboard-head h2{margin:0;color:#0b2b5d;font-size:28px;font-weight:850;line-height:1.12;letter-spacing:-.03em}
+#app #financeDashboard .finance-head-actions,#app #attendanceDashboard .attendance-dashboard-head>div:last-child{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:9px}
+#app #financeDashboard .finance-head-actions button,#app #financeDashboard .finance-head-actions a,#app #financeDashboard .finance-head-actions>span,#app #theoryDashboard .theory-dashboard-head a,#app #attendanceDashboard .attendance-dashboard-head button{display:inline-flex;min-height:43px;align-items:center;justify-content:center;padding:0 15px;border-radius:12px;font-size:11px;font-weight:850;line-height:1;text-decoration:none;white-space:nowrap;transition:.18s ease}
+#app #financeDashboard .payment-ledger-btn{border:1px solid #bee4d6;background:#effbf6;color:#08785a}
+#app #financeDashboard .finance-head-actions a{border:1px solid #dcccf7;background:#f6f0ff;color:#6739b8}
+#app #financeDashboard .finance-head-actions>span{border:1px solid #d5e5f5;background:#fff;color:#1a5ea6}
+#app #theoryDashboard .theory-dashboard-head a,#app #attendanceDashboard .attendance-dashboard-head button:last-child{border:1px solid #126ce4;background:linear-gradient(135deg,#1883ff,#0961df);color:#fff;box-shadow:0 9px 22px rgba(17,102,224,.20)}
+#app #attendanceDashboard .attendance-dashboard-head button:first-child{border:1px solid #bee1d5;background:#f2fbf7;color:#08775a}
+#app #financeDashboard .finance-head-actions button:hover,#app #financeDashboard .finance-head-actions a:hover,#app #theoryDashboard .theory-dashboard-head a:hover,#app #attendanceDashboard .attendance-dashboard-head button:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(26,77,126,.14)}
+#app #financeDashboard .finance-grid,#app #theoryDashboard .theory-dashboard-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+#app #attendanceDashboard .attendance-dashboard-grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+#app #financeDashboard .finance-card,#app #theoryDashboard .theory-summary-card,#app #attendanceDashboard .attendance-dashboard-grid article{position:relative;overflow:hidden;border:1px solid #d6e5f2;border-radius:18px;background:#fff;box-shadow:0 8px 24px rgba(32,76,119,.07),inset 0 1px 0 #fff;transition:.2s ease}
+#app #financeDashboard .finance-card:hover,#app #theoryDashboard .theory-summary-card:hover,#app #attendanceDashboard .attendance-dashboard-grid article:hover{transform:translateY(-3px);border-color:#aacbea;box-shadow:0 17px 34px rgba(32,76,119,.13)}
+#app #financeDashboard .finance-card{display:flex;min-height:138px;align-items:center;gap:17px;padding:21px 22px;background:linear-gradient(135deg,#fbfdff,#eef6ff)}
+#app #financeDashboard .finance-paid{border-color:#c8eadc;background:linear-gradient(135deg,#fbfffd,#eaf9f3)}
+#app #financeDashboard .finance-debt{border-color:#efd9bd;background:linear-gradient(135deg,#fffdfa,#fff2e5)}
+#app #financeDashboard .finance-card:after{content:"";position:absolute;right:-28px;bottom:-48px;width:130px;height:130px;border-radius:50%;background:rgba(32,124,235,.06);pointer-events:none}
+#app #financeDashboard .finance-icon{position:relative;z-index:1;display:grid;width:62px;height:62px;min-width:62px;place-items:center;border:7px solid rgba(36,124,230,.12);border-radius:50%;background:linear-gradient(145deg,#3c9cff,#0760d8);color:#fff;font-size:25px;font-weight:950;box-shadow:0 9px 20px rgba(16,97,204,.18)}
+#app #financeDashboard .finance-paid .finance-icon{border-color:rgba(11,153,101,.13);background:linear-gradient(145deg,#25c98b,#078b5d)}
+#app #financeDashboard .finance-debt .finance-icon{border-color:rgba(231,126,26,.14);background:linear-gradient(145deg,#ffb14d,#e97510)}
+#app #financeDashboard .finance-card>div{position:relative;z-index:1;display:grid;min-width:0;gap:4px}
+#app #financeDashboard .finance-card small{color:#4b6b8c;font-size:12px;font-weight:800}
+#app #financeDashboard .finance-card strong{color:#071f4e;font-size:31px;font-weight:900;line-height:1.05;letter-spacing:-.03em;white-space:nowrap}
+#app #financeDashboard .finance-card em{color:#6e879f;font-size:10px;font-style:normal;font-weight:650}
+#app #theoryDashboard{background:linear-gradient(135deg,#fff 0%,#f6faff 62%,#eef6ff 100%)}
+#app #theoryDashboard .theory-summary-card{display:flex;min-height:116px;align-items:center;gap:15px;padding:18px 19px;color:inherit;text-align:left;font:inherit;cursor:pointer}
+#app #theoryDashboard .theory-summary-card:nth-child(2){background:linear-gradient(135deg,#fff,#fbf7ff)}
+#app #theoryDashboard .theory-summary-card:nth-child(3){background:linear-gradient(135deg,#fff,#f3fcf8)}
+#app #theoryDashboard .theory-summary-card>span{display:grid;width:58px;height:58px;min-width:58px;place-items:center;border-radius:17px;background:#e3f1ff;color:#1168cf;font-size:24px;font-weight:950}
+#app #theoryDashboard .theory-summary-card:nth-child(2)>span{background:#efe6ff;color:#7130cd}
+#app #theoryDashboard .theory-summary-card:nth-child(3)>span{background:#ddf6e9;color:#07865d}
+#app #theoryDashboard .theory-summary-card>div{display:grid;min-width:0;gap:3px}
+#app #theoryDashboard .theory-summary-card small{color:#4e6d8d;font-size:11px;font-weight:800}
+#app #theoryDashboard .theory-summary-card strong{color:#071f4e;font-size:29px;font-weight:900;line-height:1}
+#app #theoryDashboard .theory-summary-card em{color:#2577c7;font-size:10px;font-style:normal;font-weight:700}
+#app #theoryDashboard .theory-summary-card>b{display:grid;width:36px;height:36px;min-width:36px;place-items:center;margin-left:auto;border:1px solid #d7e6f5;border-radius:50%;background:#fff;color:#2877c8;font-size:21px}
+#app #attendanceDashboard{background:linear-gradient(135deg,#fff 0%,#f7fbff 58%,#f1fbf7 100%)}
+#app #attendanceDashboard .attendance-dashboard-grid article{display:flex;min-height:106px;align-items:center;gap:13px;padding:17px}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(1){background:linear-gradient(135deg,#fff,#f1fbf6)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(2){background:linear-gradient(135deg,#fff,#f1f8ff)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(3){background:linear-gradient(135deg,#fff,#faf6ff)}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(4){background:linear-gradient(135deg,#fff,#fff5f2)}
+#app #attendanceDashboard .attendance-dashboard-grid article>span{display:grid;width:54px;height:54px;min-width:54px;place-items:center;border-radius:16px;background:#ddf5e9;color:#07855d;font-size:22px;font-weight:950}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(2)>span{background:#e3f1ff;color:#1167ce}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(3)>span{background:#efe7ff;color:#6b2fc8}
+#app #attendanceDashboard .attendance-dashboard-grid article:nth-child(4)>span{background:#ffe7df;color:#c94b34}
+#app #attendanceDashboard .attendance-dashboard-grid article>div{display:grid;min-width:0;gap:3px}
+#app #attendanceDashboard .attendance-dashboard-grid small{color:#4f6e8d;font-size:10px;font-weight:800}
+#app #attendanceDashboard .attendance-dashboard-grid strong{color:#071f4e;font-size:25px;font-weight:900;line-height:1}
+#app #attendanceDashboard .attendance-dashboard-grid em{color:#758ca2;font-size:9px;font-style:normal;font-weight:600}
+#app #theoryDashboard .theory-database-notice,#app #attendanceDashboard .attendance-database-notice{position:relative;z-index:2;margin:13px 0 0;padding:10px 12px;border:1px solid #efd5aa;border-radius:10px;background:#fff9ee;color:#855917;font-size:9px}
+@media(max-width:1100px){#app #attendanceDashboard .attendance-dashboard-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){#app #financeDashboard,#app #theoryDashboard,#app #attendanceDashboard{padding:21px;border-radius:22px}#app #financeDashboard .finance-dashboard-head,#app #theoryDashboard .theory-dashboard-head,#app #attendanceDashboard .attendance-dashboard-head{flex-direction:column}#app #financeDashboard .finance-grid,#app #theoryDashboard .theory-dashboard-grid{grid-template-columns:1fr}#app #financeDashboard .finance-head-actions,#app #attendanceDashboard .attendance-dashboard-head>div:last-child{justify-content:flex-start}}
+@media(max-width:620px){#app #financeDashboard,#app #theoryDashboard,#app #attendanceDashboard{margin:14px 0;padding:16px;border-radius:19px}#app #financeDashboard h2,#app #theoryDashboard .theory-dashboard-head h2,#app #attendanceDashboard .attendance-dashboard-head h2{font-size:23px}#app #financeDashboard .finance-head-actions,#app #attendanceDashboard .attendance-dashboard-head>div:last-child{width:100%;display:grid;grid-template-columns:1fr}#app #financeDashboard .finance-head-actions button,#app #financeDashboard .finance-head-actions a,#app #financeDashboard .finance-head-actions>span,#app #theoryDashboard .theory-dashboard-head a,#app #attendanceDashboard .attendance-dashboard-head button{width:100%}#app #financeDashboard .finance-card{min-height:120px;padding:16px;gap:12px}#app #financeDashboard .finance-icon{width:52px;height:52px;min-width:52px;font-size:21px}#app #financeDashboard .finance-card strong{font-size:25px}#app #theoryDashboard .theory-summary-card{min-height:102px;padding:14px}#app #theoryDashboard .theory-summary-card>span{width:51px;height:51px;min-width:51px;font-size:21px}#app #attendanceDashboard .attendance-dashboard-grid{grid-template-columns:1fr}#app #attendanceDashboard .attendance-dashboard-grid article{min-height:94px;padding:14px}}
