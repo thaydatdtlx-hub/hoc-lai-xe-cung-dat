@@ -3,6 +3,31 @@ import "./overlay-safety.css";
 const isStudentPortal=()=>location.pathname==="/hoc-vien.html";
 const isAdminPortal=()=>Boolean(document.getElementById("app"));
 
+function syncAdminLoginSkin(){
+  if(!isAdminPortal())return;
+  const login=document.getElementById("login");
+  const app=document.getElementById("app");
+  if(!login||!app)return;
+  const sync=()=>{
+    const loginVisible=!login.hidden&&!login.classList.contains("hidden");
+    const appVisible=!app.hidden&&!app.classList.contains("hidden");
+    if(loginVisible){
+      document.documentElement.dataset.professionalUi="20260825";
+      document.body.classList.add("professional-ui");
+      return;
+    }
+    if(appVisible){
+      delete document.documentElement.dataset.professionalUi;
+      document.body.classList.remove("professional-ui");
+    }
+  };
+  sync();
+  const observer=new MutationObserver(sync);
+  observer.observe(login,{attributes:true,attributeFilter:["class","hidden"]});
+  observer.observe(app,{attributes:true,attributeFilter:["class","hidden"]});
+  window.addEventListener("pageshow",sync);
+}
+
 function removeLegacyAdminUi(){
   if(!isAdminPortal())return;
   const app=document.getElementById("app");
@@ -23,6 +48,7 @@ function guardLegacyAdminUi(){
   [0,120,350,800,1600,3200].forEach(delay=>window.setTimeout(removeLegacyAdminUi,delay));
 }
 
+syncAdminLoginSkin();
 guardLegacyAdminUi();
 const professionalUiPromise=isAdminPortal()
   ?Promise.resolve(null)
