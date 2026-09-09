@@ -1,5 +1,3 @@
-import "./coccoc-sidebar.js";
-
 const PUBLIC_HOME="/dang-ky-hoc-lai-xe.html";
 
 function goHome(){location.assign(PUBLIC_HOME)}
