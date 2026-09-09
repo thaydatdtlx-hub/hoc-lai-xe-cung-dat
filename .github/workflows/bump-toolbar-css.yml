@@ -1,33 +1,63 @@
-name: Bump toolbar CSS version
-
+name: Apply student hero redesign
 on:
   push:
     branches: [main]
-    paths:
-      - .github/toolbar-css-trigger.txt
-
+    paths: [.github/toolbar-css-trigger.txt]
 permissions:
   contents: write
-
 jobs:
-  bump:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update CSS query version
+        with:
+          fetch-depth: 0
+      - name: Replace old student hero
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('/admin-toolbar-unified.css?v=1','/admin-toolbar-unified.css?v=2')
-          p.write_text(s,encoding='utf-8')
+          import re
+          hp=Path('hoc-vien.html'); cp=Path('student.css')
+          h=hp.read_text(encoding='utf-8'); c=cp.read_text(encoding='utf-8')
+          new='''<section class="student-hero student-hero-v3"><div class="student-profile-showcase"><div class="student-profile-content"><div class="student-photo-wrap student-photo-wrap-v3"><img id="studentPhoto" class="hidden" alt="Ảnh học viên"><span id="studentPhotoPlaceholder">HV</span><i>✓</i></div><div class="student-heading student-heading-v3"><p>▣ &nbsp; HỒ SƠ ĐÀO TẠO CÁ NHÂN</p><h1 id="studentName">Học viên</h1><div class="student-profile-facts"><span class="student-fact"><i>◎</i><small>Mã học viên</small><strong id="studentCode">Chưa có mã</strong></span><span class="student-fact fact-course"><i>◆</i><small>Khóa học</small><strong id="studentCourse">Chưa có khóa</strong></span><span class="student-fact fact-license"><i>▰</i><small>Hạng giấy phép</small><strong id="studentLicense">Chưa có hạng</strong></span></div><div class="student-hero-quote"><b>“</b><span>Chúc bạn luôn vững tay lái, tự tin trên mọi hành trình!</span></div></div></div><div class="student-road-art" aria-hidden="true"><span></span><i></i><b>AN TOÀN<br>TẠO NÊN<br>HÀNH TRÌNH</b></div><div class="student-hero-motto">HỌC AN TOÀN　·　LÁI VỮNG VÀNG　·　KIẾN TẠO TƯƠNG LAI</div></div><div class="student-hero-actions student-hero-actions-v3"><a class="schedule-cta hero-action-card hero-action-schedule" href="/lich-dao-tao.html"><span>▣</span><div><strong>Xem lịch đào tạo</strong><small>Lịch học và lịch thi của tôi</small></div><b>→</b></a><a class="schedule-cta theory-cta hero-action-card hero-action-theory" href="/600-cau-hoi.html"><span>▥</span><div><strong>Học lý thuyết</strong><small>Ôn tập và thi thử A1 · A · B · C1</small></div><b>→</b></a><a id="studentDrivingRefreshCta" class="schedule-cta driving-refresh-cta student-refresh-access is-locked hero-action-card hero-action-refresh" href="/bo-tuc-tay-lai.html#tinh-chi-phi" aria-disabled="true"><span>◉</span><div><strong>Đăng ký bổ túc tay lái</strong><small id="studentDrivingRefreshStatus">Tính năng mở khi Admin ghi nhận đã nhận bằng lái</small></div><b>→</b></a></div></section>'''
+          h,n=re.subn(r'<section class="student-hero">.*?</section>',new,h,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'old hero not found: {n}')
+          h=re.sub(r'href="/student\.css(?:\?[^\"]*)?"','href="/student.css?v=20260909-hero-v3"',h,count=1)
+          hp.write_text(h,encoding='utf-8')
+          css=r'''.student-hero{display:grid;grid-template-columns:minmax(0,2.15fr) minmax(310px,.85fr);gap:16px;padding:13px;border:1px solid #d5e7f6;border-radius:26px;background:linear-gradient(135deg,#f8fcff,#edf7ff);box-shadow:0 18px 46px #164f7c18;color:#16395f}.student-profile-showcase{position:relative;min-height:315px;overflow:hidden;border:1px solid #d6e9f8;border-radius:21px;background:linear-gradient(118deg,#eaf6ff 0%,#fff 48%,#dff2ff 100%);isolation:isolate}.student-profile-showcase:before{content:"";position:absolute;left:-100px;top:-115px;width:300px;height:300px;border:42px solid #67adf22d;border-radius:50%;z-index:-1}.student-profile-showcase:after{content:"";position:absolute;left:-9%;bottom:-105px;width:70%;height:180px;border-radius:50% 50% 0 0;background:linear-gradient(180deg,#9dd0ff80,#55a9f350);transform:rotate(3deg);z-index:-1}.student-profile-content{position:relative;z-index:3;display:flex;align-items:center;gap:27px;min-height:270px;padding:30px 34px 45px}.student-photo-wrap{position:relative;display:grid;width:170px;height:205px;overflow:visible;place-items:center;flex:0 0 auto;border:7px solid #fff;border-radius:28px;background:#eef7ff;color:#1974cb;font-size:27px;font-weight:950;box-shadow:0 17px 36px #185b8f24}.student-photo-wrap img{width:100%;height:100%;object-fit:cover;border-radius:20px}.student-photo-wrap>span{display:grid;width:100%;height:100%;place-items:center;border-radius:20px;background:linear-gradient(145deg,#e5f3ff,#fff)}.student-photo-wrap>i{position:absolute;right:-13px;bottom:-13px;display:grid;width:48px;height:48px;place-items:center;border:5px solid #fff;border-radius:50%;background:#2f83e8;color:#fff;font-size:17px;font-style:normal;box-shadow:0 7px 18px #1f6fb53b}.student-heading{min-width:0;flex:1}.student-heading p{margin:0 0 11px;color:#1979db;font-size:10px;font-weight:950;letter-spacing:.13em}.student-heading h1{max-width:670px;margin:0 0 18px;color:#0b2851;font-size:clamp(29px,3.2vw,49px);line-height:1.04;letter-spacing:-.035em}.student-profile-facts{display:flex;flex-wrap:wrap;gap:9px}.student-fact{display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;min-width:145px;gap:1px 9px;padding:10px 13px;border:1px solid #d8e9f7;border-radius:15px;background:#ffffffd9;box-shadow:0 6px 17px #1c5a8d0b}.student-fact>i{display:grid;width:36px;height:36px;grid-row:1/3;place-items:center;border-radius:11px;background:#e7f2ff;color:#2077d4;font-size:16px;font-style:normal;font-weight:950}.student-fact small{align-self:end;color:#778ba0;font-size:8px;font-weight:800}.student-fact strong{align-self:start;color:#183f68;font-size:12px;white-space:nowrap}.student-fact.fact-course>i{background:#ece8ff;color:#6b53d4}.student-fact.fact-license>i{background:#ddf7ec;color:#0b9270}.student-hero-quote{display:flex;align-items:center;gap:9px;margin-top:16px;color:#3f6282;font-size:10px;font-style:italic}.student-hero-quote b{color:#91c8ff;font-family:Georgia,serif;font-size:38px;line-height:.5}.student-road-art{position:absolute;right:0;bottom:0;width:45%;height:72%;overflow:hidden;z-index:1;pointer-events:none}.student-road-art:before{content:"";position:absolute;inset:28% -12% -32% 6%;border-radius:60% 0 0;background:linear-gradient(145deg,#dceeff,#91c8f5);transform:rotate(-8deg)}.student-road-art:after{content:"";position:absolute;left:30%;bottom:15%;width:72%;height:5px;border-radius:99px;background:repeating-linear-gradient(90deg,#fff 0 34px,transparent 34px 58px);transform:rotate(-14deg);opacity:.8}.student-road-art span{position:absolute;right:13%;bottom:23%;width:95px;height:35px;border:3px solid #72afe5;border-radius:18px 24px 10px 10px;background:#fff;box-shadow:0 7px 15px #2d78af26;z-index:2}.student-road-art span:before{content:"";position:absolute;left:18px;top:-20px;width:55px;height:27px;border:3px solid #72afe5;border-bottom:0;border-radius:17px 17px 0 0;background:#cce9ff}.student-road-art span:after{content:"●　　　　　●";position:absolute;left:9px;bottom:-13px;color:#315e83;font-size:17px;letter-spacing:13px}.student-road-art b{position:absolute;right:10%;top:8%;padding:10px 9px;border:2px solid #fff;border-radius:7px;background:#2578c9d9;color:#fff;font-size:8px;line-height:1.4;text-align:center;box-shadow:0 7px 17px #175f992e;z-index:2}.student-hero-motto{position:absolute;left:34px;bottom:16px;color:#4280bb;font-size:7px;font-weight:900;letter-spacing:.14em;z-index:3}.student-hero-actions{display:grid;grid-template-columns:1fr;gap:12px}.schedule-cta{display:flex;min-width:0;align-items:center;gap:14px;padding:18px 16px;border:1px solid #dce9f6;border-radius:21px;background:#fff;color:#173f68;text-decoration:none;box-shadow:0 9px 24px #1a557f0e;transition:.18s ease}.schedule-cta:hover{transform:translateY(-2px);box-shadow:0 15px 31px #1a557f1b}.schedule-cta>span{display:grid;width:58px;height:58px;place-items:center;flex:0 0 auto;border-radius:18px;background:#e7efff;color:#5a57df;font-size:24px}.schedule-cta div{display:grid;min-width:0;gap:4px;flex:1}.schedule-cta strong{color:inherit;font-size:14px;line-height:1.2}.schedule-cta small{color:#71859a;font-size:9px;font-weight:700;line-height:1.4}.schedule-cta>b{display:grid;width:38px;height:38px;place-items:center;flex:0 0 auto;border-radius:50%;background:#edf5ff;color:#2078d2;font-size:20px}.hero-action-theory{border-color:#cfede3;background:linear-gradient(135deg,#fff,#f1fffa)}.hero-action-theory>span{background:#dff7ef;color:#078f75}.hero-action-theory>b{background:#e3f7ef;color:#078f75}.hero-action-refresh{border-color:#eddcbd;background:linear-gradient(135deg,#fff,#fff9ef);color:#78501c}.hero-action-refresh>span{background:#fff0d4;color:#9b6115}.hero-action-refresh>b{background:#fff0d7;color:#8e5a16}.student-refresh-access.is-locked{cursor:not-allowed;filter:saturate(.55);opacity:.72}
+@media(max-width:1050px){.student-hero{grid-template-columns:1fr}.student-hero-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.student-road-art{width:42%}.schedule-cta{padding:14px}.schedule-cta>span{width:46px;height:46px}.schedule-cta>b{display:none}}
+@media(max-width:760px){.student-profile-content{align-items:flex-start;gap:18px;padding:23px 21px 52px}.student-photo-wrap{width:116px;height:142px;border-width:5px;border-radius:22px}.student-photo-wrap img,.student-photo-wrap>span{border-radius:16px}.student-heading h1{font-size:30px}.student-profile-facts{display:grid;grid-template-columns:1fr 1fr}.student-fact{min-width:0}.student-fact:nth-child(3){grid-column:1/-1}.student-road-art{opacity:.42}.student-hero-actions{grid-template-columns:1fr}.schedule-cta>b{display:grid}}
+@media(max-width:520px){.student-hero{padding:9px;border-radius:20px}.student-profile-showcase{min-height:0;border-radius:17px}.student-profile-content{display:grid;grid-template-columns:92px minmax(0,1fr);gap:14px;padding:18px 15px 58px}.student-photo-wrap{width:92px;height:116px;border-radius:18px}.student-photo-wrap img,.student-photo-wrap>span{border-radius:13px}.student-heading p{font-size:7px;letter-spacing:.08em}.student-heading h1{margin-bottom:12px;font-size:23px}.student-profile-facts{grid-column:1/-1;grid-template-columns:1fr}.student-fact:nth-child(3){grid-column:auto}.student-hero-quote{grid-column:1/-1;margin-top:8px;font-size:8px}.student-road-art{display:none}.student-hero-motto{left:15px;bottom:13px;font-size:6px}.schedule-cta{border-radius:16px}.schedule-cta strong{font-size:12px}.schedule-cta>span{width:44px;height:44px}.schedule-cta>b{width:32px;height:32px}}
+'''
+          c,n=re.subn(r'\.student-hero\{.*?(?=\.theory-account-section\{)',css,c,count=1,flags=re.S)
+          if n!=1: raise SystemExit(f'old hero css not found: {n}')
+          cp.write_text(c,encoding='utf-8')
           PY
-      - name: Commit
+      - name: Restore helper and commit
+        shell: bash
         run: |
+          cat > .github/workflows/bump-toolbar-css.yml <<'YML'
+          name: Bump toolbar CSS version
+          on:
+            push:
+              branches: [main]
+              paths: [.github/toolbar-css-trigger.txt]
+          permissions:
+            contents: write
+          jobs:
+            bump:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - run: |
+                    git config user.name "github-actions[bot]"
+                    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git status --short
+          YML
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Làm mới đường dẫn CSS bộ icon"
-          git push
+          git add hoc-vien.html student.css .github/workflows/bump-toolbar-css.yml
+          git diff --cached --check
+          git commit -m "Xóa giao diện hồ sơ cũ và thay bằng giao diện mới"
+          git push origin main
