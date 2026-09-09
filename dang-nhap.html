@@ -2,126 +2,15 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#07182f">
   <title>Đăng nhập · Học lái xe cùng Đạt</title>
   <link rel="icon" href="/app-icon-192.png" type="image/png">
-  <style>
-    :root{--navy:#071a35;--navy2:#0b2d55;--blue:#1769e0;--gold:#efc56f;--line:#dbe5f0;--muted:#6f8299;--red:#c43d4e;--green:#159d68}*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,"Segoe UI",Arial,sans-serif;background:#071a35;color:#102a43}body{min-height:100vh;min-height:100svh}.page{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(430px,.92fr);background:radial-gradient(circle at 18% 18%,rgba(41,122,219,.24),transparent 34%),linear-gradient(125deg,#06172f 0%,#082447 52%,#f4f7fb 52%,#f4f7fb 100%)}.intro{position:relative;display:flex;flex-direction:column;justify-content:center;padding:70px clamp(42px,6vw,100px);color:#fff;overflow:hidden}.intro:after{content:"";position:absolute;right:-130px;bottom:-150px;width:430px;height:430px;border:1px solid rgba(239,197,111,.18);border-radius:50%;box-shadow:0 0 0 50px rgba(239,197,111,.035),0 0 0 100px rgba(239,197,111,.025)}.brand{position:relative;z-index:1;display:flex;align-items:center;gap:15px;margin-bottom:56px}.brand img{width:68px;height:68px;object-fit:contain;border-radius:18px;background:#fff;padding:5px;box-shadow:0 12px 32px rgba(0,0,0,.22)}.brand div{display:grid;gap:5px}.brand strong{font-size:20px;letter-spacing:.01em}.brand small{color:#e8c77e;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.intro .kicker{position:relative;z-index:1;margin:0 0 12px;color:#efc56f;font-size:11px;font-weight:900;letter-spacing:.14em}.intro h1{position:relative;z-index:1;max-width:760px;margin:0;font-size:clamp(42px,5vw,72px);line-height:1.04;letter-spacing:-.045em}.intro h1 span{display:block;color:#efc56f}.intro>p{position:relative;z-index:1;max-width:690px;margin:23px 0 0;color:#c7d4e4;font-size:16px;line-height:1.7}.features{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:700px;margin-top:34px}.features span{padding:16px;border:1px solid rgba(255,255,255,.13);border-radius:14px;background:rgba(255,255,255,.055);color:#edf4fb;font-size:12px;font-weight:750;line-height:1.45;backdrop-filter:blur(8px)}.features b{display:block;margin-bottom:7px;color:#efc56f;font-size:18px}.login-side{display:grid;place-items:center;padding:42px clamp(24px,4vw,70px);background:#f4f7fb}.card{width:min(520px,100%);padding:34px;border:1px solid #dce6f1;border-radius:24px;background:#fff;box-shadow:0 24px 70px rgba(34,64,101,.14)}.card-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.card-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:999px;background:#edf8f3;color:#167855;font-size:10px;font-weight:850}.card-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:#1db777;box-shadow:0 0 0 4px rgba(29,183,119,.12)}.home-link{color:#667e98;font-size:11px;font-weight:750;text-decoration:none}.card h2{margin:25px 0 7px;color:#0b2a4f;font-size:29px;letter-spacing:-.03em}.card>.sub{margin:0 0 24px;color:#74879d;font-size:13px;line-height:1.55}.label{display:block;margin:14px 0 7px;color:#304e6d;font-size:11px;font-weight:800}.field{position:relative}.field svg{position:absolute;top:50%;left:14px;width:18px;height:18px;transform:translateY(-50%);fill:none;stroke:#7e91a7;stroke-width:1.8}.field input{width:100%;height:52px;padding:0 46px 0 43px;border:1px solid #d4dfeb;border-radius:12px;background:#fbfdff;color:#163858;font-size:14px;outline:0}.field input:focus{border-color:#70a8ea;box-shadow:0 0 0 4px rgba(23,105,224,.1);background:#fff}.toggle{position:absolute;top:6px;right:7px;width:40px;height:40px;border:0;border-radius:9px;background:transparent;color:#607b96;font-size:12px;font-weight:800}.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:13px 0 0;color:#6e8197;font-size:11px}.remember{display:flex;align-items:center;gap:7px}.remember input{accent-color:#1769e0}.row a{color:#1769e0;text-decoration:none;font-weight:750}.error{min-height:20px;margin:12px 0 0;color:#c43d4e;font-size:12px;line-height:1.45}.submit{width:100%;height:52px;margin-top:6px;border:0;border-radius:12px;background:linear-gradient(135deg,#1769e0,#1d7ee9);color:#fff;font-size:13px;font-weight:900;box-shadow:0 12px 24px rgba(23,105,224,.23)}.submit:disabled{cursor:not-allowed;opacity:.62}.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:#9aa8b8;font-size:10px}.divider:before,.divider:after{content:"";height:1px;flex:1;background:#e5ebf2}.register{width:100%;min-height:48px;border:1px solid #d6e3f2;border-radius:12px;background:#f6f9fd;color:#315879;font-size:11px;font-weight:800}.support{display:flex;justify-content:center;margin-top:18px;color:#78899b;font-size:10px}.support a{margin-left:4px;color:#1674cf;font-weight:800;text-decoration:none}dialog{width:min(510px,calc(100% - 28px));max-height:88vh;padding:0;border:0;border-radius:20px;box-shadow:0 30px 100px rgba(7,28,54,.35)}dialog::backdrop{background:rgba(4,19,38,.62);backdrop-filter:blur(4px)}.dialog-body{padding:26px}.dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}.dialog-head h3{margin:0;color:#0b2a4f;font-size:21px}.dialog-head p{margin:5px 0 0;color:#77899c;font-size:11px}.close{width:35px;height:35px;border:1px solid #dce5ee;border-radius:10px;background:#fff;color:#49627b;font-size:18px}.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 10px;margin-top:14px}.reg-grid .wide{grid-column:1/-1}.reg-grid input{width:100%;height:45px;padding:0 11px;border:1px solid #d4dfeb;border-radius:10px;outline:0}.reg-grid input:focus{border-color:#70a8ea;box-shadow:0 0 0 3px rgba(23,105,224,.09)}.reg-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.reg-actions button{min-height:42px;padding:0 14px;border-radius:10px;font-size:11px;font-weight:800}.secondary{border:1px solid #d9e3ed;background:#fff;color:#577087}.primary{border:0;background:#1769e0;color:#fff}@media(max-width:980px){.page{grid-template-columns:1fr;background:linear-gradient(180deg,#071a35 0,#0a2c53 36%,#f4f7fb 36%,#f4f7fb 100%)}.intro{padding:34px 24px 52px}.brand{margin-bottom:26px}.intro h1{font-size:38px}.intro>p{font-size:13px;margin-top:15px}.features{display:none}.login-side{padding:0 16px 34px}.card{margin-top:-18px;padding:26px 20px;border-radius:20px}.card h2{font-size:25px}.reg-grid{grid-template-columns:1fr}.reg-grid .wide{grid-column:auto}}@media(max-width:520px){.intro{padding:24px 16px 42px}.brand img{width:54px;height:54px;border-radius:14px}.brand strong{font-size:15px}.brand small{font-size:8px}.intro .kicker{font-size:9px}.intro h1{font-size:31px}.intro>p{display:none}.login-side{padding:0 10px 24px}.card{padding:22px 16px}.row{align-items:flex-start}.support{line-height:1.5;text-align:center}}
-  </style>
+  <meta http-equiv="refresh" content="0;url=/?login=1">
+  <script>location.replace('/?login=1');</script>
 </head>
 <body>
-  <main class="page">
-    <section class="intro" aria-label="Giới thiệu hệ thống">
-      <div class="brand"><img src="/logo-thay-dat-compact.webp?v=15" alt="Logo Học lái xe cùng Đạt"><div><strong>HỌC LÁI XE CÙNG ĐẠT</strong><small>Đào tạo và hỗ trợ học viên lái xe</small></div></div>
-      <p class="kicker">CỔNG QUẢN LÝ & HỌC VIÊN</p>
-      <h1>Hệ thống quản lý<span>đào tạo học viên lái xe</span></h1>
-      <p>Đăng nhập để theo dõi hồ sơ, học phí, lịch đào tạo, tiến độ lý thuyết và các hoạt động học tập trên một nền tảng thống nhất.</p>
-      <div class="features"><span><b>▣</b>Học tập trực tuyến</span><span><b>▥</b>Theo dõi tiến độ</span><span><b>▦</b>Lịch học chủ động</span></div>
-    </section>
-
-    <section class="login-side">
-      <form id="loginForm" class="card" novalidate>
-        <div class="card-top"><span class="card-badge">Hệ thống đang hoạt động</span><a class="home-link" href="/">Trang chủ</a></div>
-        <h2>Đăng nhập hệ thống</h2>
-        <p class="sub">Dành cho quản trị viên, tài khoản quản lý và học viên.</p>
-
-        <label class="label" for="username">Tên đăng nhập</label>
-        <div class="field"><svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg><input id="username" autocomplete="username" placeholder="Nhập tên đăng nhập" required></div>
-
-        <label class="label" for="password">Mật khẩu</label>
-        <div class="field"><svg viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/></svg><input id="password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required><button id="togglePassword" class="toggle" type="button">Hiện</button></div>
-
-        <div class="row"><label class="remember"><input id="rememberLogin" type="checkbox">Ghi nhớ đăng nhập</label><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Quên mật khẩu?</a></div>
-        <div id="loginError" class="error" role="alert"></div>
-        <button id="loginBtn" class="submit" type="submit">Đăng nhập →</button>
-        <div class="divider"><span>hoặc</span></div>
-        <button id="openRegister" class="register" type="button">＋ Tạo tài khoản học 600 câu</button>
-        <div class="support">Cần hỗ trợ?<a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Liên hệ Zalo 0984 811 037</a></div>
-      </form>
-    </section>
-  </main>
-
-  <dialog id="registerDialog">
-    <form id="registerForm" class="dialog-body" method="dialog">
-      <div class="dialog-head"><div><h3>Tạo tài khoản học 600 câu</h3><p>Dành cho người học chưa phải học viên trong hệ thống.</p></div><button id="closeRegister" class="close" type="button" aria-label="Đóng">×</button></div>
-      <div class="reg-grid">
-        <div class="wide"><label class="label" for="regName">Họ và tên</label><input id="regName" autocomplete="name" required></div>
-        <div><label class="label" for="regPhone">Số điện thoại</label><input id="regPhone" inputmode="tel" autocomplete="tel" required></div>
-        <div><label class="label" for="regUsername">Tên đăng nhập</label><input id="regUsername" autocomplete="username" required></div>
-        <div><label class="label" for="regPassword">Mật khẩu</label><input id="regPassword" type="password" autocomplete="new-password" required></div>
-        <div><label class="label" for="regConfirm">Nhập lại mật khẩu</label><input id="regConfirm" type="password" autocomplete="new-password" required></div>
-      </div>
-      <label class="remember" style="margin-top:13px"><input id="regRemember" type="checkbox">Ghi nhớ đăng nhập</label>
-      <div id="registerError" class="error" role="alert"></div>
-      <div class="reg-actions"><button id="cancelRegister" class="secondary" type="button">Đóng</button><button id="registerBtn" class="primary" type="submit">Tạo tài khoản</button></div>
-    </form>
-  </dialog>
-
-  <script>
-  (()=>{
-    const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
-    const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
-    const $=id=>document.getElementById(id);
-    const errText=error=>error?.message||"Có lỗi xảy ra. Vui lòng thử lại.";
-    async function rpc(fn,body={}){
-      const controller=new AbortController();
-      const timer=setTimeout(()=>controller.abort(),12000);
-      try{
-        const response=await fetch(`${SUPABASE_URL}/rest/v1/rpc/${fn}`,{method:"POST",headers:{apikey:SUPABASE_KEY,"Content-Type":"application/json"},body:JSON.stringify(body),signal:controller.signal});
-        const data=await response.json().catch(()=>null);
-        if(!response.ok)throw new Error(data?.message||data?.details||data?.error||"Không thể kết nối máy chủ");
-        return data;
-      }catch(error){if(error?.name==="AbortError")throw new Error("Kết nối máy chủ quá thời gian. Vui lòng thử lại.");throw error}
-      finally{clearTimeout(timer)}
-    }
-    function saveAuth(token,kind,remember){
-      for(const store of [localStorage,sessionStorage]){store.removeItem("hv_token");store.removeItem("hv_auth_kind")}
-      const store=remember?localStorage:sessionStorage;
-      store.setItem("hv_token",token);store.setItem("hv_auth_kind",kind);
-    }
-    const saved=localStorage.getItem("hv_saved_user")||"";
-    if(saved){$("username").value=saved;$("rememberLogin").checked=true}
-    $("togglePassword").onclick=()=>{const input=$("password"),show=input.type==="password";input.type=show?"text":"password";$("togglePassword").textContent=show?"Ẩn":"Hiện"};
-    $("loginForm").addEventListener("submit",async event=>{
-      event.preventDefault();$("loginError").textContent="";
-      const button=$("loginBtn"),username=$("username").value.trim(),password=$("password").value,remember=$("rememberLogin").checked;
-      if(!username||!password){$("loginError").textContent="Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.";return}
-      button.disabled=true;button.textContent="Đang đăng nhập…";
-      try{
-        let result,kind="manager";
-        try{result=await rpc("app_login",{p_username:username,p_password:password})}
-        catch(managerError){
-          try{result=await rpc("app_student_login",{p_username:username,p_password:password});kind=result?.role==="public_theory"?"public_theory":"student"}
-          catch(studentError){if(/app_student_login|schema cache|PGRST202/i.test(errText(studentError)))throw managerError;throw studentError}
-        }
-        if(!result?.token)throw new Error("Không nhận được phiên đăng nhập. Vui lòng thử lại.");
-        saveAuth(result.token,kind,remember);
-        if(remember)localStorage.setItem("hv_saved_user",username);else localStorage.removeItem("hv_saved_user");
-        if(kind==="public_theory")location.replace("/600-cau-hoi.html");
-        else if(kind==="student")location.replace("/hoc-vien.html");
-        else location.replace("/index.html");
-      }catch(error){$("loginError").textContent=errText(error)}
-      finally{button.disabled=false;button.textContent="Đăng nhập →"}
-    });
-    const dialog=$("registerDialog");
-    $("openRegister").onclick=()=>{if(typeof dialog.showModal==="function")dialog.showModal();else dialog.setAttribute("open","");setTimeout(()=>$("regName").focus(),50)};
-    const closeDialog=()=>{if(typeof dialog.close==="function")dialog.close();else dialog.removeAttribute("open")};
-    $("closeRegister").onclick=closeDialog;$("cancelRegister").onclick=closeDialog;
-    $("registerForm").addEventListener("submit",async event=>{
-      event.preventDefault();$("registerError").textContent="";
-      const password=$("regPassword").value;
-      if(password!==$("regConfirm").value){$("registerError").textContent="Hai lần nhập mật khẩu chưa giống nhau.";return}
-      const button=$("registerBtn");button.disabled=true;button.textContent="Đang tạo…";
-      try{
-        const result=await rpc("app_public_theory_register",{p_full_name:$("regName").value.trim(),p_phone:$("regPhone").value.trim(),p_username:$("regUsername").value.trim().toLowerCase(),p_password:password});
-        if(!result?.token)throw new Error("Không nhận được phiên đăng nhập.");
-        saveAuth(result.token,"public_theory",$("regRemember").checked);location.replace("/600-cau-hoi.html");
-      }catch(error){const message=errText(error);$("registerError").textContent=/app_public_theory_register|schema cache|PGRST202/i.test(message)?"Tính năng đăng ký đang được quản trị viên kích hoạt. Vui lòng thử lại sau.":message}
-      finally{button.disabled=false;button.textContent="Tạo tài khoản"}
-    });
-  })();
-  </script>
+  <p>Đang mở cổng đăng nhập… <a href="/?login=1">Tiếp tục</a></p>
 </body>
 </html>
