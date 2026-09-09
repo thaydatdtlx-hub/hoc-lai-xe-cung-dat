@@ -1,1 +1,1 @@
-bump toolbar css v2
+bump theory progress v3
