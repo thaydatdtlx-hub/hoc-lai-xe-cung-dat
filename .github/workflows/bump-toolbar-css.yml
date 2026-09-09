@@ -1,4 +1,4 @@
-name: Bump toolbar CSS version
+name: Replace theory progress UI
 
 on:
   push:
@@ -10,24 +10,134 @@ permissions:
   contents: write
 
 jobs:
-  bump:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update CSS query version
+        with:
+          fetch-depth: 0
+
+      - name: Replace old theory progress section
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('/admin-toolbar-unified.css?v=1','/admin-toolbar-unified.css?v=2')
-          p.write_text(s,encoding='utf-8')
+          import re
+
+          p = Path('hoc-vien.html')
+          s = p.read_text(encoding='utf-8')
+
+          new = r'''<section class="portal-section theory-account-section theory-account-section--v2" aria-labelledby="theoryAccountHeading">
+            <div class="section-heading theory-account-heading theory-account-heading--v2">
+              <div><p>LÝ THUYẾT 600 CÂU</p><h2 id="theoryAccountHeading">Tiến độ học của tôi</h2></div>
+              <a href="/600-cau-hoi.html">Tiếp tục học →</a>
+            </div>
+            <div class="theory-v2-layout">
+              <article class="theory-v2-summary">
+                <div id="theoryProgressRing" class="theory-v2-ring" style="--theory-p:0" role="img" aria-label="Đã học 0%"><div>▤</div></div>
+                <div class="theory-v2-summary-copy"><strong id="theoryPercent">0%</strong><small>Đã học</small><b id="theoryLearned">0/600</b></div>
+              </article>
+              <div class="theory-v2-detail">
+                <div class="theory-v2-grid">
+                  <article id="theoryCorrectCard" class="theory-v2-metric is-correct" style="--metric-p:0"><span>✓</span><div><small>Trả lời đúng</small><strong id="theoryCorrect">0 câu</strong></div><i><b></b></i></article>
+                  <article id="theoryWrongCard" class="theory-v2-metric is-wrong" style="--metric-p:0"><span>×</span><div><small>Trả lời sai</small><strong id="theoryWrong">0 câu</strong></div><i><b></b></i></article>
+                  <article id="theoryExamCard" class="theory-v2-metric is-exam" style="--metric-p:0"><span>⇄</span><div><small>Số lần thi thử</small><strong id="theoryExamCount">0 lần</strong></div><i><b></b></i></article>
+                  <article id="theoryBestCard" class="theory-v2-metric is-best" style="--metric-p:0"><span>★</span><div><small>Kết quả tốt nhất</small><strong id="theoryBestScore">Chưa thi</strong></div><i><b></b></i></article>
+                </div>
+                <div id="theoryLatestExam" class="theory-latest-exam"><span>i</span><p>Hãy bắt đầu học và thi thử để Admin có thể theo dõi, hỗ trợ quá trình ôn tập.</p></div>
+              </div>
+            </div>
+            <style>
+              .theory-account-section--v2{overflow:hidden;background:linear-gradient(135deg,#fff,#f8fbff)!important}
+              .theory-account-section--v2 .theory-account-heading--v2{align-items:center;margin-bottom:16px}
+              .theory-account-section--v2 .theory-account-heading--v2 a{padding:9px 13px;border:1px solid #d7e8f8;border-radius:11px;background:#e8f4ff;color:#126ac2;font-size:9px;font-weight:900;text-decoration:none;transition:.18s ease}
+              .theory-account-section--v2 .theory-account-heading--v2 a:hover{transform:translateY(-1px);background:#dcedff;box-shadow:0 7px 18px #176bc41a}
+              .theory-v2-layout{display:grid;grid-template-columns:minmax(285px,.85fr) minmax(0,2.65fr);gap:14px;align-items:stretch}
+              .theory-v2-summary{display:flex;min-width:0;align-items:center;gap:18px;padding:18px;border:1px solid #dce8f3;border-radius:17px;background:linear-gradient(145deg,#fff,#fbfdff);box-shadow:0 8px 22px #25557b0b}
+              .theory-v2-ring{position:relative;display:grid;width:112px;aspect-ratio:1;place-items:center;flex:0 0 auto;border-radius:50%;background:conic-gradient(#2b7ff0 calc(var(--theory-p)*1%),#e4ecf4 0);box-shadow:0 8px 22px #1c6ec018}
+              .theory-v2-ring:before{content:"";position:absolute;width:84px;aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:inset 0 0 0 9px #eef6ff}
+              .theory-v2-ring>div{position:relative;z-index:1;display:grid;width:54px;aspect-ratio:1;place-items:center;border-radius:16px;background:#e8f3ff;color:#1972d2;font-size:24px;font-weight:950;box-shadow:0 5px 14px #1e6dbb12}
+              .theory-v2-summary-copy{display:grid;min-width:0;gap:3px}.theory-v2-summary-copy>strong{color:#1269d0;font-size:29px;line-height:1;font-weight:950;letter-spacing:-.04em}.theory-v2-summary-copy>small{color:#72879b;font-size:10px;font-weight:850}.theory-v2-summary-copy>b{margin-top:4px;color:#506f90;font-size:13px;font-weight:900}
+              .theory-v2-detail{display:grid;min-width:0;gap:11px}.theory-v2-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+              .theory-v2-metric{position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);grid-template-rows:auto 5px;align-items:center;gap:8px 10px;min-width:0;padding:13px 13px 12px;border:1px solid #dce8f3;border-radius:15px;background:#fff;box-shadow:0 6px 18px #244f7608}
+              .theory-v2-metric>span{display:grid;width:42px;height:42px;grid-row:1;place-items:center;border-radius:12px;font-size:21px;font-weight:900}.theory-v2-metric>div{display:grid;min-width:0;gap:3px}.theory-v2-metric small{color:#74899d;font-size:8px;font-weight:850}.theory-v2-metric strong{overflow:hidden;color:#244f78;font-size:13px;text-overflow:ellipsis;white-space:nowrap}.theory-v2-metric>i{grid-column:1/-1;display:block;height:5px;overflow:hidden;border-radius:999px;background:#edf2f7}.theory-v2-metric>i>b{display:block;width:calc(var(--metric-p)*1%);height:100%;border-radius:inherit;background:currentColor;transition:width .35s ease}
+              .theory-v2-metric.is-correct{color:#14a36f}.theory-v2-metric.is-correct>span{background:#dcf7eb;color:#0c8d63}.theory-v2-metric.is-correct>i{background:#e2f7ef}.theory-v2-metric.is-wrong{color:#ef6a65}.theory-v2-metric.is-wrong>span{background:#ffe5e3;color:#dc4e49}.theory-v2-metric.is-wrong>i{background:#feeae8}.theory-v2-metric.is-exam{color:#7d5be8}.theory-v2-metric.is-exam>span{background:#eee7ff;color:#6b49d7}.theory-v2-metric.is-exam>i{background:#f0ebff}.theory-v2-metric.is-best{color:#d89518}.theory-v2-metric.is-best>span{background:#fff0cf;color:#b8730c}.theory-v2-metric.is-best>i{background:#fff1d4}
+              .theory-account-section--v2 .theory-latest-exam{display:flex;align-items:center;gap:10px;margin:0;padding:11px 13px;border:1px solid #d7e8f7;border-radius:13px;background:#eaf4ff;color:#426b90}.theory-account-section--v2 .theory-latest-exam>span{display:grid;width:28px;height:28px;place-items:center;flex:0 0 auto;border-radius:50%;background:#fff;color:#1671c6;font-weight:950}.theory-account-section--v2 .theory-latest-exam p{margin:0;font-size:9px;line-height:1.5}
+              @media(max-width:980px){.theory-v2-layout{grid-template-columns:1fr}.theory-v2-summary{justify-content:center}.theory-v2-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+              @media(max-width:620px){.theory-account-section--v2{padding:17px}.theory-account-section--v2 .theory-account-heading--v2{align-items:flex-end}.theory-v2-summary{justify-content:flex-start;padding:15px}.theory-v2-ring{width:96px}.theory-v2-ring:before{width:72px}.theory-v2-ring>div{width:48px;font-size:21px}.theory-v2-summary-copy>strong{font-size:25px}.theory-v2-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.theory-v2-metric{grid-template-columns:38px minmax(0,1fr);padding:11px}.theory-v2-metric>span{width:38px;height:38px;font-size:18px}.theory-v2-metric strong{font-size:12px}}
+              @media(max-width:390px){.theory-v2-grid{grid-template-columns:1fr}.theory-v2-summary{gap:14px}.theory-v2-ring{width:88px}.theory-v2-ring:before{width:66px}.theory-v2-summary-copy>strong{font-size:23px}}
+            </style>
+            <script>
+              (()=>{
+                const learned=document.getElementById('theoryLearned'),correct=document.getElementById('theoryCorrect'),wrong=document.getElementById('theoryWrong'),percent=document.getElementById('theoryPercent'),ring=document.getElementById('theoryProgressRing'),exam=document.getElementById('theoryExamCount'),best=document.getElementById('theoryBestScore');
+                const clamp=n=>Math.max(0,Math.min(100,n||0));
+                const setCard=(id,p)=>document.getElementById(id)?.style.setProperty('--metric-p',String(clamp(p)));
+                const sync=()=>{
+                  const lm=(learned?.textContent||'').match(/(\d+)\s*\/\s*(\d+)/),answered=Number(lm?.[1]||0),total=Number(lm?.[2]||600)||600;
+                  const cm=(correct?.textContent||'').match(/\d+/),ok=Number(cm?.[0]||0),bad=Math.max(0,answered-ok),p=total?answered/total*100:0;
+                  if(wrong)wrong.textContent=`${bad} câu`;
+                  if(percent)percent.textContent=p>=99.95?'100%':`${p.toFixed(1).replace(/\.0$/,'')}%`;
+                  if(ring){ring.style.setProperty('--theory-p',String(clamp(p)));ring.setAttribute('aria-label',`Đã học ${percent?.textContent||'0%'}`)}
+                  setCard('theoryCorrectCard',answered?ok/answered*100:0);setCard('theoryWrongCard',answered?bad/answered*100:0);
+                  const em=(exam?.textContent||'').match(/\d+/),ec=Number(em?.[0]||0);setCard('theoryExamCard',Math.min(100,ec*10));
+                  const bm=(best?.textContent||'').match(/(\d+)\s*\/\s*(\d+)/);setCard('theoryBestCard',bm&&Number(bm[2])?Number(bm[1])/Number(bm[2])*100:0);
+                };
+                [learned,correct,exam,best].filter(Boolean).forEach(el=>new MutationObserver(sync).observe(el,{childList:true,subtree:true,characterData:true}));
+                sync();setTimeout(sync,500);setTimeout(sync,1500);
+              })();
+            </script>
+          </section>'''
+
+          pattern = r'<section class="portal-section theory-account-section" aria-labelledby="theoryAccountHeading">.*?</section>'
+          s, n = re.subn(pattern, lambda m: new, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit(f'Expected one old theory progress section, found {n}')
+          p.write_text(s, encoding='utf-8')
           PY
-      - name: Commit
+
+      - name: Restore helper workflow and commit website change
+        shell: bash
         run: |
+          cat > .github/workflows/bump-toolbar-css.yml <<'YML'
+          name: Bump toolbar CSS version
+
+          on:
+            push:
+              branches: [main]
+              paths:
+                - .github/toolbar-css-trigger.txt
+
+          permissions:
+            contents: write
+
+          jobs:
+            bump:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - name: Update CSS query version
+                  run: |
+                    python - <<'PY'
+                    from pathlib import Path
+                    p=Path('index.html')
+                    s=p.read_text(encoding='utf-8')
+                    s=s.replace('/admin-toolbar-unified.css?v=1','/admin-toolbar-unified.css?v=2')
+                    p.write_text(s,encoding='utf-8')
+                    PY
+                - name: Commit
+                  run: |
+                    git config user.name "github-actions[bot]"
+                    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git add index.html
+                    if git diff --cached --quiet; then exit 0; fi
+                    git commit -m "Làm mới đường dẫn CSS bộ icon"
+                    git push
+          YML
+          rm -f .github/workflows/redesign-theory-progress.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Làm mới đường dẫn CSS bộ icon"
-          git push
+          git add hoc-vien.html .github/workflows/bump-toolbar-css.yml
+          git add -u .github/workflows/redesign-theory-progress.yml || true
+          git diff --cached --check
+          git commit -m "Xóa giao diện tiến độ cũ và thay bằng giao diện mới"
+          git push origin main
