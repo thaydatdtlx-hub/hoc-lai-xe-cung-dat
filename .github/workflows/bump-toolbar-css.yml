@@ -1,4 +1,4 @@
-name: Bump toolbar CSS version
+name: Replace attendance UI
 
 on:
   push:
@@ -10,24 +10,138 @@ permissions:
   contents: write
 
 jobs:
-  bump:
+  patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update CSS query version
+        with:
+          fetch-depth: 0
+
+      - name: Replace attendance interface
+        shell: bash
         run: |
-          python - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('/admin-toolbar-unified.css?v=1','/admin-toolbar-unified.css?v=2')
-          p.write_text(s,encoding='utf-8')
+          import re
+
+          html_path = Path('hoc-vien.html')
+          css_path = Path('student.css')
+          js_path = Path('student.js')
+
+          html = html_path.read_text(encoding='utf-8')
+          new_section = '''<section id="studentAttendance" class="portal-section student-attendance-section attendance-v2" aria-labelledby="studentAttendanceHeading">
+            <div class="section-heading attendance-student-heading attendance-v2-heading">
+              <div>
+                <p>CHUYÊN CẦN CỦA TÔI</p>
+                <h2 id="studentAttendanceHeading">Điểm danh &amp; Giờ thực học</h2>
+                <small>Theo dõi tình trạng tham gia và thời lượng học thực tế của bạn.</small>
+              </div>
+              <span id="studentAttendanceRate">0% chuyên cần</span>
+            </div>
+            <div class="student-attendance-metrics attendance-v2-metrics">
+              <article class="attendance-metric-card metric-sessions">
+                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+                <div><small>Tổng buổi</small><strong id="studentAttendanceSessions">0</strong></div>
+              </article>
+              <article class="attendance-metric-card metric-present">
+                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></svg></span>
+                <div><small>Có mặt</small><strong id="studentAttendancePresent">0</strong></div>
+              </article>
+              <article class="attendance-metric-card metric-hours">
+                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v6l4 2"/></svg></span>
+                <div><small>Giờ thực học</small><strong id="studentAttendanceHours">0 giờ</strong></div>
+              </article>
+              <article class="attendance-metric-card metric-absence">
+                <span class="attendance-metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20v-1a6 6 0 0 1 12 0v1M14 16a5 5 0 0 1 7 4"/></svg></span>
+                <div><small>Vắng / Có phép</small><strong id="studentAttendanceAbsent">0 / 0</strong></div>
+              </article>
+            </div>
+            <div class="attendance-history-heading">
+              <h3>Lịch sử điểm danh</h3>
+              <span id="studentAttendanceRecordCount">Hiển thị 0 bản ghi</span>
+            </div>
+            <div id="studentAttendanceList" class="student-attendance-list attendance-v2-list"></div>
+            <p id="studentAttendanceNotice" class="student-payment-history-notice hidden">Dữ liệu điểm danh đang được cập nhật.</p>
+          </section>'''
+
+          pattern = r'<section id="studentAttendance" class="portal-section student-attendance-section" aria-labelledby="studentAttendanceHeading">.*?</section>'
+          html, count = re.subn(pattern, new_section, html, count=1, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'Không tìm thấy đúng 1 giao diện điểm danh cũ (found={count})')
+          html = re.sub(r'href="/student\.css(?:\?[^\"]*)?"', 'href="/student.css?v=20260909-attendance-v2"', html, count=1)
+          html = re.sub(r'src="/student\.js(?:\?[^\"]*)?"', 'src="/student.js?v=20260909-attendance-v2"', html, count=1)
+          html_path.write_text(html, encoding='utf-8')
+
+          css = css_path.read_text(encoding='utf-8')
+          marker = '/* Bước 4: lịch sử điểm danh của học viên */'
+          start = css.find(marker)
+          if start < 0:
+              raise SystemExit('Không tìm thấy CSS điểm danh cũ')
+          end_marker = '@media(max-width:620px){.student-attendance-metrics{grid-template-columns:1fr 1fr}.student-attendance-item{grid-template-columns:1fr auto}.student-attendance-item>div{grid-column:1}.student-attendance-item>b{grid-column:2;grid-row:1/3}}'
+          end_at = css.find(end_marker, start)
+          if end_at < 0:
+              raise SystemExit('Không xác định được cuối CSS điểm danh cũ')
+          end = end_at + len(end_marker)
+
+          new_css = r'''/* Bước 4: giao diện điểm danh học viên v2 */
+.student-attendance-section{position:relative;overflow:hidden;background:linear-gradient(135deg,#ffffff 0%,#f3fffa 100%);border-color:#d8ebe5;box-shadow:0 14px 38px #1f6f5610}.student-attendance-section:before{content:"";position:absolute;right:-70px;top:-95px;width:270px;height:270px;border-radius:50%;background:radial-gradient(circle,#dff8ee 0,#effcf7 45%,transparent 70%);pointer-events:none}.attendance-v2-heading{position:relative;z-index:1;align-items:flex-start;margin-bottom:18px}.attendance-v2-heading>div{display:grid;gap:2px}.attendance-v2-heading>div>small{margin-top:4px;color:#7a8fa5;font-size:9px;font-weight:700}.attendance-v2-heading>span{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid #c7ebdd;border-radius:999px;background:#e5f8ef;color:#087759;font-size:9px;font-weight:900;box-shadow:0 5px 14px #11825c10}.attendance-v2-heading>span:before{content:"✓";display:grid;width:22px;height:22px;place-items:center;border-radius:50%;background:#12a976;color:#fff;font-size:12px;font-weight:950}.attendance-v2-metrics{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:19px}.attendance-v2-metrics .attendance-metric-card{display:flex;min-width:0;align-items:center;gap:12px;padding:15px 16px;border:1px solid #dce8ed;border-radius:16px;background:#fff;box-shadow:0 7px 20px #24557e09}.attendance-metric-card>div{display:grid;min-width:0;gap:3px}.attendance-metric-card small{color:#74899d;font-size:8px;font-weight:850}.attendance-metric-card strong{overflow:hidden;color:#153f69;font-size:19px;line-height:1.15;text-overflow:ellipsis;white-space:nowrap}.attendance-metric-icon{display:grid;width:46px;height:46px;place-items:center;flex:0 0 auto;border-radius:14px;background:#e9f3ff;color:#1976d2}.attendance-metric-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.metric-present .attendance-metric-icon{background:#e1f8ee;color:#0a9a6a}.metric-hours .attendance-metric-icon{background:#eaf4ff;color:#1778da}.metric-absence .attendance-metric-icon{background:#f1f4f8;color:#6f8195}.attendance-history-heading{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 10px;padding:0 2px}.attendance-history-heading h3{margin:0;color:#173e68;font-size:13px}.attendance-history-heading span{color:#75899d;font-size:8px;font-weight:750}.attendance-v2-list{position:relative;z-index:1;display:grid;gap:9px}.student-attendance-item{display:grid;grid-template-columns:minmax(145px,.65fr) minmax(0,2fr) minmax(115px,.55fr);align-items:center;gap:16px;padding:14px 16px;border:1px solid #dce8e5;border-left:5px solid #16ad7b;border-radius:15px;background:#fff;box-shadow:0 6px 18px #24557e07}.student-attendance-item.status-absent{border-left-color:#e06248}.student-attendance-item.status-excused{border-left-color:#d99a28}.student-attendance-date{display:grid;gap:3px;padding-right:16px;border-right:1px solid #e3ebf0}.student-attendance-date b{color:#163f69;font-size:11px}.student-attendance-date small{color:#788da1;font-size:8px}.student-attendance-item>div{display:grid;min-width:0;gap:4px}.student-attendance-item>div>strong{display:inline-flex;width:max-content;max-width:100%;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#e4f8ef;color:#087858;font-size:8px;font-weight:900}.student-attendance-item>div>strong:before{content:"✓";display:grid;width:16px;height:16px;place-items:center;border-radius:50%;background:#11a979;color:#fff;font-size:9px}.student-attendance-item.status-absent>div>strong{background:#fff0eb;color:#b84e34}.student-attendance-item.status-absent>div>strong:before{content:"×";background:#df6247}.student-attendance-item.status-excused>div>strong{background:#fff5df;color:#93610f}.student-attendance-item.status-excused>div>strong:before{content:"!";background:#d89a29}.student-attendance-item>div small{color:#71879a;font-size:8px}.student-attendance-item>div em{overflow-wrap:anywhere;color:#5e7690;font-size:8px;font-style:normal;line-height:1.5}.student-attendance-item>b{display:grid;gap:4px;padding-left:16px;border-left:1px solid #e3ebf0;color:#153f69;font-size:12px;text-align:right;white-space:nowrap}.student-attendance-item>b:before{content:"◷  Thời lượng";color:#7a8ea2;font-size:8px;font-weight:750}.student-attendance-empty{display:grid;min-height:130px;place-items:center;align-content:center;gap:5px;border:1px dashed #c9dfe0;border-radius:15px;background:#ffffffb8;color:#71879a;text-align:center}.student-attendance-empty span{font-size:27px}.student-attendance-empty strong{color:#315f82;font-size:11px}.student-attendance-empty small{font-size:8px}.student-attendance-section .student-payment-history-notice{position:relative;z-index:1}
+@media(max-width:900px){.attendance-v2-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.student-attendance-item{grid-template-columns:125px minmax(0,1fr) 105px;gap:12px}}
+@media(max-width:620px){.attendance-v2-heading{align-items:flex-start;flex-wrap:wrap}.attendance-v2-heading>span{margin-top:2px}.attendance-v2-metrics{grid-template-columns:1fr 1fr;gap:8px}.attendance-v2-metrics .attendance-metric-card{gap:9px;padding:12px}.attendance-metric-icon{width:39px;height:39px;border-radius:12px}.attendance-metric-icon svg{width:20px;height:20px}.attendance-metric-card strong{font-size:16px}.attendance-history-heading{align-items:flex-end}.student-attendance-item{grid-template-columns:1fr;padding:13px 14px;gap:10px}.student-attendance-date{padding-right:0;padding-bottom:9px;border-right:0;border-bottom:1px solid #e6edf1}.student-attendance-item>b{padding:9px 0 0;border-left:0;border-top:1px solid #e6edf1;text-align:left}.student-attendance-item>b:before{display:inline;margin-right:8px}}
+@media(max-width:390px){.attendance-v2-metrics{grid-template-columns:1fr}.attendance-v2-heading>span{width:max-content}.attendance-history-heading{display:grid;gap:3px}}'''
+          css = css[:start] + new_css + css[end:]
+          css_path.write_text(css, encoding='utf-8')
+
+          js = js_path.read_text(encoding='utf-8')
+          needle = '  const summary=attendanceSummary(studentAttendance);\n'
+          insert = needle + '  const attendanceCountEl=$("studentAttendanceRecordCount");if(attendanceCountEl)attendanceCountEl.textContent=`Hiển thị ${studentAttendance.length} bản ghi`;\n'
+          if 'studentAttendanceRecordCount' not in js:
+              if needle not in js:
+                  raise SystemExit('Không tìm thấy hàm renderStudentAttendance để cập nhật số bản ghi')
+              js = js.replace(needle, insert, 1)
+          js_path.write_text(js, encoding='utf-8')
           PY
-      - name: Commit
+
+      - name: Restore helper workflow and commit attendance UI
+        shell: bash
         run: |
+          cat > .github/workflows/bump-toolbar-css.yml <<'YML'
+          name: Bump toolbar CSS version
+
+          on:
+            push:
+              branches: [main]
+              paths:
+                - .github/toolbar-css-trigger.txt
+
+          permissions:
+            contents: write
+
+          jobs:
+            bump:
+              runs-on: ubuntu-latest
+              steps:
+                - uses: actions/checkout@v4
+                - name: Update CSS query version
+                  run: |
+                    python - <<'PY'
+                    from pathlib import Path
+                    p=Path('index.html')
+                    s=p.read_text(encoding='utf-8')
+                    s=s.replace('/admin-toolbar-unified.css?v=1','/admin-toolbar-unified.css?v=2')
+                    p.write_text(s,encoding='utf-8')
+                    PY
+                - name: Commit
+                  run: |
+                    git config user.name "github-actions[bot]"
+                    git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                    git add index.html
+                    if git diff --cached --quiet; then exit 0; fi
+                    git commit -m "Làm mới đường dẫn CSS bộ icon"
+                    git push
+          YML
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "Làm mới đường dẫn CSS bộ icon"
-          git push
+          git add hoc-vien.html student.css student.js .github/workflows/bump-toolbar-css.yml
+          git diff --cached --check
+          git commit -m "Xóa giao diện điểm danh cũ và thay bằng giao diện mới"
+          git push origin main
