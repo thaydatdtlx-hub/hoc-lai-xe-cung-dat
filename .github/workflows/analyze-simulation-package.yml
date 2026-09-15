@@ -39,17 +39,18 @@ jobs:
           msiinfo export Setup.msi Media > report/media.tsv || true
           msiinfo export Setup.msi File > report/file.tsv || true
           cabextract -l Setup1.cab > report/setup1-listing.txt
-          grep -Ei 'chapter[1-6]_th[0-9]+\.pt|count_down\.pt|tss\.db|OnTapMoPhong\.exe' report/setup1-listing.txt > report/setup1-interesting.txt || true
+          grep -Ei 'chapter[1-6]_th[0-9]+\.pt|count_down\.pt|tss\.db|OnTapMoPhong\.exe|sqlitecipher\.dll|qsqlite\.dll' report/setup1-listing.txt > report/setup1-interesting.txt || true
           cat report/setup1-interesting.txt
 
-      - name: Extract small diagnostic targets
+      - name: Extract diagnostic targets
         run: |
           first_pt=$(awk '/chapter[1-6]_th[0-9]+\.pt/{print $NF; exit}' report/setup1-listing.txt || true)
           if [ -n "$first_pt" ]; then
             cabextract -q -d extracted -F "$first_pt" Setup1.cab || true
           fi
-          cabextract -q -d extracted -F 'tss.db' Setup1.cab || true
-          cabextract -q -d extracted -F 'OnTapMoPhong.exe' Setup1.cab || true
+          for f in tss.db OnTapMoPhong.exe sqlitecipher.dll qsqlite.dll; do
+            cabextract -q -d extracted -F "$f" Setup1.cab || true
+          done
           find extracted -maxdepth 1 -type f -printf '%f\t%s bytes\n' | tee report/extracted-files.txt
 
           for f in extracted/*; do
@@ -57,12 +58,33 @@ jobs:
             echo "===== $f =====" | tee -a report/file-analysis.txt
             file "$f" | tee -a report/file-analysis.txt
             xxd -l 128 "$f" | tee -a report/file-analysis.txt
-            ffprobe -v error -show_entries format=format_name,duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate -of json "$f" > "report/$(basename "$f").ffprobe.json" 2>/dev/null || true
-            if [ "$(basename "$f")" = 'tss.db' ]; then
-              sqlite3 "$f" '.tables' > report/tss-tables.txt 2>report/tss-sqlite-error.txt || true
-              sqlite3 "$f" '.schema' > report/tss-schema.txt 2>>report/tss-sqlite-error.txt || true
-            fi
           done
+
+      - name: Verify RC4 video key on first scenario
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          src = next(Path('extracted').glob('chapter*_th*.pt'))
+          out = Path('extracted/first-scenario.mp4')
+          key = bytes.fromhex('175ce5fb82404109cb627c50a5c56115')
+          s = list(range(256)); j = 0
+          for i in range(256):
+              j = (j + s[i] + key[i % len(key)]) & 255
+              s[i], s[j] = s[j], s[i]
+          i = j = 0
+          with src.open('rb') as fi, out.open('wb') as fo:
+              while True:
+                  chunk = fi.read(1024 * 1024)
+                  if not chunk: break
+                  buf = bytearray(len(chunk))
+                  for n, b in enumerate(chunk):
+                      i = (i + 1) & 255
+                      j = (j + s[i]) & 255
+                      s[i], s[j] = s[j], s[i]
+                      buf[n] = b ^ s[(s[i] + s[j]) & 255]
+                  fo.write(buf)
+          PY
+          ffprobe -v error -show_entries format=format_name,duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate -of json extracted/first-scenario.mp4 | tee report/first-scenario.ffprobe.json
 
       - name: Save report and bounded samples
         uses: actions/upload-artifact@v4
@@ -74,7 +96,9 @@ jobs:
             sizes.txt
             extracted/tss.db
             extracted/OnTapMoPhong.exe
-            extracted/*.pt
+            extracted/sqlitecipher.dll
+            extracted/qsqlite.dll
+            extracted/first-scenario.mp4
           if-no-files-found: warn
           compression-level: 0
           retention-days: 1
