@@ -1,0 +1,83 @@
+name: Publish built simulation media
+on:
+  push:
+    branches: [docs/simulation-media-source-audit]
+    paths: [.github/workflows/publish-built-simulation-media.yml]
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+  id-token: write
+env:
+  BUILD_RUN_ID: '34956734310'
+  UPLOAD_FUNCTION: https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload
+  PUBLIC_MEDIA_BASE: https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/simulation-media-source-audit
+      - name: Wait for media build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 90); do
+            json=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_RUN_ID}")
+            status=$(echo "$json" | jq -r .status)
+            conclusion=$(echo "$json" | jq -r .conclusion)
+            echo "media build: $status / $conclusion"
+            if [ "$status" = completed ]; then test "$conclusion" = success; exit $?; fi
+            sleep 20
+          done
+          exit 1
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ env.BUILD_RUN_ID }}
+          pattern: simulation-media-cab-*
+          path: media
+          merge-multiple: true
+      - name: Verify 120 videos
+        run: |
+          test $(find media -type f -name 'chapter*_th*.mp4' | wc -l) -eq 120
+          du -sh media
+      - name: Upload media to project storage
+        run: |
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
+          OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
+          for f in media/chapter*_th*.mp4; do
+            id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
+            test "$id" -ge 1 -a "$id" -le 120
+            resp=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION")
+            signed=$(echo "$resp" | jq -r .signedUrl)
+            test -n "$signed" -a "$signed" != null
+            curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
+            printf 'uploaded %03d\n' "$id"
+          done
+      - name: Build production manifest
+        run: |
+          python - <<'PY'
+          import json, os
+          src=json.load(open('public/data/mo-phong-120-timing-source.json',encoding='utf-8'))
+          base=os.environ['PUBLIC_MEDIA_BASE']; scenarios=[]
+          for x in src['scenarios']:
+              start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
+              windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
+              scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
+          out={'version':'2.0.0-web-2026-09-15','note':'120 authorized simulation videos optimized for web; score windows derived from verified tss.db start/end markers.','scenarios':scenarios}
+          with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
+          PY
+          node scripts/test-simulation-media.mjs
+          node --check public/mo-phong/core.mjs
+          node --check public/mo-phong/app.mjs
+      - name: Commit production manifest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/mo-phong-120-media.json
+          git commit -m 'data: publish 120 simulation media URLs'
+          git push origin HEAD:docs/simulation-media-source-audit
