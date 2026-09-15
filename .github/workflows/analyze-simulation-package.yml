@@ -12,7 +12,6 @@ permissions:
   contents: read
 
 env:
-  SETUP_MSI_ID: 1sR3TGcdd6G_PlSW66ixKMQ-WvBgZx2j5
   SETUP1_CAB_ID: 1ikfLw9io14py41qRbycRZg2trWL6m2iF
 
 jobs:
@@ -20,83 +19,67 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Install analysis tools
+      - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cabextract msitools ffmpeg file cmake ninja-build
-          python -m pip install --disable-pip-version-check gdown pycryptodome
+          sudo apt-get install -y cabextract cmake ninja-build binutils
+          python -m pip install --disable-pip-version-check gdown
 
-      - name: Download MSI and first cabinet from shared Drive
-        run: |
-          gdown "https://drive.google.com/uc?id=${SETUP_MSI_ID}" -O Setup.msi
-          gdown "https://drive.google.com/uc?id=${SETUP1_CAB_ID}" -O Setup1.cab
-          sha256sum Setup.msi Setup1.cab | tee sha256.txt
-          ls -lh Setup.msi Setup1.cab | tee sizes.txt
-
-      - name: Inspect MSI tables and cabinet listing
+      - name: Download first cabinet and extract database components
         run: |
           mkdir -p report extracted
-          msiinfo export Setup.msi Media > report/media.tsv || true
-          msiinfo export Setup.msi File > report/file.tsv || true
-          cabextract -l Setup1.cab > report/setup1-listing.txt
-          grep -Ei 'chapter[1-6]_th[0-9]+\.pt|count_down\.pt|tss\.db|OnTapMoPhong\.exe|sqlitecipher\.dll|qsqlite\.dll' report/setup1-listing.txt > report/setup1-interesting.txt || true
-
-      - name: Extract diagnostic targets
-        run: |
-          first_pt=$(awk '/chapter[1-6]_th[0-9]+\.pt/{print $NF; exit}' report/setup1-listing.txt || true)
-          if [ -n "$first_pt" ]; then cabextract -q -d extracted -F "$first_pt" Setup1.cab || true; fi
-          for f in tss.db OnTapMoPhong.exe sqlitecipher.dll qsqlite.dll; do cabextract -q -d extracted -F "$f" Setup1.cab || true; done
-          find extracted -maxdepth 1 -type f -printf '%f\t%s bytes\n' | tee report/extracted-files.txt
-
-      - name: Verify first scenario media
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          from Crypto.Cipher import ARC4
-          src = next(Path('extracted').glob('chapter*_th*.pt'))
-          out = Path('extracted/first-scenario.mp4')
-          key = bytes.fromhex('175ce5fb82404109cb627c50a5c56115')
-          cipher = ARC4.new(key)
-          with src.open('rb') as fi, out.open('wb') as fo:
-              while chunk := fi.read(1024 * 1024): fo.write(cipher.decrypt(chunk))
-          PY
-          ffprobe -v error -show_entries format=format_name,duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate -of json extracted/first-scenario.mp4 | tee report/first-scenario.ffprobe.json
+          gdown "https://drive.google.com/uc?id=${SETUP1_CAB_ID}" -O Setup1.cab
+          cabextract -q -d extracted -F 'tss.db' Setup1.cab || true
+          cabextract -q -d extracted -F 'OnTapMoPhong.exe' Setup1.cab || true
+          test -s extracted/tss.db
+          test -s extracted/OnTapMoPhong.exe
+          sha256sum extracted/tss.db | tee report/tss-db-sha256.txt
 
       - name: Build SQLite3 Multiple Ciphers shell
         run: |
           git clone --depth 1 https://github.com/utelle/SQLite3MultipleCiphers.git sqlite3mc-src
           cmake -S sqlite3mc-src -B sqlite3mc-build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSQLITE3MC_BUILD_SHELL=ON
           cmake --build sqlite3mc-build --config Release
-          find sqlite3mc-build -type f -perm -111 -maxdepth 4 -print | tee report/sqlite3mc-binaries.txt
+          test -x sqlite3mc-build/sqlite3mc_shell
 
-      - name: Probe encrypted database with supported ciphers
+      - name: Export schema and all video rows
         shell: bash
         run: |
-          DB_PASS='db161602241ec0dcc682d0ff6d481db010c686'
-          MC=$(find sqlite3mc-build -type f -perm -111 -name 'sqlite3mc*' | head -n1)
-          if [ -z "$MC" ]; then MC=$(find sqlite3mc-build -type f -perm -111 -name 'sqlite3*' | head -n1); fi
-          echo "shell=$MC" | tee report/tss-sqlite3mc-results.txt
-          for cipher in chacha20 aes128cbc aes256cbc sqlcipher rc4; do
-            for legacy in 0 1 2 3 4; do
-              echo "=== cipher=$cipher legacy=$legacy ===" | tee -a report/tss-sqlite3mc-results.txt
-              printf "PRAGMA cipher='%s';\nPRAGMA legacy=%s;\nPRAGMA key='%s';\nSELECT count(*) AS objects FROM sqlite_master;\nSELECT name,type FROM sqlite_master ORDER BY type,name;\n" "$cipher" "$legacy" "$DB_PASS" | "$MC" extracted/tss.db >> report/tss-sqlite3mc-results.txt 2>&1 || true
-            done
-          done
-          cat report/tss-sqlite3mc-results.txt
+          DB_PASS=$(strings -a extracted/OnTapMoPhong.exe | grep -E '^db[0-9a-f]{32,64}$' | head -n 1)
+          test -n "$DB_PASS"
+          MC=sqlite3mc-build/sqlite3mc_shell
 
-      - name: Save report and bounded samples
+          {
+            echo "PRAGMA cipher='chacha20';"
+            printf "PRAGMA key='%s';\n" "$DB_PASS"
+            echo '.schema video'
+            echo 'PRAGMA table_info(video);'
+            echo 'SELECT count(*) AS video_rows FROM video;'
+          } > report/schema.sql
+          "$MC" extracted/tss.db < report/schema.sql > report/video-schema.txt 2> report/video-schema-error.txt
+
+          {
+            echo "PRAGMA cipher='chacha20';"
+            printf "PRAGMA key='%s';\n" "$DB_PASS"
+            echo '.headers on'
+            echo '.mode csv'
+            echo 'SELECT * FROM video ORDER BY chapter, th;'
+          } > report/export.sql
+          "$MC" extracted/tss.db < report/export.sql > report/video.csv 2> report/video-export-error.txt
+
+          sed -i 's/^PRAGMA key=.*/PRAGMA key=[REDACTED];/' report/schema.sql report/export.sql
+          echo '--- schema ---'
+          cat report/video-schema.txt
+          echo '--- first rows ---'
+          head -n 8 report/video.csv
+          echo '--- row count including header ---'
+          wc -l report/video.csv
+
+      - name: Save database report
         uses: actions/upload-artifact@v4
         with:
-          name: simulation-package-analysis
-          path: |
-            report/
-            sha256.txt
-            sizes.txt
-            extracted/tss.db
-            extracted/OnTapMoPhong.exe
-            extracted/sqlitecipher.dll
-            extracted/qsqlite.dll
-            extracted/first-scenario.mp4
-          if-no-files-found: warn
-          compression-level: 0
+          name: simulation-database-export
+          path: report/
+          if-no-files-found: error
+          compression-level: 9
           retention-days: 1
