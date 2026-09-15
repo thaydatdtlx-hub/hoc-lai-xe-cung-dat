@@ -9,21 +9,8 @@ permissions:
   id-token: write
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        cab:
-          - { n: 1, id: 1ikfLw9io14py41qRbycRZg2trWL6m2iF }
-          - { n: 2, id: 1kVXx_f3jFHLesGpTjLvc_R450q1FGYRB }
-          - { n: 3, id: 1rgTl3ErAVbXuFz5PeUI-OByGQ5r6wWWN }
-          - { n: 4, id: 1fXNLVmSoJIletvvjzrKgyp-kmX-ZiKYW }
-          - { n: 5, id: 1rM0gNFKpIg1VsGMNUYG-vY8U-LkwT14Q }
-          - { n: 6, id: 1WHGeBgBzAS8xn25hzqqbwtT3E2PbH-L3 }
-          - { n: 7, id: 1VdGpL3p3ffA4l696MukzVeuLJhp3uGyx }
-          - { n: 8, id: 1LPzDCKkd5nREv0ozoTwtAv8uJgh7JGXH }
-          - { n: 9, id: 1cJSbq-uod426Wf_AhdSAGl8NImweZU1I }
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - run: |
@@ -37,33 +24,53 @@ jobs:
           KEY=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data '{"action":"media-key"}' https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload | jq -r .key)
           test ${#KEY} -eq 32
           echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
-      - name: Download cabinet
+      - name: Download complete spanned cabinet set
         run: |
-          gdown "https://drive.google.com/uc?id=${{ matrix.cab.id }}" -O setup.cab
-          mkdir -p encoded media
-          cabextract -q -d encoded setup.cab
-          count=$(find encoded -type f -name 'chapter*_th*.pt' | wc -l)
-          echo "scenario files in cabinet: $count"
-          test "$count" -gt 0
-      - name: Convert to web MP4
+          ids=(
+            1ikfLw9io14py41qRbycRZg2trWL6m2iF
+            1kVXx_f3jFHLesGpTjLvc_R450q1FGYRB
+            1rgTl3ErAVbXuFz5PeUI-OByGQ5r6wWWN
+            1fXNLVmSoJIletvvjzrKgyp-kmX-ZiKYW
+            1rM0gNFKpIg1VsGMNUYG-vY8U-LkwT14Q
+            1WHGeBgBzAS8xn25hzqqbwtT3E2PbH-L3
+            1VdGpL3p3ffA4l696MukzVeuLJhp3uGyx
+            1LPzDCKkd5nREv0ozoTwtAv8uJgh7JGXH
+            1cJSbq-uod426Wf_AhdSAGl8NImweZU1I
+          )
+          for i in $(seq 1 9); do
+            gdown "https://drive.google.com/uc?id=${ids[$((i-1))]}" -O "Setup${i}.cab"
+          done
+          ls -lh Setup*.cab
+          df -h .
+      - name: Prepare decoder
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('/tmp/decode.py')
-          p.write_text('''import sys\nfrom pathlib import Path\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3]); s=list(range(256)); j=0\nfor i in range(256): j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n while chunk:=fi.read(1048576):\n  out=bytearray(len(chunk))\n  for n,x in enumerate(chunk):\n   i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n  fo.write(out)\n''')
+          Path('/tmp/decode.py').write_text('''import sys\nfrom pathlib import Path\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3]); s=list(range(256)); j=0\nfor i in range(256): j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n while chunk:=fi.read(1048576):\n  out=bytearray(len(chunk))\n  for n,x in enumerate(chunk):\n   i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n  fo.write(out)\n''')
           PY
-          find encoded -type f -name 'chapter*_th*.pt' -print0 | while IFS= read -r -d '' f; do
-            name=$(basename "$f" .pt)
-            python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
-            ffprobe -v error /tmp/source.mp4 >/dev/null
-            ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
+      - name: Extract and convert all 120 scenarios
+        run: |
+          mkdir -p media encoded
+          for chapter in 1 2 3 4 5 6; do
+            rm -rf encoded/*
+            cabextract -q -d encoded -F "chapter${chapter}_th*.pt" Setup1.cab
+            count=$(find encoded -type f -name "chapter${chapter}_th*.pt" | wc -l)
+            echo "chapter $chapter encrypted files: $count"
+            test "$count" -gt 0
+            find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | while IFS= read -r -d '' f; do
+              name=$(basename "$f" .pt)
+              python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
+              ffprobe -v error /tmp/source.mp4 >/dev/null
+              ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
+            done
           done
-          count=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
-          echo "converted videos: $count"
-          test "$count" -gt 0
+          total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
+          echo "converted videos: $total"
+          test "$total" -eq 120
+          du -sh media
       - uses: actions/upload-artifact@v4
         with:
-          name: simulation-media-cab-${{ matrix.cab.n }}
+          name: simulation-media-120
           path: media/chapter*_th*.mp4
           compression-level: 0
           retention-days: 1
