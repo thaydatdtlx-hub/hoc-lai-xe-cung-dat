@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {chapterOf, validateManifest, scoreAt, makeExam} from '../public/mo-phong/core.mjs';
+import {chapterOf, EXAM_CHAPTER_COUNTS, validateManifest, scoreAt, makeExam} from '../public/mo-phong/core.mjs';
 // Synthetic timeline for algorithm tests only. Never included in the production manifest.
 const scenario = id => ({id, chapter: chapterOf(id), title: 'Synthetic fixture', videoUrl: '/fixture.mp4', durationSeconds: 20,
   scoreWindows: Array.from({length:5},(_,i)=>({score:5-i,start:5+i,end:6+i})),
@@ -18,9 +18,11 @@ assert.throws(()=>scoreAt(good.scenarios[0],NaN));
 for (const mutate of [d=>d.scenarios.push(scenario(1)),d=>d.scenarios[0].scoreWindows[1].start=4,d=>d.scenarios[0].durationSeconds=6,d=>d.scenarios[0].chapter=2,d=>d.scenarios[0].videoUrl='javascript:alert(1)',d=>delete d.scenarios[0].source]) {
  const d=structuredClone(good);mutate(d);assert.ok(validateManifest(d).length);
 }
-assert.equal(new Set(makeExam(good.scenarios).map(s=>s.id)).size,10);
+const exam = makeExam(good.scenarios, () => 0.314159);
+assert.equal(new Set(exam.map(s=>s.id)).size,10);
+assert.deepEqual(Array.from({length:6},(_,i)=>exam.filter(s=>chapterOf(s.id)===i+1).length),EXAM_CHAPTER_COUNTS);
 assert.throws(()=>makeExam(good.scenarios.slice(0,119)));
 const pending=JSON.parse(await readFile(new URL('../public/data/mo-phong-120-media.json',import.meta.url)));
 assert.deepEqual(validateManifest(pending),[]);
 assert.ok(validateManifest(pending,{requireComplete:true}).length);
-console.log('PASS: boundary scores, missing/invalid data, chapter mapping, 10 unique exam items, pending release blocked.');
+console.log('PASS: boundary scores, invalid data, chapter mapping, exam chapter quotas, pending release blocked.');
