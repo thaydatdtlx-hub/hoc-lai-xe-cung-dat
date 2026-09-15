@@ -1,4 +1,5 @@
 export const CHAPTER_ENDS = [29, 43, 63, 73, 90, 120];
+export const EXAM_CHAPTER_COUNTS = [2, 1, 2, 1, 2, 2];
 export const chapterOf = id => CHAPTER_ENDS.findIndex(end => id <= end) + 1;
 const finite = n => typeof n === 'number' && Number.isFinite(n);
 export function validateManifest(data, {requireComplete = false} = {}) {
@@ -30,11 +31,24 @@ export function scoreAt(scenario, seconds) {
   if (!finite(seconds) || seconds < 0) throw new Error('Thời điểm không hợp lệ.');
   return scenario.scoreWindows.find(w => seconds >= w.start && seconds < w.end)?.score ?? 0;
 }
+function shuffle(items, random) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
 export function makeExam(scenarios, random = Math.random) {
   if (scenarios.length !== 120 || new Set(scenarios.map(s => s.id)).size !== 120) throw new Error('Thi thử cần đủ 120 tình huống hợp lệ.');
-  const copy = [...scenarios];
-  for (let i = copy.length-1; i > 0; i--) { const j = Math.floor(random()*(i+1)); [copy[i], copy[j]] = [copy[j], copy[i]]; }
-  return copy.slice(0,10);
+  const selected = [];
+  for (let chapter = 1; chapter <= 6; chapter++) {
+    const pool = scenarios.filter(s => chapterOf(s.id) === chapter);
+    const need = EXAM_CHAPTER_COUNTS[chapter - 1];
+    if (pool.length < need) throw new Error(`Chương ${chapter} không đủ tình huống để tạo đề.`);
+    selected.push(...shuffle(pool, random).slice(0, need));
+  }
+  return shuffle(selected, random);
 }
 export async function loadManifest(url = '/data/mo-phong-120-media.json') {
   const response = await fetch(url, {cache: 'no-store', signal: AbortSignal.timeout(15000)});
