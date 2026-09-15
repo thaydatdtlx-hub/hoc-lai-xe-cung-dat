@@ -17,7 +17,7 @@ jobs:
       - name: Install package tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cabextract msitools build-essential
+          sudo apt-get install -y cabextract msitools build-essential cmake
           python -m pip install --disable-pip-version-check gdown
       - name: Download first package cabinet
         run: |
