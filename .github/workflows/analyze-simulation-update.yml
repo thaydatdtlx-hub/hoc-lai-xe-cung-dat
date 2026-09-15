@@ -9,46 +9,26 @@ permissions:
 jobs:
   inspect-update:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 5
     steps:
       - name: Install tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y unrar cmake ninja-build binutils
+          sudo apt-get install -y unrar binutils
           python -m pip install --disable-pip-version-check gdown
-      - name: Download and extract update
+      - name: Inspect update payload
         run: |
           mkdir -p update report
           gdown 'https://drive.google.com/uc?id=1lteAIGUPs2yQRN-ds2A62G7tghEcZ2d7' -O update.rar
           unrar x -o+ update.rar update/
           find update -type f -printf '%P\t%s\n' | sort | tee report/files.txt
-          sha256sum update/* 2>/dev/null | tee report/sha256.txt || true
-      - name: Build database reader
-        run: |
-          git clone --depth 1 https://github.com/utelle/SQLite3MultipleCiphers.git sqlite3mc-src
-          cmake -S sqlite3mc-src -B sqlite3mc-build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSQLITE3MC_BUILD_SHELL=ON
-          cmake --build sqlite3mc-build --config Release
-      - name: Export updated database
-        shell: bash
-        run: |
-          DB=$(find update -type f -iname 'tss.db' | head -1)
+          find update -type f -exec sha256sum {} \; > report/sha256.txt
           EXE=$(find update -type f -iname 'OnTapMoPhong.exe' | head -1)
-          test -s "$DB"; test -s "$EXE"
-          DB_PASS=$(strings -a "$EXE" | grep -E '^db[0-9a-f]{32,64}$' | head -1)
-          test -n "$DB_PASS"
-          MC=sqlite3mc-build/sqlite3mc_shell
-          {
-            echo "PRAGMA cipher='chacha20';"
-            printf "PRAGMA key='%s';\n" "$DB_PASS"
-            echo '.headers on'; echo '.mode csv'; echo 'SELECT * FROM video ORDER BY chapter, th;'
-          } | "$MC" "$DB" > report/video-updated.csv 2>report/video-error.txt
-          {
-            echo "PRAGMA cipher='chacha20';"
-            printf "PRAGMA key='%s';\n" "$DB_PASS"
-            echo '.schema video'; echo 'SELECT count(*) FROM video;'
-          } | "$MC" "$DB" > report/schema.txt 2>report/schema-error.txt
-          strings -a "$EXE" | grep -Ei 'rank_score|milestone|score|select \* from video|tss.db|SQLITECIPHER|chacha|duration|start|end' > report/relevant-strings.txt || true
-          head -8 report/video-updated.csv
+          LC4=$(find update -type f -name 'lc4' | head -1)
+          strings -a "$EXE" | grep -Ei 'rank_score|milestone|score|select \* from video|tss.db|SQLITECIPHER|chacha|duration|start|end|^[0-9a-f]{32,}$' > report/relevant-strings.txt || true
+          xxd "$LC4" > report/lc4.hex
+          strings -a "$LC4" > report/lc4.txt || true
+          cat report/files.txt report/lc4.hex report/lc4.txt
       - name: Upload report
         uses: actions/upload-artifact@v4
         with:
