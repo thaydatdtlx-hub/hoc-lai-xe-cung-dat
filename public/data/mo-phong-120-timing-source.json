@@ -1,1 +1,1089 @@
-PLACEHOLDER
+{
+  "version": "2.0.0-base-2024-01",
+  "timeEncoding": "MM:SS:centiseconds interpreted from tss.db; normalized to seconds",
+  "scenarioCount": 120,
+  "sourcePackage": "OnTapMoPhongSetup v2.0.0 x64",
+  "sourceDatabaseSha256": "bc897759dbb296a5ef9a01e2fc277268f256dfcba1b534daa9a882af0c8689ec",
+  "scenarios": [
+    {
+      "id": 1,
+      "chapter": 1,
+      "file": "chapter1_th1.pt",
+      "durationMilliseconds": 17043,
+      "dangerStart": 7.02,
+      "dangerEnd": 9.5,
+      "title": "Người đi bộ sang đường bị khuất sau xe tải"
+    },
+    {
+      "id": 2,
+      "chapter": 1,
+      "file": "chapter1_th2.pt",
+      "durationMilliseconds": 29525,
+      "dangerStart": 14.3,
+      "dangerEnd": 16.5,
+      "title": "Người đi bộ vượt đèn đỏ sang đường"
+    },
+    {
+      "id": 3,
+      "chapter": 1,
+      "file": "chapter1_th3.pt",
+      "durationMilliseconds": 24050,
+      "dangerStart": 11.36,
+      "dangerEnd": 14.3,
+      "title": "Xe phía trước phanh gấp để tránh xe buýt đang dừng tại bến xe buýt"
+    },
+    {
+      "id": 4,
+      "chapter": 1,
+      "file": "chapter1_th4.pt",
+      "durationMilliseconds": 24433,
+      "dangerStart": 7.06,
+      "dangerEnd": 11.5,
+      "title": "Xe con từ đường nhánh đi nhanh ra tại ngã ba không có đèn tín hiệu giao thông"
+    },
+    {
+      "id": 5,
+      "chapter": 1,
+      "file": "chapter1_th5.pt",
+      "durationMilliseconds": 23466,
+      "dangerStart": 8.55,
+      "dangerEnd": 13.0,
+      "title": "Xe máy đang đi thẳng, đột ngột rẽ trái sang đường trước đầu xe bạn"
+    },
+    {
+      "id": 6,
+      "chapter": 1,
+      "file": "chapter1_th6.pt",
+      "durationMilliseconds": 20850,
+      "dangerStart": 9.42,
+      "dangerEnd": 13.0,
+      "title": "Xe buýt lấn làn để vượt tại ngã ba"
+    },
+    {
+      "id": 7,
+      "chapter": 1,
+      "file": "chapter1_th7.pt",
+      "durationMilliseconds": 23066,
+      "dangerStart": 7.07,
+      "dangerEnd": 11.36,
+      "title": "Xe phía trước phanh gấp tránh người đi bộ vượt đèn đỏ sang đường"
+    },
+    {
+      "id": 8,
+      "chapter": 1,
+      "file": "chapter1_th8.pt",
+      "durationMilliseconds": 24170,
+      "dangerStart": 7.1,
+      "dangerEnd": 10.09,
+      "title": "Xe đạp bất ngờ đi ra từ đường nhánh tại ngã ba"
+    },
+    {
+      "id": 9,
+      "chapter": 1,
+      "file": "chapter1_th9.pt",
+      "durationMilliseconds": 13400,
+      "dangerStart": 4.48,
+      "dangerEnd": 7.33,
+      "title": "Xe ô tô làn đường đối diện lấn làn vượt xe tải đang dừng đỗ tại khu vực đông đúc"
+    },
+    {
+      "id": 10,
+      "chapter": 1,
+      "file": "chapter1_th10.pt",
+      "durationMilliseconds": 21333,
+      "dangerStart": 8.25,
+      "dangerEnd": 12.47,
+      "title": "Xe ô tô bất ngờ đi nhanh ra từ đường nhánh bên trái tại ngã ba"
+    },
+    {
+      "id": 11,
+      "chapter": 1,
+      "file": "chapter1_th11.pt",
+      "durationMilliseconds": 22650,
+      "dangerStart": 6.44,
+      "dangerEnd": 14.1,
+      "title": "Xe bồn bê-tông từ đường nhánh lấn làn để rẽ tại ngã ba không có đèn giao thông có nhiều xe đang dừng đỗ"
+    },
+    {
+      "id": 12,
+      "chapter": 1,
+      "file": "chapter1_th12.pt",
+      "durationMilliseconds": 26922,
+      "dangerStart": 10.0,
+      "dangerEnd": 12.2,
+      "title": "Xe mô-tô lấn làn vượt ẩu nguy hiểm tại giao lộ"
+    },
+    {
+      "id": 13,
+      "chapter": 1,
+      "file": "chapter1_th13.pt",
+      "durationMilliseconds": 20083,
+      "dangerStart": 7.48,
+      "dangerEnd": 10.12,
+      "title": "Người đi xe đạp từ vỉa hè bất ngờ đi xuống đường để sang đường"
+    },
+    {
+      "id": 14,
+      "chapter": 1,
+      "file": "chapter1_th14.pt",
+      "durationMilliseconds": 24116,
+      "dangerStart": 10.35,
+      "dangerEnd": 14.3,
+      "title": "Tình huống nguy hiểm khi gặp xe tải lớn đi qua hầm chui dân sinh"
+    },
+    {
+      "id": 15,
+      "chapter": 1,
+      "file": "chapter1_th15.pt",
+      "durationMilliseconds": 23200,
+      "dangerStart": 9.37,
+      "dangerEnd": 12.11,
+      "title": "Xe phía trước phanh gấp để tránh xe chuyển làn rẽ trái tại ngã ba"
+    },
+    {
+      "id": 16,
+      "chapter": 1,
+      "file": "chapter1_th16.pt",
+      "durationMilliseconds": 20233,
+      "dangerStart": 7.35,
+      "dangerEnd": 10.27,
+      "title": "Xe ô tô từ đường nhánh bên trái bất ngờ đi nhanh ra có nguy cơ va chạm với xe bạn"
+    },
+    {
+      "id": 17,
+      "chapter": 1,
+      "file": "chapter1_th17.pt",
+      "durationMilliseconds": 19000,
+      "dangerStart": 4.56,
+      "dangerEnd": 7.3,
+      "title": "Xe buýt lấn làn đường vượt ẩu tại ngã tư có đèn giao thông"
+    },
+    {
+      "id": 18,
+      "chapter": 1,
+      "file": "chapter1_th18.pt",
+      "durationMilliseconds": 21300,
+      "dangerStart": 7.5,
+      "dangerEnd": 11.1,
+      "title": "Gặp tài xế xe đang dừng đỗ ven đường đột ngột mở cửa xe"
+    },
+    {
+      "id": 19,
+      "chapter": 1,
+      "file": "chapter1_th19.pt",
+      "durationMilliseconds": 18901,
+      "dangerStart": 9.05,
+      "dangerEnd": 11.55,
+      "title": "Tài xế xe dừng bên đường đang mở cửa xe"
+    },
+    {
+      "id": 20,
+      "chapter": 1,
+      "file": "chapter1_th20.pt",
+      "durationMilliseconds": 27285,
+      "dangerStart": 15.08,
+      "dangerEnd": 18.4,
+      "title": "Tài xế xe đang đỗ ven đường đi ra mở cửa xe tại khu vực đường hẹp đường hẹp"
+    },
+    {
+      "id": 21,
+      "chapter": 1,
+      "file": "chapter1_th21.pt",
+      "durationMilliseconds": 29418,
+      "dangerStart": 10.0,
+      "dangerEnd": 13.23,
+      "title": "Xe tô tô phía dừng lại và lùi vào nơi đỗ tại khu vực đường hẹp"
+    },
+    {
+      "id": 22,
+      "chapter": 1,
+      "file": "chapter1_th22.pt",
+      "durationMilliseconds": 22800,
+      "dangerStart": 9.45,
+      "dangerEnd": 12.41,
+      "title": "Gặp xe ô tô từ đường nhánh bên phải tại ngã ba đi ra với tốc độ nhanh"
+    },
+    {
+      "id": 23,
+      "chapter": 1,
+      "file": "chapter1_th23.pt",
+      "durationMilliseconds": 22650,
+      "dangerStart": 11.4,
+      "dangerEnd": 14.2,
+      "title": "Xe ô tô đối diện lấn làn vượt xe đang có tín hiệu dừng khẩn cấp"
+    },
+    {
+      "id": 24,
+      "chapter": 1,
+      "file": "chapter1_th24.pt",
+      "durationMilliseconds": 24200,
+      "dangerStart": 10.14,
+      "dangerEnd": 13.14,
+      "title": "Xe tải lớn ở làn đối diện lấn làn vượt xe đang thu gom rác"
+    },
+    {
+      "id": 25,
+      "chapter": 1,
+      "file": "chapter1_th25.pt",
+      "durationMilliseconds": 35178,
+      "dangerStart": 7.2,
+      "dangerEnd": 14.28,
+      "title": "Xe ô tô khách bất ngờ đi ra từ nơi đỗ tại đường hẹp"
+    },
+    {
+      "id": 26,
+      "chapter": 1,
+      "file": "chapter1_th26.pt",
+      "durationMilliseconds": 33237,
+      "dangerStart": 9.18,
+      "dangerEnd": 14.05,
+      "title": "Tránh xe tại khu vực công trình sửa đường xuất hiện sau khúc cua"
+    },
+    {
+      "id": 27,
+      "chapter": 1,
+      "file": "chapter1_th27.pt",
+      "durationMilliseconds": 24733,
+      "dangerStart": 10.52,
+      "dangerEnd": 13.5,
+      "title": "Xe khách bật đèn cảnh báo dừng giữa ngã tư để đón khách"
+    },
+    {
+      "id": 28,
+      "chapter": 1,
+      "file": "chapter1_th28.pt",
+      "durationMilliseconds": 25941,
+      "dangerStart": 8.28,
+      "dangerEnd": 12.0,
+      "title": "Xe ô tô phía trước đang đi, đột ngột phanh gấp khi gặp vũng nước trên đường"
+    },
+    {
+      "id": 29,
+      "chapter": 1,
+      "file": "chapter1_th29.pt",
+      "durationMilliseconds": 23978,
+      "dangerStart": 8.27,
+      "dangerEnd": 12.0,
+      "title": "Trời mưa, ô tô phía trước phanh gấp để tránh xe mô-tô tạt đầu khi gặp chướng ngại vật"
+    },
+    {
+      "id": 30,
+      "chapter": 2,
+      "file": "chapter2_th30.pt",
+      "durationMilliseconds": 27136,
+      "dangerStart": 7.24,
+      "dangerEnd": 12.0,
+      "title": "Đường nông thôn, xe đi gặp đàn bò đang đứng trên đường"
+    },
+    {
+      "id": 31,
+      "chapter": 2,
+      "file": "chapter2_th31.pt",
+      "durationMilliseconds": 27608,
+      "dangerStart": 6.2,
+      "dangerEnd": 11.3,
+      "title": "Đường nông thôn, gặp đàn bò đi từ dưới vệ đường băng qua đường"
+    },
+    {
+      "id": 32,
+      "chapter": 2,
+      "file": "chapter2_th32.pt",
+      "durationMilliseconds": 19477,
+      "dangerStart": 8.16,
+      "dangerEnd": 12.12,
+      "title": "Người đi bộ băng qua đường lúc chập tối ngay trước xe bạn"
+    },
+    {
+      "id": 33,
+      "chapter": 2,
+      "file": "chapter2_th33.pt",
+      "durationMilliseconds": 23402,
+      "dangerStart": 9.08,
+      "dangerEnd": 12.2,
+      "title": "Học sinh đi ra đường tại khu vực gần trường học"
+    },
+    {
+      "id": 34,
+      "chapter": 2,
+      "file": "chapter2_th34.pt",
+      "durationMilliseconds": 17045,
+      "dangerStart": 5.1,
+      "dangerEnd": 9.2,
+      "title": "Gặp xe khách tại đoạn đường cong vào cua chiếm hết làn đường tại khu vực đường hẹp"
+    },
+    {
+      "id": 35,
+      "chapter": 2,
+      "file": "chapter2_th35.pt",
+      "durationMilliseconds": 17600,
+      "dangerStart": 3.0,
+      "dangerEnd": 6.16,
+      "title": "Xe khách phía trước đột ngột phanh giảm tốc độ tránh xe đối diện tại đoạn đường cong"
+    },
+    {
+      "id": 36,
+      "chapter": 2,
+      "file": "chapter2_th36.pt",
+      "durationMilliseconds": 24405,
+      "dangerStart": 13.22,
+      "dangerEnd": 15.5,
+      "title": "Đường nông thôn, xuất hiện xe máy đi ra từ ngõ bên phải"
+    },
+    {
+      "id": 37,
+      "chapter": 2,
+      "file": "chapter2_th37.pt",
+      "durationMilliseconds": 25472,
+      "dangerStart": 14.21,
+      "dangerEnd": 17.1,
+      "title": "Đường nông thôn, nhóm xe đạp đi ra từ ngõ bên phải"
+    },
+    {
+      "id": 38,
+      "chapter": 2,
+      "file": "chapter2_th38.pt",
+      "durationMilliseconds": 22677,
+      "dangerStart": 8.0,
+      "dangerEnd": 11.04,
+      "title": "Ban đêm xe ô tô tải ngược chiều bật đèn chiếu xa làm 2 xe máy phía trước giảm tốc độ"
+    },
+    {
+      "id": 39,
+      "chapter": 2,
+      "file": "chapter2_th39.pt",
+      "durationMilliseconds": 21888,
+      "dangerStart": 11.35,
+      "dangerEnd": 14.42,
+      "title": "Xe tải từ đường nhánh nhập làn nguy hiểm"
+    },
+    {
+      "id": 40,
+      "chapter": 2,
+      "file": "chapter2_th40.pt",
+      "durationMilliseconds": 24833,
+      "dangerStart": 6.18,
+      "dangerEnd": 10.1,
+      "title": "Gần cổng làng, phía sau có xe mô-tô lấn làn để vượt xe ô tô đang dừng đỗ"
+    },
+    {
+      "id": 41,
+      "chapter": 2,
+      "file": "chapter2_th41.pt",
+      "durationMilliseconds": 23500,
+      "dangerStart": 9.24,
+      "dangerEnd": 11.11,
+      "title": "Xe con làn đối diện rẽ nhanh cắt qua đầu xe bạn tại ngã ba"
+    },
+    {
+      "id": 42,
+      "chapter": 2,
+      "file": "chapter2_th42.pt",
+      "durationMilliseconds": 21916,
+      "dangerStart": 7.01,
+      "dangerEnd": 10.0,
+      "title": "Tại ngã tư, đèn xanh, xe bạn bắt đầu di chuyển có xe mô-tô rẽ cắt ngang qua đầu xe bạn"
+    },
+    {
+      "id": 43,
+      "chapter": 2,
+      "file": "chapter2_th43.pt",
+      "durationMilliseconds": 25557,
+      "dangerStart": 6.22,
+      "dangerEnd": 10.2,
+      "title": "Trời mưa, xe con giảm nhanh tốc độ để tránh xe tải chuyển làn đột ngột tránh chướng ngại vật phía trước"
+    },
+    {
+      "id": 44,
+      "chapter": 3,
+      "file": "chapter3_th44.pt",
+      "durationMilliseconds": 17088,
+      "dangerStart": 4.48,
+      "dangerEnd": 8.5,
+      "title": "Phía sau làn phải có xe con vượt lên và chuyển làn cắt ngang nguy hiểm trước mặt xe bạn"
+    },
+    {
+      "id": 45,
+      "chapter": 3,
+      "file": "chapter3_th45.pt",
+      "durationMilliseconds": 19264,
+      "dangerStart": 9.36,
+      "dangerEnd": 12.3,
+      "title": "Xe tải ở làn phải vượt lên và đột ngột chuyển làn sang làn giữa làm xe phía trước phải phanh gấp"
+    },
+    {
+      "id": 46,
+      "chapter": 3,
+      "file": "chapter3_th46.pt",
+      "durationMilliseconds": 27050,
+      "dangerStart": 16.5,
+      "dangerEnd": 20.0,
+      "title": "Xe ô tô con ở làn bên trái vượt lên và chuyển làn phải cắt qua nguy hiểm trước đầu xe bạn để rẽ ra đường gom"
+    },
+    {
+      "id": 47,
+      "chapter": 3,
+      "file": "chapter3_th47.pt",
+      "durationMilliseconds": 26005,
+      "dangerStart": 14.4,
+      "dangerEnd": 18.0,
+      "title": "Xe cấp cứu xin đường, xe con bên trái tăng tốc vượt lên và chuyển làn cắt qua đầu xe bạn"
+    },
+    {
+      "id": 48,
+      "chapter": 3,
+      "file": "chapter3_th48.pt",
+      "durationMilliseconds": 23658,
+      "dangerStart": 4.5,
+      "dangerEnd": 7.2,
+      "title": "Xe bạn có tín hiệu để chuyển làn trái thì có xe phía sau nháy pha liên tục để vượt"
+    },
+    {
+      "id": 49,
+      "chapter": 3,
+      "file": "chapter3_th49.pt",
+      "durationMilliseconds": 23253,
+      "dangerStart": 6.54,
+      "dangerEnd": 12.0,
+      "title": "Ô tô phía trước phanh gấp do có xe tải tạt sang đột ngột vì gặp chướng ngại vật"
+    },
+    {
+      "id": 50,
+      "chapter": 3,
+      "file": "chapter3_th50.pt",
+      "durationMilliseconds": 25280,
+      "dangerStart": 8.39,
+      "dangerEnd": 13.0,
+      "title": "Xe tải phía trước làn phải đột ngột tăng tốc và chuyển sang làn giữa làm xe con phía trước phanh gấp"
+    },
+    {
+      "id": 51,
+      "chapter": 3,
+      "file": "chapter3_th51.pt",
+      "durationMilliseconds": 26016,
+      "dangerStart": 9.0,
+      "dangerEnd": 14.0,
+      "title": "Xe tải bật đèn cảnh báo đi ngược đường ở làn bên phải cao tốc"
+    },
+    {
+      "id": 52,
+      "chapter": 3,
+      "file": "chapter3_th52.pt",
+      "durationMilliseconds": 24916,
+      "dangerStart": 12.3,
+      "dangerEnd": 16.1,
+      "title": "Qua đoạn đường cong đột nhiên có xe tải đi lùi trong làn khẩn cấp"
+    },
+    {
+      "id": 53,
+      "chapter": 3,
+      "file": "chapter3_th53.pt",
+      "durationMilliseconds": 25600,
+      "dangerStart": 12.45,
+      "dangerEnd": 16.3,
+      "title": "Trên đường cao tốc ban đêm, đột nhiên có xe tải đi chiều ngược lại ở làn khẩn cấp"
+    },
+    {
+      "id": 54,
+      "chapter": 3,
+      "file": "chapter3_th54.pt",
+      "durationMilliseconds": 21418,
+      "dangerStart": 9.14,
+      "dangerEnd": 13.3,
+      "title": "Xe tải từ đường nhánh nhập vào cao tốc với tốc độ cao"
+    },
+    {
+      "id": 55,
+      "chapter": 3,
+      "file": "chapter3_th55.pt",
+      "durationMilliseconds": 26133,
+      "dangerStart": 7.2,
+      "dangerEnd": 11.2,
+      "title": "Cao tốc, xe tải đột ngột giảm tốc và chuyển sang làn xe bạn do gặp xe đang gặp sự cố trên đường"
+    },
+    {
+      "id": 56,
+      "chapter": 3,
+      "file": "chapter3_th56.pt",
+      "durationMilliseconds": 17386,
+      "dangerStart": 7.16,
+      "dangerEnd": 10.0,
+      "title": "Xe con đang dừng ở làn khẩn cấp xi nhan nhập làn trước xe bạn"
+    },
+    {
+      "id": 57,
+      "chapter": 3,
+      "file": "chapter3_th57.pt",
+      "durationMilliseconds": 49685,
+      "dangerStart": 20.29,
+      "dangerEnd": 27.17,
+      "title": "Xe con phía trước giảm tốc độ và chuyển sang làn xe bạn do gặp đoạn đường đang sửa chữa phía trước"
+    },
+    {
+      "id": 58,
+      "chapter": 3,
+      "file": "chapter3_th58.pt",
+      "durationMilliseconds": 36942,
+      "dangerStart": 14.15,
+      "dangerEnd": 19.0,
+      "title": "Xe tải phía trước giảm tốc độ, chuyển sang làn giữa do gặp đoạn đường đang sửa chữa phía trước"
+    },
+    {
+      "id": 59,
+      "chapter": 3,
+      "file": "chapter3_th59.pt",
+      "durationMilliseconds": 28683,
+      "dangerStart": 16.49,
+      "dangerEnd": 20.02,
+      "title": "Xe container đang đi từ làn trái chuyển ra đường nhánh cắt qua làn đường xe bạn"
+    },
+    {
+      "id": 60,
+      "chapter": 3,
+      "file": "chapter3_th60.pt",
+      "durationMilliseconds": 23765,
+      "dangerStart": 7.2,
+      "dangerEnd": 11.1,
+      "title": "Xe 16 chỗ từ làn đường khẩn cấp đi ra vào làn xe bạn"
+    },
+    {
+      "id": 61,
+      "chapter": 3,
+      "file": "chapter3_th61.pt",
+      "durationMilliseconds": 27413,
+      "dangerStart": 16.38,
+      "dangerEnd": 21.2,
+      "title": "Xe con từ đường nhánh nhập làn nguy hiểm cắt qua đầu xe bạn"
+    },
+    {
+      "id": 62,
+      "chapter": 3,
+      "file": "chapter3_th62.pt",
+      "durationMilliseconds": 26901,
+      "dangerStart": 15.4,
+      "dangerEnd": 19.5,
+      "title": "Xe con đi ngược chiều nguy hiểm tại làn đường tốc độ cao nhất trên cao tốc"
+    },
+    {
+      "id": 63,
+      "chapter": 3,
+      "file": "chapter3_th63.pt",
+      "durationMilliseconds": 20131,
+      "dangerStart": 4.25,
+      "dangerEnd": 8.3,
+      "title": "Đàn gia súc từ bên đường đi ra cắt qua làn đường xe bạn tại khu vực cao tốc bị hỏng hộ lan"
+    },
+    {
+      "id": 64,
+      "chapter": 4,
+      "file": "chapter4_th64.pt",
+      "durationMilliseconds": 23233,
+      "dangerStart": 10.0,
+      "dangerEnd": 14.0,
+      "title": "Phía đường cong xuất hiện xe tải đi đối diện làm xe khách phía trước giảm tốc độ đột ngột"
+    },
+    {
+      "id": 65,
+      "chapter": 4,
+      "file": "chapter4_th65.pt",
+      "durationMilliseconds": 32853,
+      "dangerStart": 16.5,
+      "dangerEnd": 21.4,
+      "title": "Đường đèo dốc ban đêm gần đoạn đường cong, đột ngột tại khúc cua có xe khách lấn làn vượt xe tải lớn"
+    },
+    {
+      "id": 66,
+      "chapter": 4,
+      "file": "chapter4_th66.pt",
+      "durationMilliseconds": 18033,
+      "dangerStart": 9.19,
+      "dangerEnd": 12.5,
+      "title": "Đi phía sau xe tải chở vật liệu không được chằng buộc cẩn thận"
+    },
+    {
+      "id": 67,
+      "chapter": 4,
+      "file": "chapter4_th67.pt",
+      "durationMilliseconds": 28883,
+      "dangerStart": 12.37,
+      "dangerEnd": 16.5,
+      "title": "Xe ô tô phía trước phanh gấp do có động vật hoang dã đứng ven đường"
+    },
+    {
+      "id": 68,
+      "chapter": 4,
+      "file": "chapter4_th68.pt",
+      "durationMilliseconds": 22954,
+      "dangerStart": 10.55,
+      "dangerEnd": 14.0,
+      "title": "Đường núi, sương mù, có đàn bò đứng sát đường ngay sau đoạn đường cong"
+    },
+    {
+      "id": 69,
+      "chapter": 4,
+      "file": "chapter4_th69.pt",
+      "durationMilliseconds": 27690,
+      "dangerStart": 14.36,
+      "dangerEnd": 16.5,
+      "title": "Xe con vào cua lấn làn nguy hiểm va chạm với xe ngược chiều trên đường đồi núi"
+    },
+    {
+      "id": 70,
+      "chapter": 4,
+      "file": "chapter4_th70.pt",
+      "durationMilliseconds": 48021,
+      "dangerStart": 27.45,
+      "dangerEnd": 32.0,
+      "title": "Xe khách lấn làn vượt xe container ngay tại khúc cua trên đường núi"
+    },
+    {
+      "id": 71,
+      "chapter": 4,
+      "file": "chapter4_th71.pt",
+      "durationMilliseconds": 26100,
+      "dangerStart": 11.49,
+      "dangerEnd": 16.2,
+      "title": "Đường núi, trời mưa, xe phía trước đột ngột dừng lại vì hỏng máy"
+    },
+    {
+      "id": 72,
+      "chapter": 4,
+      "file": "chapter4_th72.pt",
+      "durationMilliseconds": 26965,
+      "dangerStart": 14.52,
+      "dangerEnd": 19.15,
+      "title": "Xe tải lấn làn đường xe bạn để vượt các xe khác trên đường núi thời tiết sương mù"
+    },
+    {
+      "id": 73,
+      "chapter": 4,
+      "file": "chapter4_th73.pt",
+      "durationMilliseconds": 27114,
+      "dangerStart": 15.02,
+      "dangerEnd": 17.45,
+      "title": "Xe con lấn làn xe bạn để vượt xe tải trên đường núi ngay tại đoạn đường quanh co"
+    },
+    {
+      "id": 74,
+      "chapter": 5,
+      "file": "chapter5_th74.pt",
+      "durationMilliseconds": 28778,
+      "dangerStart": 11.0,
+      "dangerEnd": 15.13,
+      "title": "Xe ô tô phía trước phanh gấp để tránh đoàn xe đạp từ đường nhánh đi ra"
+    },
+    {
+      "id": 75,
+      "chapter": 5,
+      "file": "chapter5_th75.pt",
+      "durationMilliseconds": 19760,
+      "dangerStart": 5.0,
+      "dangerEnd": 8.0,
+      "title": "Trẻ em đột ngột lao ra để nhặt quả bóng bị lăn ra đường"
+    },
+    {
+      "id": 76,
+      "chapter": 5,
+      "file": "chapter5_th76.pt",
+      "durationMilliseconds": 22485,
+      "dangerStart": 6.15,
+      "dangerEnd": 9.4,
+      "title": "Em bé đột ngột chạy ra đường"
+    },
+    {
+      "id": 77,
+      "chapter": 5,
+      "file": "chapter5_th77.pt",
+      "durationMilliseconds": 22080,
+      "dangerStart": 6.1,
+      "dangerEnd": 10.0,
+      "title": "Xe con từ làn phải (khuất tầm nhìn) cắt ngang qua các xe đang đi thẳng để sang đường"
+    },
+    {
+      "id": 78,
+      "chapter": 5,
+      "file": "chapter5_th78.pt",
+      "durationMilliseconds": 20600,
+      "dangerStart": 11.16,
+      "dangerEnd": 14.0,
+      "title": "Đèn vừa chuyển xanh, đột ngột xe mô-tô làn trái phía trước cố vượt đèn đỏ cắt qua trước đầu xe"
+    },
+    {
+      "id": 79,
+      "chapter": 5,
+      "file": "chapter5_th79.pt",
+      "durationMilliseconds": 24234,
+      "dangerStart": 9.24,
+      "dangerEnd": 12.08,
+      "title": "Xe mô-tô đi ra từ đường nhánh nguy hiểm phía sau xe buýt vừa đi qua."
+    },
+    {
+      "id": 80,
+      "chapter": 5,
+      "file": "chapter5_th80.pt",
+      "durationMilliseconds": 16469,
+      "dangerStart": 6.22,
+      "dangerEnd": 9.0,
+      "title": "Xe mô tô vượt lên đột ngột giảm tốc và chuyển sang làn xe bạn để tránh chướng ngại vật trên đường"
+    },
+    {
+      "id": 81,
+      "chapter": 5,
+      "file": "chapter5_th81.pt",
+      "durationMilliseconds": 24042,
+      "dangerStart": 15.05,
+      "dangerEnd": 18.21,
+      "title": "Xe bán tải từ đường bên kia quay đầu đột ngột lấn làn xe bạn"
+    },
+    {
+      "id": 82,
+      "chapter": 5,
+      "file": "chapter5_th82.pt",
+      "durationMilliseconds": 25194,
+      "dangerStart": 6.2,
+      "dangerEnd": 11.2,
+      "title": "Xe tải lớn ở làn đường ngược chiều lấn làn xe bạn để vượt qua xe buýt"
+    },
+    {
+      "id": 83,
+      "chapter": 5,
+      "file": "chapter5_th83.pt",
+      "durationMilliseconds": 20416,
+      "dangerStart": 7.19,
+      "dangerEnd": 10.11,
+      "title": "Xuất hiện gia súc từ vệ đường đi ra đường quốc lộ ngay trước mặt xe bạn"
+    },
+    {
+      "id": 84,
+      "chapter": 5,
+      "file": "chapter5_th84.pt",
+      "durationMilliseconds": 21610,
+      "dangerStart": 9.14,
+      "dangerEnd": 13.02,
+      "title": "Xe con phía trước giảm tốc đột ngột và chuyển làn để tránh xe buýt đang dừng"
+    },
+    {
+      "id": 85,
+      "chapter": 5,
+      "file": "chapter5_th85.pt",
+      "durationMilliseconds": 29418,
+      "dangerStart": 16.02,
+      "dangerEnd": 18.22,
+      "title": "Khúc gỗ trên xe tải phía trước bị rơi xuống do xe phanh gấp"
+    },
+    {
+      "id": 86,
+      "chapter": 5,
+      "file": "chapter5_th86.pt",
+      "durationMilliseconds": 20842,
+      "dangerStart": 4.16,
+      "dangerEnd": 8.26,
+      "title": "Xe con đi phía trước giảm tốc và chuyển làn đột ngột để tránh chướng ngại vật"
+    },
+    {
+      "id": 87,
+      "chapter": 5,
+      "file": "chapter5_th87.pt",
+      "durationMilliseconds": 24213,
+      "dangerStart": 3.23,
+      "dangerEnd": 8.0,
+      "title": "Đi qua chỗ giao cắt với đường sắt ban đêm, không có đèn tín hiệu, phía sau xe con, đột nhiên có tàu đi tới"
+    },
+    {
+      "id": 88,
+      "chapter": 5,
+      "file": "chapter5_th88.pt",
+      "durationMilliseconds": 21269,
+      "dangerStart": 11.1,
+      "dangerEnd": 13.55,
+      "title": "Xe mô-tô phanh và chuyển làn để tránh xe buýt vào trả khách"
+    },
+    {
+      "id": 89,
+      "chapter": 5,
+      "file": "chapter5_th89.pt",
+      "durationMilliseconds": 20544,
+      "dangerStart": 8.24,
+      "dangerEnd": 12.0,
+      "title": "Xe đạp từ bên kia đường đối diện băng qua đường không quan sát trước mặt xe bạn"
+    },
+    {
+      "id": 90,
+      "chapter": 5,
+      "file": "chapter5_th90.pt",
+      "durationMilliseconds": 19072,
+      "dangerStart": 6.26,
+      "dangerEnd": 10.23,
+      "title": "Xe bán tải phía trước giảm tốc độ và chuyển làn khẩn cấp để tránh xe mô-tô đi ngược chiều"
+    },
+    {
+      "id": 91,
+      "chapter": 6,
+      "file": "chapter6_th91.pt",
+      "durationMilliseconds": 20950,
+      "dangerStart": 5.34,
+      "dangerEnd": 10.02,
+      "title": "[Tai nạn] Xe ô tô Innova lùi trên cao tốc Hà Nội - Thái Nguyên"
+    },
+    {
+      "id": 92,
+      "chapter": 6,
+      "file": "chapter6_th92.pt",
+      "durationMilliseconds": 15189,
+      "dangerStart": 5.0,
+      "dangerEnd": 8.2,
+      "title": "[Tai nạn] Xe mô-tô lấn làn vượt ẩu trên đường núi, va chạm với xe khách đi ngược chiều"
+    },
+    {
+      "id": 93,
+      "chapter": 6,
+      "file": "chapter6_th93.pt",
+      "durationMilliseconds": 26816,
+      "dangerStart": 12.59,
+      "dangerEnd": 16.15,
+      "title": "[Tai nạn] Xe con từ làn trong cùng bên trái lấn làn vượt ẩu để đi ra đường nhánh, va chạm với xe tải"
+    },
+    {
+      "id": 94,
+      "chapter": 6,
+      "file": "chapter6_th94.pt",
+      "durationMilliseconds": 30833,
+      "dangerStart": 17.0,
+      "dangerEnd": 21.0,
+      "title": "[Tai nạn] Tai nạn liên hoàn giữa 3 xe khách do đâm vào xe đang dừng đỗ để sửa chữa"
+    },
+    {
+      "id": 95,
+      "chapter": 6,
+      "file": "chapter6_th95.pt",
+      "durationMilliseconds": 18602,
+      "dangerStart": 5.2,
+      "dangerEnd": 10.1,
+      "title": "[Tai nạn] Tài xế giật mình đánh lái gấp đâm xe vào dải phân cách, xe đổ vào đám đông làm 5 người thiệt mạng"
+    },
+    {
+      "id": 96,
+      "chapter": 6,
+      "file": "chapter6_th96.pt",
+      "durationMilliseconds": 23146,
+      "dangerStart": 17.11,
+      "dangerEnd": 20.28,
+      "title": "[Tai nạn] Tai nạn xe container không làm chủ tốc độ đâm trực diện vào xe ô tô con đang dừng chờ đèn đỏ"
+    },
+    {
+      "id": 97,
+      "chapter": 6,
+      "file": "chapter6_th97.pt",
+      "durationMilliseconds": 36288,
+      "dangerStart": 18.55,
+      "dangerEnd": 21.35,
+      "title": "[Tai nạn] Xe khách vào cua với tốc độ cao, lấn sang đường ngược chiều va chạm với xe đi chiều ngược lại"
+    },
+    {
+      "id": 98,
+      "chapter": 6,
+      "file": "chapter6_th98.pt",
+      "durationMilliseconds": 29024,
+      "dangerStart": 13.3,
+      "dangerEnd": 17.12,
+      "title": "[Tai nạn] Tai nạn đèo Prenn xe khách mất lái đâm vào người điều tiết giao thông và xe khách đi ngược chiều"
+    },
+    {
+      "id": 99,
+      "chapter": 6,
+      "file": "chapter6_th99.pt",
+      "durationMilliseconds": 28026,
+      "dangerStart": 16.08,
+      "dangerEnd": 19.12,
+      "title": "[Tai nạn] Hầm Hải Vân xe kéo rơ mooc mất lái lấn làn đâm trực diện vào xe tải đi chiều ngược lại gây tai nạn"
+    },
+    {
+      "id": 100,
+      "chapter": 6,
+      "file": "chapter6_th100.pt",
+      "durationMilliseconds": 20616,
+      "dangerStart": 7.48,
+      "dangerEnd": 10.52,
+      "title": "[Tai nạn] Xe ô tô con chở người đi qua đường sắt tại Nam Định không chú ý va chạm với tàu hỏa"
+    },
+    {
+      "id": 101,
+      "chapter": 6,
+      "file": "chapter6_th101.pt",
+      "durationMilliseconds": 26200,
+      "dangerStart": 11.29,
+      "dangerEnd": 13.53,
+      "title": "[Tai nạn] Xe ô tô 16 chỗ chở khách rẽ trái qua đường sắt không chú ý va chạm với tàu hỏa"
+    },
+    {
+      "id": 102,
+      "chapter": 6,
+      "file": "chapter6_th102.pt",
+      "durationMilliseconds": 21120,
+      "dangerStart": 11.51,
+      "dangerEnd": 15.26,
+      "title": "[Tai nạn] Xe khách va chạm với xe cứu hỏa đi ngược chiều tại nút giao Pháp Vân"
+    },
+    {
+      "id": 103,
+      "chapter": 6,
+      "file": "chapter6_th103.pt",
+      "durationMilliseconds": 26346,
+      "dangerStart": 16.05,
+      "dangerEnd": 19.16,
+      "title": "[Tai nạn] Phía trước đột nhiên có xe ô tô từ làn đối diện đi ngược chiều va chạm với xe con"
+    },
+    {
+      "id": 104,
+      "chapter": 6,
+      "file": "chapter6_th104.pt",
+      "durationMilliseconds": 30037,
+      "dangerStart": 18.55,
+      "dangerEnd": 21.26,
+      "title": "[Tai nạn] Tại ngã tư Hàng Xanh, lái xe ô tô con trong tình trạng có nồng độ cồn không làm chủ tốc độ đâm vào loạt xe  dừng chờ đèn đỏ"
+    },
+    {
+      "id": 105,
+      "chapter": 6,
+      "file": "chapter6_th105.pt",
+      "durationMilliseconds": 20466,
+      "dangerStart": 10.15,
+      "dangerEnd": 12.4,
+      "title": "[Tai nạn] Xe khách 45 chỗ đâm vào xe đầu kéo kéo rơ moóc chở máy ủi đi từ đường tránh ra gây tai nạn thảm khốc"
+    },
+    {
+      "id": 106,
+      "chapter": 6,
+      "file": "chapter6_th106.pt",
+      "durationMilliseconds": 30677,
+      "dangerStart": 16.0,
+      "dangerEnd": 19.1,
+      "title": "[Tai nạn] Xe khách 48 chỗ thiếu kỹ năng điều khiển, không thông thuộc địa hình lao xuống vực tại Kon Tum"
+    },
+    {
+      "id": 107,
+      "chapter": 6,
+      "file": "chapter6_th107.pt",
+      "durationMilliseconds": 31530,
+      "dangerStart": 11.4,
+      "dangerEnd": 14.4,
+      "title": "[Tai nạn] Xe khách chạy vượt xe tải, đâm trực diện vào xe khách đi chiều ngược lại gây tai nạn liên hoàn 3 xe"
+    },
+    {
+      "id": 108,
+      "chapter": 6,
+      "file": "chapter6_th108.pt",
+      "durationMilliseconds": 26773,
+      "dangerStart": 19.3,
+      "dangerEnd": 21.45,
+      "title": "[Tai nạn] Trời mưa, đường trơn trượt xe tải khi vào cua không làm chủ tốc độ đã đâm vào xe ben đi ngược chiều"
+    },
+    {
+      "id": 109,
+      "chapter": 6,
+      "file": "chapter6_th109.pt",
+      "durationMilliseconds": 21034,
+      "dangerStart": 8.52,
+      "dangerEnd": 12.06,
+      "title": "[Tai nạn] Xe 16 chỗ từ đường nhánh, khuất tầm nhìn rẽ vào đường chính không giảm tốc độ, bị xe sơ mi rơ moóc đâm vào (tại Ngã 3 Nà Phặc - Bắc Kạn)"
+    },
+    {
+      "id": 110,
+      "chapter": 6,
+      "file": "chapter6_th110.pt",
+      "durationMilliseconds": 22732,
+      "dangerStart": 8.5,
+      "dangerEnd": 11.5,
+      "title": "[Tai nạn] Xe container bất ngờ tông vào hàng loạt phương tiện đang dừng đèn đỏ tại quốc lộ 1, đoạn nút giao Mỹ Phước - Tân Vạn, Bình Dương"
+    },
+    {
+      "id": 111,
+      "chapter": 6,
+      "file": "chapter6_th111.pt",
+      "durationMilliseconds": 14784,
+      "dangerStart": 8.09,
+      "dangerEnd": 11.11,
+      "title": "[Tai nạn] Xe khách lấn làn vượt xe tải chỗ đường cong, đâm vào xe khách đi ngược chiều Tai nạn tại km 1791+ 400 trên đường Hồ Chí Minh, đoạn qua thôn 7, xã Hoà Phú, TP.Buôn Ma Thuột (Đắk Lắk)"
+    },
+    {
+      "id": 112,
+      "chapter": 6,
+      "file": "chapter6_th112.pt",
+      "durationMilliseconds": 17229,
+      "dangerStart": 3.5,
+      "dangerEnd": 7.46,
+      "title": "[Tai nạn] Xe khách 16 chỗ vượt ẩu qua xe đầu kéo va chạm với xe khách đang xuống dốc tốc độ cao, gây tai nạn liên hoàn giữa 3 xe tại km12+400 đoạn qua phường Hương Hồ, TP. Huế"
+    },
+    {
+      "id": 113,
+      "chapter": 6,
+      "file": "chapter6_th113.pt",
+      "durationMilliseconds": 22890,
+      "dangerStart": 13.32,
+      "dangerEnd": 16.3,
+      "title": "[Tai nạn] Khi đèn tín hiệu chuyển sang xanh, đột ngột có xe con cố vượt từ đường giao bên trái sang làm va chạm với xe con"
+    },
+    {
+      "id": 114,
+      "chapter": 6,
+      "file": "chapter6_th114.pt",
+      "durationMilliseconds": 27050,
+      "dangerStart": 8.42,
+      "dangerEnd": 13.02,
+      "title": "[Tai nạn] Ô tô 7 chỗ đi trên cầu treo hẹp ban đêm, tài xế lái xe va chạm với xe máy, xe đâm xuống sông tại cầu treo qua sông Giăng, Thanh Chương, Nghệ An"
+    },
+    {
+      "id": 115,
+      "chapter": 6,
+      "file": "chapter6_th115.pt",
+      "durationMilliseconds": 20522,
+      "dangerStart": 9.16,
+      "dangerEnd": 12.4,
+      "title": "[Tai nạn] Ban đêm, xe con phanh gấp tránh xe máy từ ngõ lao ra, xe khách không làm chủ tốc độ đã đâm trực diện vào xe con"
+    },
+    {
+      "id": 116,
+      "chapter": 6,
+      "file": "chapter6_th116.pt",
+      "durationMilliseconds": 20062,
+      "dangerStart": 7.1,
+      "dangerEnd": 11.4,
+      "title": "[Tai nạn] Phía trước có đá lở đột ngột và rơi xuống (tai nạn tại Đồng Văn, Hà Giang)"
+    },
+    {
+      "id": 117,
+      "chapter": 6,
+      "file": "chapter6_th117.pt",
+      "durationMilliseconds": 15680,
+      "dangerStart": 7.21,
+      "dangerEnd": 10.05,
+      "title": "[Tai nạn] Xe con phanh gấp tránh xe máy từ ngõ lao ra, xe khách không làm chủ tốc độ đã đâm trực diện vào xe con"
+    },
+    {
+      "id": 118,
+      "chapter": 6,
+      "file": "chapter6_th118.pt",
+      "durationMilliseconds": 19650,
+      "dangerStart": 7.1,
+      "dangerEnd": 12.0,
+      "title": "[Tai nạn] Xe 16 chỗ rẽ không quan sát, không làm chủ tốc độ đâm vào xe bán tải đang lùi"
+    },
+    {
+      "id": 119,
+      "chapter": 6,
+      "file": "chapter6_th119.pt",
+      "durationMilliseconds": 26304,
+      "dangerStart": 8.33,
+      "dangerEnd": 11.2,
+      "title": "[Tai nạn] Xe khách không tuân thủ khoảng cách an toàn, xử lý tình huống không kịp dẫn tới va chạm với xe tải đang dừng đỗ"
+    },
+    {
+      "id": 120,
+      "chapter": 6,
+      "file": "chapter6_th120.pt",
+      "durationMilliseconds": 30058,
+      "dangerStart": 10.19,
+      "dangerEnd": 13.02,
+      "title": "[Tai nạn] Xe tải không làm chủ được tốc độ mất lái lao vào chợ dân sinh và va chạm với các xe đang đi phía trước"
+    }
+  ]
+}
