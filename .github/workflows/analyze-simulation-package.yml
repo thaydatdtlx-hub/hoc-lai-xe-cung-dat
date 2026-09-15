@@ -23,8 +23,8 @@ jobs:
       - name: Install analysis tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y cabextract msitools ffmpeg sqlite3 sqlcipher file
-          python -m pip install --disable-pip-version-check gdown
+          sudo apt-get install -y cabextract msitools ffmpeg file cmake ninja-build
+          python -m pip install --disable-pip-version-check gdown pycryptodome
 
       - name: Download MSI and first cabinet from shared Drive
         run: |
@@ -40,61 +40,49 @@ jobs:
           msiinfo export Setup.msi File > report/file.tsv || true
           cabextract -l Setup1.cab > report/setup1-listing.txt
           grep -Ei 'chapter[1-6]_th[0-9]+\.pt|count_down\.pt|tss\.db|OnTapMoPhong\.exe|sqlitecipher\.dll|qsqlite\.dll' report/setup1-listing.txt > report/setup1-interesting.txt || true
-          cat report/setup1-interesting.txt
 
       - name: Extract diagnostic targets
         run: |
           first_pt=$(awk '/chapter[1-6]_th[0-9]+\.pt/{print $NF; exit}' report/setup1-listing.txt || true)
-          if [ -n "$first_pt" ]; then
-            cabextract -q -d extracted -F "$first_pt" Setup1.cab || true
-          fi
-          for f in tss.db OnTapMoPhong.exe sqlitecipher.dll qsqlite.dll; do
-            cabextract -q -d extracted -F "$f" Setup1.cab || true
-          done
+          if [ -n "$first_pt" ]; then cabextract -q -d extracted -F "$first_pt" Setup1.cab || true; fi
+          for f in tss.db OnTapMoPhong.exe sqlitecipher.dll qsqlite.dll; do cabextract -q -d extracted -F "$f" Setup1.cab || true; done
           find extracted -maxdepth 1 -type f -printf '%f\t%s bytes\n' | tee report/extracted-files.txt
-          for f in extracted/*; do
-            [ -f "$f" ] || continue
-            echo "===== $f =====" | tee -a report/file-analysis.txt
-            file "$f" | tee -a report/file-analysis.txt
-            xxd -l 128 "$f" | tee -a report/file-analysis.txt
-          done
 
-      - name: Verify RC4 video key on first scenario
+      - name: Verify first scenario media
         run: |
           python - <<'PY'
           from pathlib import Path
+          from Crypto.Cipher import ARC4
           src = next(Path('extracted').glob('chapter*_th*.pt'))
           out = Path('extracted/first-scenario.mp4')
           key = bytes.fromhex('175ce5fb82404109cb627c50a5c56115')
-          s = list(range(256)); j = 0
-          for i in range(256):
-              j = (j + s[i] + key[i % len(key)]) & 255
-              s[i], s[j] = s[j], s[i]
-          i = j = 0
+          cipher = ARC4.new(key)
           with src.open('rb') as fi, out.open('wb') as fo:
-              while True:
-                  chunk = fi.read(1024 * 1024)
-                  if not chunk: break
-                  buf = bytearray(len(chunk))
-                  for n, b in enumerate(chunk):
-                      i = (i + 1) & 255
-                      j = (j + s[i]) & 255
-                      s[i], s[j] = s[j], s[i]
-                      buf[n] = b ^ s[(s[i] + s[j]) & 255]
-                  fo.write(buf)
+              while chunk := fi.read(1024 * 1024): fo.write(cipher.decrypt(chunk))
           PY
           ffprobe -v error -show_entries format=format_name,duration,size -show_entries stream=codec_name,codec_type,width,height,r_frame_rate -of json extracted/first-scenario.mp4 | tee report/first-scenario.ffprobe.json
 
-      - name: Test database password with SQLCipher compatibility modes
+      - name: Build SQLite3 Multiple Ciphers shell
+        run: |
+          git clone --depth 1 https://github.com/utelle/SQLite3MultipleCiphers.git sqlite3mc-src
+          cmake -S sqlite3mc-src -B sqlite3mc-build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSQLITE3MC_BUILD_SHELL=ON
+          cmake --build sqlite3mc-build --config Release
+          find sqlite3mc-build -type f -perm -111 -maxdepth 4 -print | tee report/sqlite3mc-binaries.txt
+
+      - name: Probe encrypted database with supported ciphers
         shell: bash
         run: |
           DB_PASS='db161602241ec0dcc682d0ff6d481db010c686'
-          : > report/tss-sqlcipher-results.txt
-          for compat in 4 3 2 1; do
-            echo "=== cipher_compatibility=$compat ===" | tee -a report/tss-sqlcipher-results.txt
-            printf "PRAGMA key='%s';\nPRAGMA cipher_compatibility=%s;\nSELECT count(*) AS sqlite_master_rows FROM sqlite_master;\nSELECT name, type FROM sqlite_master ORDER BY type,name;\n" "$DB_PASS" "$compat" | sqlcipher extracted/tss.db >> report/tss-sqlcipher-results.txt 2>&1 || true
+          MC=$(find sqlite3mc-build -type f -perm -111 -name 'sqlite3mc*' | head -n1)
+          if [ -z "$MC" ]; then MC=$(find sqlite3mc-build -type f -perm -111 -name 'sqlite3*' | head -n1); fi
+          echo "shell=$MC" | tee report/tss-sqlite3mc-results.txt
+          for cipher in chacha20 aes128cbc aes256cbc sqlcipher rc4; do
+            for legacy in 0 1 2 3 4; do
+              echo "=== cipher=$cipher legacy=$legacy ===" | tee -a report/tss-sqlite3mc-results.txt
+              printf "PRAGMA cipher='%s';\nPRAGMA legacy=%s;\nPRAGMA key='%s';\nSELECT count(*) AS objects FROM sqlite_master;\nSELECT name,type FROM sqlite_master ORDER BY type,name;\n" "$cipher" "$legacy" "$DB_PASS" | "$MC" extracted/tss.db >> report/tss-sqlite3mc-results.txt 2>&1 || true
+            done
           done
-          cat report/tss-sqlcipher-results.txt
+          cat report/tss-sqlite3mc-results.txt
 
       - name: Save report and bounded samples
         uses: actions/upload-artifact@v4
