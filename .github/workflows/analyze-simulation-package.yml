@@ -2,14 +2,12 @@ name: Analyze simulation package
 
 on:
   push:
-    branches:
-      - docs/simulation-media-source-audit
-    paths:
-      - .github/workflows/analyze-simulation-package.yml
+    branches: [docs/simulation-media-source-audit]
+    paths: [.github/workflows/analyze-simulation-package.yml]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   SETUP1_CAB_ID: 1ikfLw9io14py41qRbycRZg2trWL6m2iF
@@ -19,12 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/simulation-media-source-audit
       - name: Install tools
         run: |
           sudo apt-get update
           sudo apt-get install -y cabextract cmake ninja-build binutils
           python -m pip install --disable-pip-version-check gdown
-
       - name: Download first cabinet and extract database components
         run: |
           mkdir -p report extracted
@@ -34,52 +34,69 @@ jobs:
           test -s extracted/tss.db
           test -s extracted/OnTapMoPhong.exe
           sha256sum extracted/tss.db | tee report/tss-db-sha256.txt
-
-      - name: Build SQLite3 Multiple Ciphers shell
+      - name: Build database reader
         run: |
           git clone --depth 1 https://github.com/utelle/SQLite3MultipleCiphers.git sqlite3mc-src
           cmake -S sqlite3mc-src -B sqlite3mc-build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSQLITE3MC_BUILD_SHELL=ON
           cmake --build sqlite3mc-build --config Release
-          test -x sqlite3mc-build/sqlite3mc_shell
-
-      - name: Export schema and all video rows
+      - name: Export all video rows
         shell: bash
         run: |
           DB_PASS=$(strings -a extracted/OnTapMoPhong.exe | grep -E '^db[0-9a-f]{32,64}$' | head -n 1)
           test -n "$DB_PASS"
           MC=sqlite3mc-build/sqlite3mc_shell
-
           {
             echo "PRAGMA cipher='chacha20';"
             printf "PRAGMA key='%s';\n" "$DB_PASS"
-            echo '.schema video'
-            echo 'PRAGMA table_info(video);'
-            echo 'SELECT count(*) AS video_rows FROM video;'
-          } > report/schema.sql
-          "$MC" extracted/tss.db < report/schema.sql > report/video-schema.txt 2> report/video-schema-error.txt
-
-          {
-            echo "PRAGMA cipher='chacha20';"
-            printf "PRAGMA key='%s';\n" "$DB_PASS"
-            echo '.headers on'
-            echo '.mode csv'
-            echo 'SELECT * FROM video ORDER BY chapter, th;'
-          } > report/export.sql
-          "$MC" extracted/tss.db < report/export.sql > report/video.csv 2> report/video-export-error.txt
-
-          sed -i 's/^PRAGMA key=.*/PRAGMA key=[REDACTED];/' report/schema.sql report/export.sql
-          echo '--- schema ---'
-          cat report/video-schema.txt
-          echo '--- first rows ---'
-          head -n 8 report/video.csv
-          echo '--- row count including header ---'
-          wc -l report/video.csv
-
+            echo '.headers on'; echo '.mode csv'; echo 'SELECT * FROM video ORDER BY chapter, th;'
+          } | "$MC" extracted/tss.db > report/video.csv 2>report/video-error.txt
+      - name: Build verified timing dataset
+        run: |
+          python - <<'PY'
+          import csv, hashlib, json
+          with open('report/video.csv', encoding='utf-8-sig') as f:
+              lines=f.readlines()
+          header=next(i for i,line in enumerate(lines) if line.startswith('id,name,chapter,th,'))
+          rows=list(csv.DictReader(lines[header:]))
+          def sec(value):
+              a,b,c=map(int,value.split(':'))
+              return round(a*60+b+c/100,2)
+          scenarios=[]
+          for row in rows:
+              if int(row['chapter']) == 0: continue
+              scenarios.append({
+                  'id':int(row['th']), 'chapter':int(row['chapter']), 'file':row['name'],
+                  'durationMilliseconds':int(row['duration']), 'dangerStart':sec(row['start']),
+                  'dangerEnd':sec(row['end']), 'title':row['description'].strip()
+              })
+          scenarios.sort(key=lambda x:x['id'])
+          assert [x['id'] for x in scenarios] == list(range(1,121))
+          assert all(0 <= x['dangerStart'] < x['dangerEnd'] <= x['durationMilliseconds']/1000 + .25 for x in scenarios)
+          sha=hashlib.sha256(open('extracted/tss.db','rb').read()).hexdigest()
+          data={
+              'version':'2.0.0-base-2024-01',
+              'timeEncoding':'MM:SS:centiseconds interpreted from tss.db; normalized to seconds',
+              'scenarioCount':120,
+              'sourcePackage':'OnTapMoPhongSetup v2.0.0 x64',
+              'sourceDatabaseSha256':sha,
+              'scenarios':scenarios
+          }
+          with open('public/data/mo-phong-120-timing-source.json','w',encoding='utf-8') as f:
+              json.dump(data,f,ensure_ascii=False,indent=2); f.write('\n')
+          PY
+          git diff --check
+      - name: Commit timing dataset
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/mo-phong-120-timing-source.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: import 120 verified simulation timing rows'
+            git push origin HEAD:docs/simulation-media-source-audit
+          fi
       - name: Save database report
         uses: actions/upload-artifact@v4
         with:
           name: simulation-database-export
           path: report/
-          if-no-files-found: error
-          compression-level: 9
           retention-days: 1
