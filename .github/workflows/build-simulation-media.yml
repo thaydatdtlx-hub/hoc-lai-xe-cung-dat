@@ -52,12 +52,13 @@ jobs:
           p=Path('/tmp/decode.py')
           p.write_text('''import sys\nfrom pathlib import Path\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3]); s=list(range(256)); j=0\nfor i in range(256): j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n while chunk:=fi.read(1048576):\n  out=bytearray(len(chunk))\n  for n,x in enumerate(chunk):\n   i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n  fo.write(out)\n''')
           PY
-          for f in encoded/chapter*_th*.pt; do
+          find encoded -type f -name 'chapter*_th*.pt' -print0 | while IFS= read -r -d '' f; do
             name=$(basename "$f" .pt)
             python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
             ffprobe -v error /tmp/source.mp4 >/dev/null
             ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
           done
+          test "$(find media -type f -name 'chapter*_th*.mp4' | wc -l)" -gt 0
       - uses: actions/upload-artifact@v4
         with:
           name: simulation-media-cab-${{ matrix.cab.n }}
