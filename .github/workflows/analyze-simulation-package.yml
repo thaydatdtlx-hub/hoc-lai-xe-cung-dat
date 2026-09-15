@@ -52,7 +52,6 @@ jobs:
             cabextract -q -d extracted -F "$f" Setup1.cab || true
           done
           find extracted -maxdepth 1 -type f -printf '%f\t%s bytes\n' | tee report/extracted-files.txt
-
           for f in extracted/*; do
             [ -f "$f" ] || continue
             echo "===== $f =====" | tee -a report/file-analysis.txt
@@ -93,13 +92,9 @@ jobs:
           : > report/tss-sqlcipher-results.txt
           for compat in 4 3 2 1; do
             echo "=== cipher_compatibility=$compat ===" | tee -a report/tss-sqlcipher-results.txt
-            sqlcipher extracted/tss.db <<SQL >> report/tss-sqlcipher-results.txt 2>&1 || true
-          PRAGMA key='$DB_PASS';
-          PRAGMA cipher_compatibility=$compat;
-          SELECT count(*) AS sqlite_master_rows FROM sqlite_master;
-          SELECT name, type FROM sqlite_master ORDER BY type,name;
-SQL
+            printf "PRAGMA key='%s';\nPRAGMA cipher_compatibility=%s;\nSELECT count(*) AS sqlite_master_rows FROM sqlite_master;\nSELECT name, type FROM sqlite_master ORDER BY type,name;\n" "$DB_PASS" "$compat" | sqlcipher extracted/tss.db >> report/tss-sqlcipher-results.txt 2>&1 || true
           done
+          cat report/tss-sqlcipher-results.txt
 
       - name: Save report and bounded samples
         uses: actions/upload-artifact@v4
