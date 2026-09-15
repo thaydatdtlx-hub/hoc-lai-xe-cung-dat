@@ -41,7 +41,7 @@ jobs:
         run: |
           gdown "https://drive.google.com/uc?id=${{ matrix.cab.id }}" -O setup.cab
           mkdir -p encoded media
-          cabextract -q -d encoded -F 'chapter*_th*.pt' setup.cab || true
+          cabextract -q -d encoded setup.cab
           count=$(find encoded -type f -name 'chapter*_th*.pt' | wc -l)
           echo "scenario files in cabinet: $count"
           test "$count" -gt 0
@@ -58,7 +58,9 @@ jobs:
             ffprobe -v error /tmp/source.mp4 >/dev/null
             ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
           done
-          test "$(find media -type f -name 'chapter*_th*.mp4' | wc -l)" -gt 0
+          count=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
+          echo "converted videos: $count"
+          test "$count" -gt 0
       - uses: actions/upload-artifact@v4
         with:
           name: simulation-media-cab-${{ matrix.cab.n }}
