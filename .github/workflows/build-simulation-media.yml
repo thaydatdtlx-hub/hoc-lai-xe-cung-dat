@@ -36,6 +36,7 @@ jobs:
           OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
           KEY=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data '{"action":"media-key"}' https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload | jq -r .key)
           test ${#KEY} -eq 32
+          echo "::add-mask::$KEY"
           echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
       - name: Download complete spanned cabinet set
         run: |
@@ -56,7 +57,7 @@ jobs:
             for attempt in 1 2 3 4; do
               echo "Setup${i}.cab attempt ${attempt}"
               rm -f "Setup${i}.cab"
-              if gdown --fuzzy "https://drive.google.com/file/d/${id}/view" -O "Setup${i}.cab"; then
+              if gdown "https://drive.google.com/uc?id=${id}" -O "Setup${i}.cab"; then
                 size=$(stat -c%s "Setup${i}.cab")
                 if [ "$size" -gt 300000000 ]; then ok=1; break; fi
               fi
