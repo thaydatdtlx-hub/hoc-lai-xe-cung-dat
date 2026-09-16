@@ -51,7 +51,19 @@ jobs:
             1cJSbq-uod426Wf_AhdSAGl8NImweZU1I
           )
           for i in $(seq 1 9); do
-            gdown "https://drive.google.com/uc?id=${ids[$((i-1))]}" -O "Setup${i}.cab"
+            id=${ids[$((i-1))]}
+            ok=0
+            for attempt in 1 2 3 4; do
+              echo "Setup${i}.cab attempt ${attempt}"
+              rm -f "Setup${i}.cab"
+              if gdown --fuzzy "https://drive.google.com/file/d/${id}/view" -O "Setup${i}.cab"; then
+                size=$(stat -c%s "Setup${i}.cab")
+                if [ "$size" -gt 300000000 ]; then ok=1; break; fi
+              fi
+              sleep $((attempt * 15))
+            done
+            test "$ok" -eq 1
+            sleep 5
           done
           ls -lh Setup*.cab
           df -h .
