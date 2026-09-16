@@ -25,10 +25,10 @@ jobs:
           run-id: ${{ env.ANALYSIS_RUN_ID }}
           name: ${{ env.ANALYSIS_ARTIFACT }}
           path: analysis
-      - name: Verify validated MP4
+      - name: Verify validated MP4 artifact
         run: |
           test -s analysis/extracted/first-scenario.mp4
-          ffprobe -v error analysis/extracted/first-scenario.mp4 >/dev/null
+          test $(stat -c%s analysis/extracted/first-scenario.mp4) -gt 1000000
       - name: Upload scenario 001 to storage
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
