@@ -32,15 +32,15 @@ jobs:
       - name: Download mirrored cabinet set once
         run: |
           ids=(
-            1QAWgDcrVkCcH4wh3ucPiLXo4Cu29Ydp7
-            1IbpbVDpMVpJPB6EXI3mP7ttS_cBp3k8I
-            1nFwQDmp1aaKnQ_12tHb0Cz1RyWXVNHiE
-            1Qz9HxJ8JpLJt--b7aggAv-xyo-aYEKsY
-            1BmYYSYuD-M9OfPSNRZ8qHEiKNioeDoHb
-            1bPC2B-7kgx5atuUFh2Dvtph9_T99gF46
-            1w09TeYjnu4iaDetH1oeqsC_C2u9ozE76
-            1nEHNocdS4GfM9J5s4iONwgNNj7Bxq46g
-            1RurhhPmVJAt8vZN6im5jzhkfLUjjEhfD
+            1P3whOKPu0GzPJ4ZbWwkDcu-Lo8lUQMeM
+            1xQ1GhPjJAuLcuVXMbhhK3t_cg4zUpAnK
+            1870X6xxTZwHFoyrutSZsJKFbRCVOhlte
+            1-k-b_r__lxiCkyqYIo0XL8lr1DM-8RTh
+            1K8fKHZiTu9JBlyENGbBlD9Sqh3uVIUTP
+            1EKR_zSqCA6KqchuHArl7E0x1Lb1sbPrQ
+            1RJfsq8HbqpYhf80v7-oRRRMxa6vCLZrd
+            1dyUx0CHQgkRWrvcRNDHfIOB-tHRn__QP
+            1xRPrWpfYHgV9HOCzq3CsuDWUz4MnPYGf
           )
           for i in $(seq 1 9); do
             id=${ids[$((i-1))]}
