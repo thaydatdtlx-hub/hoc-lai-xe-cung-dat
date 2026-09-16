@@ -9,27 +9,33 @@ permissions:
   contents: write
   id-token: write
 env:
-  BUILD_RUN_ID: '34968909153'
   UPLOAD_FUNCTION: https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload
   PUBLIC_MEDIA_BASE: https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
           ref: docs/simulation-media-source-audit
-      - name: Wait for media build
+      - name: Resolve and wait for latest media build
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          for i in $(seq 1 360); do
-            json=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${BUILD_RUN_ID}")
-            status=$(echo "$json" | jq -r .status)
-            conclusion=$(echo "$json" | jq -r .conclusion)
-            echo "media build: $status / $conclusion"
-            if [ "$status" = completed ]; then test "$conclusion" = success; exit $?; fi
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build-simulation-media.yml/runs?branch=docs%2Fsimulation-media-source-audit&event=push&per_page=10"
+          for i in $(seq 1 510); do
+            json=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$api")
+            run=$(echo "$json" | jq -c '[.workflow_runs[] | select(.head_sha != "'"$GITHUB_SHA"'")][0] // .workflow_runs[0]')
+            id=$(echo "$run" | jq -r .id)
+            status=$(echo "$run" | jq -r .status)
+            conclusion=$(echo "$run" | jq -r .conclusion)
+            echo "media build $id: $status / $conclusion"
+            if [ "$status" = completed ]; then
+              test "$conclusion" = success
+              echo "BUILD_RUN_ID=$id" >> "$GITHUB_ENV"
+              exit 0
+            fi
             sleep 20
           done
           exit 1
@@ -38,11 +44,14 @@ jobs:
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ env.BUILD_RUN_ID }}
-          name: simulation-media-120
+          pattern: simulation-media-shard-*
+          merge-multiple: true
           path: media
       - name: Verify 120 videos
         run: |
-          test $(find media -type f -name 'chapter*_th*.mp4' | wc -l) -eq 120
+          total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
+          echo "downloaded videos: $total"
+          test "$total" -eq 120
           du -sh media
       - name: Upload media to project storage
         run: |
@@ -67,7 +76,7 @@ jobs:
               start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
               windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
               scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
-          out={'version':'2.0.0-web-2026-09-15','note':'120 authorized simulation videos optimized for web; score bands derived from verified tss.db 5-point and 0-point markers.','scenarios':scenarios}
+          out={'version':'2.0.0-web-2026-09-16','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
           with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
           PY
           node scripts/test-simulation-media.mjs
