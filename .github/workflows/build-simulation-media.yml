@@ -29,23 +29,23 @@ jobs:
           echo "::add-mask::$KEY"
           echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
 
-      - name: Download cabinet set once
+      - name: Download mirrored cabinet set once
         run: |
           ids=(
-            1ikfLw9io14py41qRbycRZg2trWL6m2iF
+            1QAWgDcrVkCcH4wh3ucPiLXo4Cu29Ydp7
             1IbpbVDpMVpJPB6EXI3mP7ttS_cBp3k8I
-            1rgTl3ErAVbXuFz5PeUI-OByGQ5r6wWWN
-            1fXNLVmSoJIletvvjzrKgyp-kmX-ZiKYW
-            1rM0gNFKpIg1VsGMNUYG-vY8U-LkwT14Q
-            1WHGeBgBzAS8xn25hzqqbwtT3E2PbH-L3
-            1VdGpL3p3ffA4l696MukzVeuLJhp3uGyx
-            1LPzDCKkd5nREv0ozoTwtAv8uJgh7JGXH
-            1cJSbq-uod426Wf_AhdSAGl8NImweZU1I
+            1nFwQDmp1aaKnQ_12tHb0Cz1RyWXVNHiE
+            1Qz9HxJ8JpLJt--b7aggAv-xyo-aYEKsY
+            1BmYYSYuD-M9OfPSNRZ8qHEiKNioeDoHb
+            1bPC2B-7kgx5atuUFh2Dvtph9_T99gF46
+            1w09TeYjnu4iaDetH1oeqsC_C2u9ozE76
+            1nEHNocdS4GfM9J5s4iONwgNNj7Bxq46g
+            1RurhhPmVJAt8vZN6im5jzhkfLUjjEhfD
           )
           for i in $(seq 1 9); do
             id=${ids[$((i-1))]}
             ok=0
-            for attempt in 1 2 3 4 5 6; do
+            for attempt in 1 2 3; do
               echo "Setup${i}.cab attempt ${attempt}"
               rm -f "Setup${i}.cab"
               if gdown "https://drive.google.com/uc?id=${id}" -O "Setup${i}.cab"; then
@@ -53,7 +53,7 @@ jobs:
                 echo "Setup${i}.cab bytes: $size"
                 if [ "$size" -gt 300000000 ]; then ok=1; break; fi
               fi
-              sleep $((attempt * 20))
+              sleep $((attempt * 10))
             done
             test "$ok" -eq 1
           done
