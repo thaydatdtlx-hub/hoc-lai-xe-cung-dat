@@ -10,26 +10,16 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - shard: 1
-            chapters: "1 2"
-            expected: 43
-          - shard: 2
-            chapters: "3 4"
-            expected: 30
-          - shard: 3
-            chapters: "5 6"
-            expected: 47
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
-      - run: |
+
+      - name: Install media tools
+        run: |
           sudo apt-get update
           sudo apt-get install -y cabextract ffmpeg jq
           python -m pip install --disable-pip-version-check gdown
+
       - name: Get protected media key
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
@@ -38,7 +28,8 @@ jobs:
           test ${#KEY} -eq 32
           echo "::add-mask::$KEY"
           echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
-      - name: Download complete spanned cabinet set
+
+      - name: Download cabinet set once
         run: |
           ids=(
             1ikfLw9io14py41qRbycRZg2trWL6m2iF
@@ -54,52 +45,55 @@ jobs:
           for i in $(seq 1 9); do
             id=${ids[$((i-1))]}
             ok=0
-            for attempt in 1 2 3 4; do
+            for attempt in 1 2 3 4 5 6; do
               echo "Setup${i}.cab attempt ${attempt}"
               rm -f "Setup${i}.cab"
               if gdown "https://drive.google.com/uc?id=${id}" -O "Setup${i}.cab"; then
                 size=$(stat -c%s "Setup${i}.cab")
+                echo "Setup${i}.cab bytes: $size"
                 if [ "$size" -gt 300000000 ]; then ok=1; break; fi
               fi
-              sleep $((attempt * 15))
+              sleep $((attempt * 20))
             done
             test "$ok" -eq 1
-            sleep 5
           done
           ls -lh Setup*.cab
           df -h .
+
       - name: Prepare decoder
         run: |
           python - <<'PY'
           from pathlib import Path
           Path('/tmp/decode.py').write_text('''import sys\nfrom pathlib import Path\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3]); s=list(range(256)); j=0\nfor i in range(256): j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n while chunk:=fi.read(1048576):\n  out=bytearray(len(chunk))\n  for n,x in enumerate(chunk):\n   i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n  fo.write(out)\n''')
           PY
-      - name: Extract and convert shard
-        env:
-          CHAPTERS: ${{ matrix.chapters }}
-          EXPECTED: ${{ matrix.expected }}
+
+      - name: Extract and convert all 120 videos
         run: |
           mkdir -p media encoded
-          for chapter in $CHAPTERS; do
+          expected=(29 14 20 10 17 30)
+          for chapter in 1 2 3 4 5 6; do
             rm -rf encoded/*
             cabextract -q -d encoded -F "chapter${chapter}_th*.pt" Setup1.cab
             count=$(find encoded -type f -name "chapter${chapter}_th*.pt" | wc -l)
-            echo "chapter $chapter encrypted files: $count"
-            test "$count" -gt 0
-            find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | while IFS= read -r -d '' f; do
+            want=${expected[$((chapter-1))]}
+            echo "chapter $chapter encrypted files: $count / expected $want"
+            test "$count" -eq "$want"
+            find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z | while IFS= read -r -d '' f; do
               name=$(basename "$f" .pt)
               python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
               ffprobe -v error /tmp/source.mp4 >/dev/null
               ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
+              rm -f /tmp/source.mp4
             done
           done
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
-          echo "converted videos in shard ${{ matrix.shard }}: $total"
-          test "$total" -eq "$EXPECTED"
+          echo "converted videos: $total"
+          test "$total" -eq 120
           du -sh media
+
       - uses: actions/upload-artifact@v4
         with:
-          name: simulation-media-shard-${{ matrix.shard }}
+          name: simulation-media-all
           path: media/chapter*_th*.mp4
           compression-level: 0
           retention-days: 1
