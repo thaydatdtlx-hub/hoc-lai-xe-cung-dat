@@ -1,5 +1,8 @@
 name: Publish built simulation media
 on:
+  workflow_run:
+    workflows: ["Build simulation media artifacts"]
+    types: [completed]
   push:
     branches: [docs/simulation-media-source-audit]
     paths: [.github/workflows/publish-built-simulation-media.yml]
@@ -13,32 +16,58 @@ env:
   PUBLIC_MEDIA_BASE: https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2
 jobs:
   publish:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: docs/simulation-media-source-audit
-      - name: Resolve and wait for latest media build
+      - name: Resolve media build
         env:
           GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id }}
+          EVENT_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          EVENT_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          CURRENT_BRANCH: ${{ github.ref_name }}
         run: |
-          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build-simulation-media.yml/runs?branch=docs%2Fsimulation-media-source-audit&event=push&per_page=10"
+          if [ "$EVENT_NAME" = "workflow_run" ]; then
+            test "$EVENT_CONCLUSION" = "success"
+            test -n "$EVENT_RUN_ID"
+            test -n "$EVENT_BRANCH"
+            echo "BUILD_RUN_ID=$EVENT_RUN_ID" >> "$GITHUB_ENV"
+            echo "TARGET_BRANCH=$EVENT_BRANCH" >> "$GITHUB_ENV"
+            exit 0
+          fi
+
+          branch="$CURRENT_BRANCH"
+          test -n "$branch"
+          encoded=$(python -c 'import sys,urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$branch")
+          api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/build-simulation-media.yml/runs?branch=${encoded}&per_page=10"
           for i in $(seq 1 510); do
             json=$(curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H 'Accept: application/vnd.github+json' "$api")
-            run=$(echo "$json" | jq -c '[.workflow_runs[] | select(.head_sha != "'"$GITHUB_SHA"'")][0] // .workflow_runs[0]')
+            run=$(echo "$json" | jq -c '.workflow_runs[0] // empty')
+            if [ -z "$run" ]; then
+              echo "no media build found yet for $branch"
+              sleep 20
+              continue
+            fi
             id=$(echo "$run" | jq -r .id)
             status=$(echo "$run" | jq -r .status)
             conclusion=$(echo "$run" | jq -r .conclusion)
             echo "media build $id: $status / $conclusion"
-            if [ "$status" = completed ]; then
-              test "$conclusion" = success
+            if [ "$status" = "completed" ]; then
+              test "$conclusion" = "success"
               echo "BUILD_RUN_ID=$id" >> "$GITHUB_ENV"
+              echo "TARGET_BRANCH=$branch" >> "$GITHUB_ENV"
               exit 0
             fi
             sleep 20
           done
           exit 1
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_BRANCH }}
+
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -47,12 +76,14 @@ jobs:
           pattern: simulation-media-shard-*
           merge-multiple: true
           path: media
+
       - name: Verify 120 videos
         run: |
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
           echo "downloaded videos: $total"
           test "$total" -eq 120
           du -sh media
+
       - name: Upload media to project storage
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
@@ -66,6 +97,7 @@ jobs:
             curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
             printf 'uploaded %03d\n' "$id"
           done
+
       - name: Build production manifest
         run: |
           python - <<'PY'
@@ -82,10 +114,15 @@ jobs:
           node scripts/test-simulation-media.mjs
           node --check public/mo-phong/core.mjs
           node --check public/mo-phong/app.mjs
+
       - name: Commit production manifest
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add public/data/mo-phong-120-media.json
+          if git diff --cached --quiet; then
+            echo "production manifest is already current"
+            exit 0
+          fi
           git commit -m 'data: publish 120 simulation media URLs'
-          git push origin HEAD:docs/simulation-media-source-audit
+          git push origin "HEAD:${TARGET_BRANCH}"
