@@ -73,7 +73,7 @@ jobs:
           github-token: ${{ github.token }}
           repository: ${{ github.repository }}
           run-id: ${{ env.BUILD_RUN_ID }}
-          pattern: simulation-media-shard-*
+          pattern: simulation-media-*
           merge-multiple: true
           path: media
 
