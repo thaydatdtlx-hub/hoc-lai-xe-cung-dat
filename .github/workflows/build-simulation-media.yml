@@ -36,7 +36,7 @@ jobs:
         run: |
           ids=(
             1P3whOKPu0GzPJ4ZbWwkDcu-Lo8lUQMeM
-            1xQ1GhPjJAuLcuVXMbhhK3t_cg4zUpAnK
+            1x2uc5MwAbMQerIjWRYm_ogokL1BaUVEs
             1870X6xxTZwHFoyrutSZsJKFbRCVOhlte
             1-k-b_r__lxiCkyqYIo0XL8lr1DM-8RTh
             1K8fKHZiTu9JBlyENGbBlD9Sqh3uVIUTP
@@ -72,29 +72,69 @@ jobs:
 
       - name: Extract and convert all 120 videos
         run: |
-          mkdir -p media encoded
+          mkdir -p media encoded diagnostics
+          : > diagnostics/converted.txt
+          : > diagnostics/failures.txt
           expected=(29 14 20 10 17 30)
           for chapter in 1 2 3 4 5 6; do
             rm -rf encoded/*
+            echo "=== chapter ${chapter} ==="
+            df -h .
             cabextract -q -d encoded -F "chapter${chapter}_th*.pt" Setup1.cab
             count=$(find encoded -type f -name "chapter${chapter}_th*.pt" | wc -l)
             want=${expected[$((chapter-1))]}
             echo "chapter $chapter encrypted files: $count / expected $want"
-            test "$count" -eq "$want"
+            if [ "$count" -ne "$want" ]; then
+              echo "chapter ${chapter}: extracted ${count}, expected ${want}" | tee -a diagnostics/failures.txt
+              continue
+            fi
             while IFS= read -r -d '' f; do
               name=$(basename "$f" .pt)
               echo "converting ${name}"
-              python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
-              ffprobe -v error /tmp/source.mp4 >/dev/null
-              ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
               rm -f /tmp/source.mp4
+              if ! python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"; then
+                echo "${name}: decode failed" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
+              if ! ffprobe -v error /tmp/source.mp4 >/dev/null 2>"diagnostics/${name}.ffprobe.log"; then
+                echo "${name}: ffprobe failed" | tee -a diagnostics/failures.txt
+                cat "diagnostics/${name}.ffprobe.log"
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
+              if ! ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.ffmpeg.log"; then
+                echo "${name}: ffmpeg failed" | tee -a diagnostics/failures.txt
+                cat "diagnostics/${name}.ffmpeg.log"
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log" "diagnostics/${name}.ffmpeg.log"
+              echo "${name}" >> diagnostics/converted.txt
               echo "converted ${name}"
             done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
+            rm -rf encoded/*
+            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt)"
+            df -h .
           done
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
           echo "converted videos: $total"
+          du -sh media || true
+          if [ -s diagnostics/failures.txt ]; then
+            echo "Conversion failures:"
+            cat diagnostics/failures.txt
+            exit 1
+          fi
           test "$total" -eq 120
-          du -sh media
+
+      - name: Upload conversion diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-build-diagnostics
+          path: diagnostics/
+          if-no-files-found: ignore
+          retention-days: 1
 
       - name: Upload 120 videos to Supabase Storage
         run: |
