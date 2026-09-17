@@ -1,6 +1,6 @@
 import {loadManifest, chapterOf, scoreAt, makeExam} from './core.mjs';
 const $=id=>document.getElementById(id),video=$('video'),KEY='dat-simulation-device-v2';
-const token=()=>localStorage.getItem('app_student_token')||sessionStorage.getItem('app_student_token')||'';
+const token=()=>localStorage.getItem('hv_token')||sessionStorage.getItem('hv_token')||localStorage.getItem('app_student_token')||sessionStorage.getItem('app_student_token')||'';
 let data={scenarios:[]},current=null,mode='study',queue=[],index=0,answers=[],mark=null,finished=false,recorded=false,mediaReady=false,examStartedAt=0,remoteTimer=null;
 let state={last:null,attempts:{},history:[],totalAttempts:0};
 try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&saved.attempts&&typeof saved.attempts==='object'){state={...state,...saved,history:Array.isArray(saved.history)?saved.history:[]}}}catch{$('storageNotice').textContent='Không đọc được tiến độ đã lưu. Bạn vẫn có thể luyện trong phiên này.'}
