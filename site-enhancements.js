@@ -2,6 +2,7 @@ import "./login-isolated-v20.js?v=7";
 
 if(document.getElementById("app")){
   import("./theory-license-progress-fix.js?v=1").catch(error=>console.warn("[site-enhancements] Không thể tải điều chỉnh tiến độ lý thuyết theo hạng.",error));
+  import("./training-center.js?v=1").catch(error=>console.warn("[site-enhancements] Không thể tải trường Trung tâm đào tạo.",error));
 }
 
 if(location.pathname==="/600-cau-hoi.html"){
