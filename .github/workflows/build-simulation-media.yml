@@ -78,13 +78,15 @@ jobs:
             want=${expected[$((chapter-1))]}
             echo "chapter $chapter encrypted files: $count / expected $want"
             test "$count" -eq "$want"
-            find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z | while IFS= read -r -d '' f; do
+            while IFS= read -r -d '' f; do
               name=$(basename "$f" .pt)
+              echo "converting ${name}"
               python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"
               ffprobe -v error /tmp/source.mp4 >/dev/null
-              ffmpeg -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
+              ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4"
               rm -f /tmp/source.mp4
-            done
+              echo "converted ${name}"
+            done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
           done
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
           echo "converted videos: $total"
