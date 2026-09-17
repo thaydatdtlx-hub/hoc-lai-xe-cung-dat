@@ -19,24 +19,44 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+
           path = Path('app.js')
           text = path.read_text(encoding='utf-8')
+
           old_boot = '    showApp();\n    if(me.role==="admin"){await loadUsers();await loadStudentAccounts();await loadPublicTheoryAccounts();await loadOperations();await loadPaymentFeature();await loadAttendanceFeature()}\n    await loadStudents();'
           new_boot = '    showApp();\n    await loadStudents();\n    if(me.role==="admin"){\n      await Promise.allSettled([loadUsers(),loadStudentAccounts(),loadPublicTheoryAccounts(),loadOperations(),loadPaymentFeature(),loadAttendanceFeature()]);\n      renderStudents();\n    }'
-          if old_boot not in text:
-              raise SystemExit('Expected admin boot block not found; refusing unsafe patch')
-          text = text.replace(old_boot, new_boot, 1)
+          current_boot = '    showApp();\n    await nextPaint();\n    await loadStudents();\n    if(me.role==="admin"){\n      await Promise.allSettled([loadUsers(),loadStudentAccounts(),loadPublicTheoryAccounts(),loadOperations(),loadPaymentFeature(),loadAttendanceFeature()]);\n      renderStudents();\n    }'
+
+          if old_boot in text:
+              text = text.replace(old_boot, new_boot, 1)
+              print('Updated admin boot ordering.')
+          elif new_boot in text or current_boot in text:
+              print('Admin boot already prioritizes student data; no boot patch needed.')
+          else:
+              raise SystemExit('Admin boot structure is unfamiliar; refusing unsafe patch')
+
           old_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
           new_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    renderStudents();\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
-          if old_students not in text:
-              raise SystemExit('Expected student loading block not found; refusing unsafe patch')
-          text = text.replace(old_students, new_students, 1)
+          current_students = '    students=await rpc("app_list_students",{p_token:token,p_owner_id:me.role==="admin"?($("ownerFilter").value||null):null})||[];\n    await nextPaint();\n    try{trainingRequests=await rpc("app_list_training_requests",{p_token:token,p_student_id:null})||[]}'
+
+          if old_students in text:
+              text = text.replace(old_students, new_students, 1)
+              print('Updated student loading render point.')
+          elif new_students in text or current_students in text:
+              print('Student loading flow is already on a newer compatible path; no patch needed.')
+          else:
+              raise SystemExit('Student loading structure is unfamiliar; refusing unsafe patch')
+
           path.write_text(text, encoding='utf-8')
           PY
       - name: Validate JavaScript syntax
         run: node --check app.js
-      - name: Commit fix
+      - name: Commit fix when needed
         run: |
+          if git diff --quiet -- app.js; then
+            echo "Student-first behavior is already present; nothing to commit."
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add app.js
