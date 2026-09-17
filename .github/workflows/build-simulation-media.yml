@@ -5,8 +5,11 @@ on:
     paths: [.github/workflows/build-simulation-media.yml]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   id-token: write
+env:
+  UPLOAD_FUNCTION: https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload
+  PUBLIC_MEDIA_BASE: https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
           OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
-          KEY=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data '{"action":"media-key"}' https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload | jq -r .key)
+          KEY=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data '{"action":"media-key"}' "$UPLOAD_FUNCTION" | jq -r .key)
           test ${#KEY} -eq 32
           echo "::add-mask::$KEY"
           echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
@@ -92,6 +95,49 @@ jobs:
           echo "converted videos: $total"
           test "$total" -eq 120
           du -sh media
+
+      - name: Upload 120 videos to Supabase Storage
+        run: |
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
+          OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
+          while IFS= read -r -d '' f; do
+            id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
+            test "$id" -ge 1 -a "$id" -le 120
+            resp=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION")
+            signed=$(echo "$resp" | jq -r .signedUrl)
+            test -n "$signed" -a "$signed" != null
+            curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
+            printf 'uploaded %03d\n' "$id"
+          done < <(find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z)
+
+      - name: Build and verify production manifest
+        run: |
+          python - <<'PY'
+          import json, os
+          src=json.load(open('public/data/mo-phong-120-timing-source.json',encoding='utf-8'))
+          base=os.environ['PUBLIC_MEDIA_BASE']; scenarios=[]
+          for x in src['scenarios']:
+              start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
+              windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
+              scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
+          out={'version':'2.0.0-web-2026-09-17','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
+          with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
+          PY
+          node scripts/test-simulation-media.mjs
+          node --check public/mo-phong/core.mjs
+          node --check public/mo-phong/app.mjs
+
+      - name: Commit production manifest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/mo-phong-120-media.json
+          if git diff --cached --quiet; then
+            echo "production manifest is already current"
+          else
+            git commit -m 'data: publish 120 simulation media URLs'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
