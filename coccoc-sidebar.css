@@ -15,12 +15,15 @@
     z-index:120!important;
     width:var(--coccoc-sidebar-current-width)!important;
     height:100dvh;
-    padding:9px 8px 14px!important;
+    max-height:100dvh;
+    box-sizing:border-box!important;
+    padding:9px 8px calc(14px + env(safe-area-inset-bottom,0px))!important;
     border-right:1px solid #dce6ef!important;
     background:rgba(255,255,255,.985)!important;
     box-shadow:8px 0 28px rgba(8,47,99,.08)!important;
     overflow-x:hidden!important;
     overflow-y:auto!important;
+    overscroll-behavior:contain;
     scrollbar-width:thin;
     scrollbar-color:#c7d6e3 transparent;
     transition:width .22s ease,box-shadow .22s ease
@@ -43,6 +46,7 @@
     margin-right:0!important;
     margin-left:var(--coccoc-sidebar-current-width)!important;
     padding-right:clamp(18px,2.4vw,40px)!important;
+    padding-bottom:clamp(28px,4vh,56px)!important;
     padding-left:clamp(18px,2.4vw,40px)!important;
     box-sizing:border-box!important;
     overflow-x:clip;
