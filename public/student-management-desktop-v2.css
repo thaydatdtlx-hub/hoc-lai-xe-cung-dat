@@ -1,0 +1,390 @@
+/* Giao diện quản lý học viên desktop v2.
+   Chỉ thay đổi trình bày, không thay đổi dữ liệu, API hay hành vi hiện có. */
+
+@media (min-width:1100px){
+  #app #dashboardMain{
+    width:calc(100% - 24px)!important;
+    max-width:none!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+
+  /* Thanh công cụ: giữ nguyên toàn bộ nút/chức năng nhưng thu gọn để vừa màn hình. */
+  #app #dashboardMain>.toolbar{
+    display:grid!important;
+    grid-template-columns:minmax(300px,2fr) repeat(5,minmax(126px,1fr))!important;
+    gap:8px!important;
+    align-items:stretch!important;
+    padding:10px!important;
+    border:1px solid #dbe7f3!important;
+    border-radius:16px!important;
+    background:#fff!important;
+    box-shadow:0 10px 30px rgba(26,64,104,.08)!important;
+  }
+  #app #dashboardMain>.toolbar>#search{
+    grid-column:span 2!important;
+  }
+  #app #dashboardMain>.toolbar>input:not(.hidden),
+  #app #dashboardMain>.toolbar>select:not(.hidden){
+    height:58px!important;
+    min-height:58px!important;
+    padding:0 14px!important;
+    border-radius:12px!important;
+    font-size:12px!important;
+  }
+  #app #dashboardMain>.toolbar>button,
+  #app #dashboardMain>.toolbar>a{
+    min-height:58px!important;
+    padding:7px 9px!important;
+    border-radius:12px!important;
+    gap:8px!important;
+  }
+  #app #dashboardMain>.toolbar strong,
+  #app #dashboardMain>.toolbar>button::after{
+    font-size:9.5px!important;
+    line-height:1.2!important;
+  }
+  #app #dashboardMain>.toolbar small{
+    margin-top:2px!important;
+    font-size:8px!important;
+    line-height:1.15!important;
+  }
+  #app #dashboardMain>.toolbar #addStudentBtn::before,
+  #app #dashboardMain>.toolbar #usersBtn::before,
+  #app #dashboardMain>.toolbar #publicTheoryAccountsBtn::before,
+  #app #dashboardMain>.toolbar>a>span:first-child,
+  #app #dashboardMain>.toolbar .data-action>span:first-child,
+  #app #dashboardMain>.toolbar .attendance-toolbar-btn>span:first-child,
+  #app #dashboardMain>.toolbar .report-toolbar-btn>span:first-child,
+  #app #dashboardMain>.toolbar .refresh-admin-btn>span:first-child,
+  #app #dashboardMain>.toolbar .operations-btn>span:first-child{
+    width:34px!important;
+    height:34px!important;
+    min-width:34px!important;
+    flex-basis:34px!important;
+    border-radius:10px!important;
+    background-size:18px 18px!important;
+  }
+
+  /* Khối danh sách học viên mới. */
+  #app #dashboardMain .panel:has(#studentRows){
+    overflow:hidden!important;
+    border:1px solid #dbe7f2!important;
+    border-radius:18px!important;
+    background:#fff!important;
+    box-shadow:0 12px 34px rgba(28,65,103,.08)!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows)>.panel-title{
+    padding:14px 16px!important;
+    border-bottom:1px solid #e5edf5!important;
+    background:linear-gradient(180deg,#fff,#f9fbfe)!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows)>.panel-title h2{
+    margin:0!important;
+    color:#123c6a!important;
+    font-size:18px!important;
+    line-height:1.2!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows)>.panel-title p{
+    margin:3px 0 0!important;
+    color:#73869a!important;
+    font-size:10px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows)>.panel-title>span{
+    padding:6px 10px!important;
+    border-radius:999px!important;
+    background:#eaf3ff!important;
+    color:#1768bd!important;
+    font-size:10px!important;
+    font-weight:800!important;
+  }
+
+  #app #dashboardMain .panel:has(#studentRows) .table-wrap{
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:hidden!important;
+    overflow-y:visible!important;
+    border:0!important;
+    border-radius:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) table{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    table-layout:fixed!important;
+    border-collapse:separate!important;
+    border-spacing:0!important;
+    background:#fff!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) thead th{
+    position:sticky;
+    top:0;
+    z-index:2;
+    padding:11px 9px!important;
+    border-bottom:1px solid #dfe9f3!important;
+    background:#eef4fa!important;
+    color:#536b84!important;
+    font-size:9px!important;
+    font-weight:850!important;
+    line-height:1.25!important;
+    letter-spacing:.035em!important;
+    text-align:left!important;
+    vertical-align:middle!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) tbody td{
+    padding:11px 9px!important;
+    border-bottom:1px solid #e8eef5!important;
+    color:#173b5f!important;
+    font-size:10.5px!important;
+    line-height:1.35!important;
+    vertical-align:middle!important;
+    overflow-wrap:anywhere!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) tbody tr:last-child td{
+    border-bottom:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) tbody tr:hover{
+    background:#f8fbff!important;
+  }
+
+  /* Tỷ lệ cột desktop: tổng đúng 100%, tránh thanh cuộn ngang ở zoom 100%. */
+  #app #dashboardMain .panel:has(#studentRows) th:nth-child(1){width:13%!important}
+  #app #dashboardMain .panel:has(#studentRows) th:nth-child(2){width:5%!important}
+  #app #dashboardMain .panel:has(#studentRows) th[data-center-heading="training_center"]{width:10%!important;min-width:0!important}
+  #app #dashboardMain .panel:has(#studentRows) th[data-center-heading="exam_center"]{width:8%!important;min-width:0!important}
+  #app #dashboardMain .panel:has(#studentRows) th:nth-child(5){width:7%!important}
+  #app #dashboardMain .panel:has(#studentRows) th:nth-child(6){width:16%!important}
+  #app #dashboardMain .panel:has(#studentRows) th.admin-only:not(.hidden){width:9%!important}
+  #app #dashboardMain .panel:has(#studentRows) th:nth-last-child(2){width:8%!important}
+  #app #dashboardMain .panel:has(#studentRows) th:last-child{width:24%!important}
+
+  #app #dashboardMain .panel:has(#studentRows) td:first-child{width:13%!important}
+  #app #dashboardMain .panel:has(#studentRows) td:nth-child(2){width:5%!important}
+  #app #dashboardMain .panel:has(#studentRows) td.training-center-cell{width:10%!important;min-width:0!important}
+  #app #dashboardMain .panel:has(#studentRows) td.exam-center-cell{width:8%!important;min-width:0!important}
+  #app #dashboardMain .panel:has(#studentRows) td:nth-child(5){width:7%!important}
+  #app #dashboardMain .panel:has(#studentRows) td:has(.progress-list){width:16%!important}
+  #app #dashboardMain .panel:has(#studentRows) td:has(.theory-table-progress),
+  #app #dashboardMain .panel:has(#studentRows) td:has(.theory-table-empty){width:9%!important}
+  #app #dashboardMain .panel:has(#studentRows) td:nth-last-child(2){width:8%!important}
+  #app #dashboardMain .panel:has(#studentRows) td:last-child{width:24%!important}
+
+  /* Học viên. */
+  #app #dashboardMain .panel:has(#studentRows) .student-cell{
+    display:grid!important;
+    grid-template-columns:46px minmax(0,1fr)!important;
+    gap:8px!important;
+    align-items:center!important;
+    min-width:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .student-photo{
+    width:44px!important;
+    height:58px!important;
+    border-radius:10px!important;
+    object-fit:cover!important;
+    box-shadow:0 4px 12px rgba(22,55,88,.13)!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .photo-placeholder{
+    width:44px!important;
+    height:58px!important;
+    min-width:44px!important;
+    border-radius:10px!important;
+    font-size:8px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .student-cell>div{
+    min-width:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .student-name{
+    display:block!important;
+    margin:0 0 3px!important;
+    color:#0d3d72!important;
+    font-size:12px!important;
+    font-weight:850!important;
+    line-height:1.22!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .sub{
+    display:block!important;
+    margin-top:3px!important;
+    color:#7b8da0!important;
+    font-size:9px!important;
+    line-height:1.3!important;
+  }
+
+  /* Trung tâm đào tạo / sát hạch. */
+  #app #dashboardMain .panel:has(#studentRows) td.training-center-cell,
+  #app #dashboardMain .panel:has(#studentRows) td.exam-center-cell{
+    min-width:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .center-value{
+    display:block!important;
+    color:#173b5f!important;
+    font-size:10.5px!important;
+    font-weight:780!important;
+    line-height:1.28!important;
+    overflow-wrap:anywhere!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .center-empty{
+    display:block!important;
+    color:#8a9aac!important;
+    font-size:9.5px!important;
+    line-height:1.3!important;
+  }
+
+  /* Tiến độ đào tạo. */
+  #app #dashboardMain .panel:has(#studentRows) .progress-list{
+    display:grid!important;
+    min-width:0!important;
+    width:100%!important;
+    gap:4px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .progress-chip{
+    display:grid!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    gap:5px!important;
+    align-items:center!important;
+    min-width:0!important;
+    min-height:19px!important;
+    padding:3px 6px!important;
+    border-radius:8px!important;
+    font-size:8.5px!important;
+    line-height:1.12!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .progress-chip b{
+    font-size:7.8px!important;
+    line-height:1.1!important;
+    white-space:nowrap!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .progress-chip>span{
+    min-width:0!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .progress-chip small{
+    font-size:7px!important;
+  }
+
+  /* Tiến độ học lý thuyết. */
+  #app #dashboardMain .panel:has(#studentRows) .theory-table-progress{
+    display:grid!important;
+    min-width:0!important;
+    width:100%!important;
+    gap:4px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .theory-table-progress strong{
+    font-size:10px!important;
+    line-height:1.2!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .theory-table-progress span,
+  #app #dashboardMain .panel:has(#studentRows) .theory-table-empty{
+    max-width:none!important;
+    font-size:8px!important;
+    line-height:1.25!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .theory-table-progress button{
+    width:max-content!important;
+    max-width:100%!important;
+    padding:5px 7px!important;
+    border-radius:7px!important;
+    font-size:8px!important;
+    white-space:normal!important;
+  }
+
+  /* Học phí. */
+  #app #dashboardMain .panel:has(#studentRows) td:nth-last-child(2){
+    color:#153b62!important;
+    font-size:10.5px!important;
+    font-weight:700!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) td:nth-last-child(2) .sub{
+    font-size:8.5px!important;
+    font-weight:500!important;
+  }
+
+  /* Thao tác: không ẩn bất kỳ chức năng nào; bố trí lại thành lưới để không bị cắt. */
+  #app #dashboardMain .panel:has(#studentRows) .row-actions{
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    width:100%!important;
+    min-width:0!important;
+    gap:6px!important;
+    align-items:stretch!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>button,
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>a{
+    display:flex!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:34px!important;
+    margin:0!important;
+    padding:5px 6px!important;
+    align-items:center!important;
+    justify-content:center!important;
+    border:1px solid #cfe0f1!important;
+    border-radius:9px!important;
+    background:#f7fbff!important;
+    color:#1268bb!important;
+    font-size:8.7px!important;
+    font-weight:800!important;
+    line-height:1.15!important;
+    text-align:center!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+    box-shadow:none!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>.student-account-btn{
+    grid-column:span 2!important;
+    border-color:#bde3d5!important;
+    background:#eaf9f3!important;
+    color:#087657!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>.attendance-row-btn,
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>.payment-row-btn{
+    border-color:#bde3d5!important;
+    background:#effaf6!important;
+    color:#087657!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>[data-training-schedule],
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>[data-edit],
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>[data-download-photo]{
+    border-color:#c9dff5!important;
+    background:#f2f8ff!important;
+    color:#1268bb!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>.danger,
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>[data-delete]{
+    border-color:#f2c7c2!important;
+    background:#fff5f4!important;
+    color:#b33a31!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>button:hover,
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>a:hover{
+    transform:translateY(-1px)!important;
+    filter:saturate(1.06)!important;
+    box-shadow:0 5px 12px rgba(30,77,122,.08)!important;
+  }
+}
+
+@media (min-width:1100px) and (max-width:1499px){
+  #app #dashboardMain>.toolbar{
+    grid-template-columns:minmax(260px,2fr) repeat(4,minmax(116px,1fr))!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) thead th,
+  #app #dashboardMain .panel:has(#studentRows) tbody td{
+    padding-left:7px!important;
+    padding-right:7px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  #app #dashboardMain .panel:has(#studentRows) .row-actions>.student-account-btn{
+    grid-column:span 2!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  #app #dashboardMain .panel:has(#studentRows) *,
+  #app #dashboardMain>.toolbar *{
+    transition:none!important;
+  }
+}
