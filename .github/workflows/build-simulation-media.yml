@@ -1,0 +1,271 @@
+name: Build simulation media artifacts
+on:
+  push:
+    branches: [docs/simulation-media-source-audit]
+    paths:
+      - .github/workflows/build-simulation-media.yml
+      - scripts/test-simulation-media.mjs
+      - public/data/mo-phong-120-timing-source.json
+  workflow_dispatch:
+concurrency:
+  group: simulation-media-build-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: write
+  id-token: write
+env:
+  UPLOAD_FUNCTION: https://pkzxkvcncipfszeukpwu.supabase.co/functions/v1/simulation-media-upload
+  PUBLIC_MEDIA_BASE: https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install media tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cabextract ffmpeg jq
+          python -m pip install --disable-pip-version-check gdown
+
+      - name: Get protected media key
+        run: |
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
+          OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
+          KEY=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data '{"action":"media-key"}' "$UPLOAD_FUNCTION" | jq -r .key)
+          test ${#KEY} -eq 32
+          echo "::add-mask::$KEY"
+          echo "MEDIA_KEY=$KEY" >> "$GITHUB_ENV"
+
+      - name: Download mirrored cabinet set once
+        run: |
+          ids=(
+            1P3whOKPu0GzPJ4ZbWwkDcu-Lo8lUQMeM
+            1x2uc5MwAbMQerIjWRYm_ogokL1BaUVEs
+            1870X6xxTZwHFoyrutSZsJKFbRCVOhlte
+            1-k-b_r__lxiCkyqYIo0XL8lr1DM-8RTh
+            1K8fKHZiTu9JBlyENGbBlD9Sqh3uVIUTP
+            1EKR_zSqCA6KqchuHArl7E0x1Lb1sbPrQ
+            1RJfsq8HbqpYhf80v7-oRRRMxa6vCLZrd
+            1dyUx0CHQgkRWrvcRNDHfIOB-tHRn__QP
+            1xRPrWpfYHgV9HOCzq3CsuDWUz4MnPYGf
+          )
+          for i in $(seq 1 9); do
+            id=${ids[$((i-1))]}
+            ok=0
+            for attempt in 1 2 3; do
+              echo "Setup${i}.cab attempt ${attempt}"
+              rm -f "Setup${i}.cab"
+              if gdown "https://drive.google.com/uc?id=${id}" -O "Setup${i}.cab"; then
+                size=$(stat -c%s "Setup${i}.cab")
+                echo "Setup${i}.cab bytes: $size"
+                if [ "$size" -gt 300000000 ]; then ok=1; break; fi
+              fi
+              sleep $((attempt * 10))
+            done
+            test "$ok" -eq 1
+          done
+          ls -lh Setup*.cab
+          df -h .
+
+      - name: Prepare decoder matching authorized application
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          Path('/tmp/decode.py').write_text('''import shutil, sys\nfrom pathlib import Path\n\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3])\ns=list(range(256)); j=0\nfor i in range(256):\n j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n chunk=fi.read(1048576)\n out=bytearray(len(chunk))\n for n,x in enumerate(chunk):\n  i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n fo.write(out)\n shutil.copyfileobj(fi,fo,length=1048576)\n''')
+          PY
+
+      - name: Extract, decrypt and convert all 120 videos
+        run: |
+          mkdir -p media encoded diagnostics
+          : > diagnostics/converted.txt
+          : > diagnostics/failures.txt
+          expected=(29 14 20 10 17 30)
+          for chapter in 1 2 3 4 5 6; do
+            rm -rf encoded/*
+            echo "=== chapter ${chapter} ==="
+            df -h .
+            cabextract -q -d encoded -F "chapter${chapter}_th*.pt" Setup1.cab
+            count=$(find encoded -type f -name "chapter${chapter}_th*.pt" | wc -l)
+            want=${expected[$((chapter-1))]}
+            echo "chapter $chapter encrypted files: $count / expected $want"
+            if [ "$count" -ne "$want" ]; then
+              echo "chapter ${chapter}: extracted ${count}, expected ${want}" | tee -a diagnostics/failures.txt
+              continue
+            fi
+            while IFS= read -r -d '' f; do
+              name=$(basename "$f" .pt)
+              id=$(echo "$name" | sed -E 's/.*_th([0-9]+)$/\1/')
+              echo "converting ${name}"
+              rm -f /tmp/source.mp4 "media/${name}.mp4"
+              if ! python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"; then
+                echo "${name}: decode failed" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
+              if ! ffprobe -v error /tmp/source.mp4 >/dev/null 2>"diagnostics/${name}.ffprobe.log"; then
+                echo "${name}: decrypted source validation failed" | tee -a diagnostics/failures.txt
+                cat "diagnostics/${name}.ffprobe.log"
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
+              expected_duration=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | (.durationMilliseconds / 1000)' public/data/mo-phong-120-timing-source.json)
+              source_duration=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/source.mp4)
+              if ! python - "$source_duration" "$expected_duration" <<'PY'
+          import sys
+          actual=float(sys.argv[1]); expected=float(sys.argv[2])
+          raise SystemExit(0 if abs(actual-expected) <= 0.25 else 1)
+          PY
+              then
+                echo "${name}: decrypted source duration ${source_duration}s differs from expected ${expected_duration}s" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
+              if ! ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.ffmpeg.log"; then
+                echo "${name}: clean web encode failed" | tee -a diagnostics/failures.txt
+                cat "diagnostics/${name}.ffmpeg.log"
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              if ! ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "media/${name}.mp4" | grep -qx h264; then
+                echo "${name}: encoded video is not H.264" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              actual=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "media/${name}.mp4")
+              if ! python - "$actual" "$expected_duration" <<'PY'
+          import sys
+          actual=float(sys.argv[1]); expected=float(sys.argv[2])
+          raise SystemExit(0 if abs(actual-expected) <= 0.25 else 1)
+          PY
+              then
+                echo "${name}: encoded duration ${actual}s differs from expected ${expected_duration}s by more than 0.25s" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              size=$(stat -c%s "media/${name}.mp4")
+              min_size=$(python - "$expected_duration" <<'PY'
+          import sys
+          duration=float(sys.argv[1])
+          print(max(250000,int(duration*40000)))
+          PY
+              )
+              if [ "$size" -lt "$min_size" ]; then
+                echo "${name}: encoded file too small (${size} bytes, minimum ${min_size})" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log" "diagnostics/${name}.ffmpeg.log"
+              echo "${name}" >> diagnostics/converted.txt
+              echo "converted ${name}; source=${source_duration}s output=${actual}s bytes=${size}"
+            done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
+            rm -rf encoded/*
+            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt)"
+            df -h .
+          done
+          total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
+          echo "converted videos: $total"
+          du -sh media || true
+          if [ -s diagnostics/failures.txt ]; then
+            echo "Conversion failures:"
+            cat diagnostics/failures.txt
+            exit 1
+          fi
+          test "$total" -eq 120
+
+      - name: Upload conversion diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-build-diagnostics
+          path: diagnostics/
+          if-no-files-found: ignore
+          retention-days: 1
+
+      - name: Upload 120 videos to Supabase Storage
+        run: |
+          URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
+          while IFS= read -r -d '' f; do
+            id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
+            test "$id" -ge 1 -a "$id" -le 120
+            public_url=$(printf '%s/%03d.mp4' "$PUBLIC_MEDIA_BASE" "$id")
+            if curl -fsSL --retry 2 --retry-all-errors --connect-timeout 15 --max-time 30 -r 0-0 "$public_url" -o /dev/null; then
+              printf 'already uploaded %03d\n' "$id"
+              continue
+            fi
+            ok=0
+            for attempt in 1 2 3 4 5; do
+              printf 'uploading %03d attempt %d/5\n' "$id" "$attempt"
+              OIDC=''
+              resp=''
+              signed=''
+              if OIDC=$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 1 --connect-timeout 15 --max-time 30 -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value); then
+                if [ -n "$OIDC" ] && [ "$OIDC" != null ]; then
+                  if resp=$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 1 --connect-timeout 15 --max-time 30 -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION"); then
+                    signed=$(echo "$resp" | jq -r '.signedUrl // empty')
+                    if [ -n "$signed" ]; then
+                      if curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null; then
+                        ok=1
+                        break
+                      fi
+                    fi
+                  fi
+                fi
+              fi
+              sleep $((attempt * 2))
+            done
+            if [ "$ok" -ne 1 ]; then
+              printf 'failed to upload %03d after 5 attempts\n' "$id" >&2
+              exit 1
+            fi
+            printf 'uploaded %03d\n' "$id"
+          done < <(find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z)
+
+      - name: Verify all public media URLs
+        run: |
+          failures=0
+          for id in $(seq 1 120); do
+            url=$(printf '%s/%03d.mp4' "$PUBLIC_MEDIA_BASE" "$id")
+            if ! curl -fsSL --retry 3 --retry-delay 1 -r 0-0 "$url" -o /dev/null; then
+              echo "public media unavailable: $url"
+              failures=$((failures+1))
+            fi
+          done
+          test "$failures" -eq 0
+
+      - name: Build and verify production manifest
+        run: |
+          python - <<'PY'
+          import json, os
+          src=json.load(open('public/data/mo-phong-120-timing-source.json',encoding='utf-8'))
+          base=os.environ['PUBLIC_MEDIA_BASE']; scenarios=[]
+          for x in src['scenarios']:
+              start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
+              windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
+              scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
+          out={'version':'2.0.0-web-2026-09-17','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
+          with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
+          PY
+          node scripts/test-simulation-media.mjs
+          node --check public/mo-phong/core.mjs
+          node --check public/mo-phong/app.mjs
+
+      - name: Commit production manifest
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/data/mo-phong-120-media.json
+          if git diff --cached --quiet; then
+            echo "production manifest is already current"
+          else
+            git commit -m 'data: publish 120 simulation media URLs'
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: simulation-media-all
+          path: media/chapter*_th*.mp4
+          compression-level: 0
+          retention-days: 1
