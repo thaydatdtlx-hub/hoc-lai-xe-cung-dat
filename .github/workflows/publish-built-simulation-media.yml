@@ -88,7 +88,7 @@ jobs:
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
           OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
-          find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z | while IFS= read -r -d '' f; do
+          while IFS= read -r -d '' f; do
             id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
             test "$id" -ge 1 -a "$id" -le 120
             resp=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION")
@@ -96,7 +96,7 @@ jobs:
             test -n "$signed" -a "$signed" != null
             curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
             printf 'uploaded %03d\n' "$id"
-          done
+          done < <(find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z)
 
       - name: Build production manifest
         run: |
@@ -108,7 +108,7 @@ jobs:
               start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
               windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
               scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
-          out={'version':'2.0.0-web-2026-09-16','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
+          out={'version':'2.0.0-web-2026-09-17','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
           with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
           PY
           node scripts/test-simulation-media.mjs
