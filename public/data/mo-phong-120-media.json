@@ -1,5 +1,4686 @@
 {
-  "version": "pending",
-  "note": "Chi nap video va moc cham diem tu nguon duoc phep su dung.",
-  "scenarios": []
+  "version": "2.0.0-web-2026-09-17",
+  "note": "120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.",
+  "scenarios": [
+    {
+      "id": 1,
+      "chapter": 1,
+      "title": "Người đi bộ sang đường bị khuất sau xe tải",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/001.mp4",
+      "durationSeconds": 17.043,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.02,
+          "end": 7.516
+        },
+        {
+          "score": 4,
+          "start": 7.516,
+          "end": 8.012
+        },
+        {
+          "score": 3,
+          "start": 8.012,
+          "end": 8.508
+        },
+        {
+          "score": 2,
+          "start": 8.508,
+          "end": 9.004
+        },
+        {
+          "score": 1,
+          "start": 9.004,
+          "end": 9.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 2,
+      "chapter": 1,
+      "title": "Người đi bộ vượt đèn đỏ sang đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/002.mp4",
+      "durationSeconds": 29.525,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.3,
+          "end": 14.74
+        },
+        {
+          "score": 4,
+          "start": 14.74,
+          "end": 15.18
+        },
+        {
+          "score": 3,
+          "start": 15.18,
+          "end": 15.62
+        },
+        {
+          "score": 2,
+          "start": 15.62,
+          "end": 16.06
+        },
+        {
+          "score": 1,
+          "start": 16.06,
+          "end": 16.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 3,
+      "chapter": 1,
+      "title": "Xe phía trước phanh gấp để tránh xe buýt đang dừng tại bến xe buýt",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/003.mp4",
+      "durationSeconds": 24.05,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.36,
+          "end": 11.948
+        },
+        {
+          "score": 4,
+          "start": 11.948,
+          "end": 12.536
+        },
+        {
+          "score": 3,
+          "start": 12.536,
+          "end": 13.124
+        },
+        {
+          "score": 2,
+          "start": 13.124,
+          "end": 13.712
+        },
+        {
+          "score": 1,
+          "start": 13.712,
+          "end": 14.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 4,
+      "chapter": 1,
+      "title": "Xe con từ đường nhánh đi nhanh ra tại ngã ba không có đèn tín hiệu giao thông",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/004.mp4",
+      "durationSeconds": 24.433,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.06,
+          "end": 7.948
+        },
+        {
+          "score": 4,
+          "start": 7.948,
+          "end": 8.836
+        },
+        {
+          "score": 3,
+          "start": 8.836,
+          "end": 9.724
+        },
+        {
+          "score": 2,
+          "start": 9.724,
+          "end": 10.612
+        },
+        {
+          "score": 1,
+          "start": 10.612,
+          "end": 11.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 5,
+      "chapter": 1,
+      "title": "Xe máy đang đi thẳng, đột ngột rẽ trái sang đường trước đầu xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/005.mp4",
+      "durationSeconds": 23.466,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.55,
+          "end": 9.44
+        },
+        {
+          "score": 4,
+          "start": 9.44,
+          "end": 10.33
+        },
+        {
+          "score": 3,
+          "start": 10.33,
+          "end": 11.22
+        },
+        {
+          "score": 2,
+          "start": 11.22,
+          "end": 12.11
+        },
+        {
+          "score": 1,
+          "start": 12.11,
+          "end": 13.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 6,
+      "chapter": 1,
+      "title": "Xe buýt lấn làn để vượt tại ngã ba",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/006.mp4",
+      "durationSeconds": 20.85,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.42,
+          "end": 10.136
+        },
+        {
+          "score": 4,
+          "start": 10.136,
+          "end": 10.852
+        },
+        {
+          "score": 3,
+          "start": 10.852,
+          "end": 11.568
+        },
+        {
+          "score": 2,
+          "start": 11.568,
+          "end": 12.284
+        },
+        {
+          "score": 1,
+          "start": 12.284,
+          "end": 13.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 7,
+      "chapter": 1,
+      "title": "Xe phía trước phanh gấp tránh người đi bộ vượt đèn đỏ sang đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/007.mp4",
+      "durationSeconds": 23.066,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.07,
+          "end": 7.928
+        },
+        {
+          "score": 4,
+          "start": 7.928,
+          "end": 8.786
+        },
+        {
+          "score": 3,
+          "start": 8.786,
+          "end": 9.644
+        },
+        {
+          "score": 2,
+          "start": 9.644,
+          "end": 10.502
+        },
+        {
+          "score": 1,
+          "start": 10.502,
+          "end": 11.36
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 8,
+      "chapter": 1,
+      "title": "Xe đạp bất ngờ đi ra từ đường nhánh tại ngã ba",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/008.mp4",
+      "durationSeconds": 24.17,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.1,
+          "end": 7.698
+        },
+        {
+          "score": 4,
+          "start": 7.698,
+          "end": 8.296
+        },
+        {
+          "score": 3,
+          "start": 8.296,
+          "end": 8.894
+        },
+        {
+          "score": 2,
+          "start": 8.894,
+          "end": 9.492
+        },
+        {
+          "score": 1,
+          "start": 9.492,
+          "end": 10.09
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 9,
+      "chapter": 1,
+      "title": "Xe ô tô làn đường đối diện lấn làn vượt xe tải đang dừng đỗ tại khu vực đông đúc",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/009.mp4",
+      "durationSeconds": 13.4,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.48,
+          "end": 5.05
+        },
+        {
+          "score": 4,
+          "start": 5.05,
+          "end": 5.62
+        },
+        {
+          "score": 3,
+          "start": 5.62,
+          "end": 6.19
+        },
+        {
+          "score": 2,
+          "start": 6.19,
+          "end": 6.76
+        },
+        {
+          "score": 1,
+          "start": 6.76,
+          "end": 7.33
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 10,
+      "chapter": 1,
+      "title": "Xe ô tô bất ngờ đi nhanh ra từ đường nhánh bên trái tại ngã ba",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/010.mp4",
+      "durationSeconds": 21.333,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.25,
+          "end": 9.094
+        },
+        {
+          "score": 4,
+          "start": 9.094,
+          "end": 9.938
+        },
+        {
+          "score": 3,
+          "start": 9.938,
+          "end": 10.782
+        },
+        {
+          "score": 2,
+          "start": 10.782,
+          "end": 11.626
+        },
+        {
+          "score": 1,
+          "start": 11.626,
+          "end": 12.47
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 11,
+      "chapter": 1,
+      "title": "Xe bồn bê-tông từ đường nhánh lấn làn để rẽ tại ngã ba không có đèn giao thông có nhiều xe đang dừng đỗ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/011.mp4",
+      "durationSeconds": 22.65,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.44,
+          "end": 7.972
+        },
+        {
+          "score": 4,
+          "start": 7.972,
+          "end": 9.504
+        },
+        {
+          "score": 3,
+          "start": 9.504,
+          "end": 11.036
+        },
+        {
+          "score": 2,
+          "start": 11.036,
+          "end": 12.568
+        },
+        {
+          "score": 1,
+          "start": 12.568,
+          "end": 14.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 12,
+      "chapter": 1,
+      "title": "Xe mô-tô lấn làn vượt ẩu nguy hiểm tại giao lộ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/012.mp4",
+      "durationSeconds": 26.922,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.0,
+          "end": 10.44
+        },
+        {
+          "score": 4,
+          "start": 10.44,
+          "end": 10.88
+        },
+        {
+          "score": 3,
+          "start": 10.88,
+          "end": 11.32
+        },
+        {
+          "score": 2,
+          "start": 11.32,
+          "end": 11.76
+        },
+        {
+          "score": 1,
+          "start": 11.76,
+          "end": 12.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 13,
+      "chapter": 1,
+      "title": "Người đi xe đạp từ vỉa hè bất ngờ đi xuống đường để sang đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/013.mp4",
+      "durationSeconds": 20.083,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.48,
+          "end": 8.008
+        },
+        {
+          "score": 4,
+          "start": 8.008,
+          "end": 8.536
+        },
+        {
+          "score": 3,
+          "start": 8.536,
+          "end": 9.064
+        },
+        {
+          "score": 2,
+          "start": 9.064,
+          "end": 9.592
+        },
+        {
+          "score": 1,
+          "start": 9.592,
+          "end": 10.12
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 14,
+      "chapter": 1,
+      "title": "Tình huống nguy hiểm khi gặp xe tải lớn đi qua hầm chui dân sinh",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/014.mp4",
+      "durationSeconds": 24.116,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.35,
+          "end": 11.14
+        },
+        {
+          "score": 4,
+          "start": 11.14,
+          "end": 11.93
+        },
+        {
+          "score": 3,
+          "start": 11.93,
+          "end": 12.72
+        },
+        {
+          "score": 2,
+          "start": 12.72,
+          "end": 13.51
+        },
+        {
+          "score": 1,
+          "start": 13.51,
+          "end": 14.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 15,
+      "chapter": 1,
+      "title": "Xe phía trước phanh gấp để tránh xe chuyển làn rẽ trái tại ngã ba",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/015.mp4",
+      "durationSeconds": 23.2,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.37,
+          "end": 9.918
+        },
+        {
+          "score": 4,
+          "start": 9.918,
+          "end": 10.466
+        },
+        {
+          "score": 3,
+          "start": 10.466,
+          "end": 11.014
+        },
+        {
+          "score": 2,
+          "start": 11.014,
+          "end": 11.562
+        },
+        {
+          "score": 1,
+          "start": 11.562,
+          "end": 12.11
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 16,
+      "chapter": 1,
+      "title": "Xe ô tô từ đường nhánh bên trái bất ngờ đi nhanh ra có nguy cơ va chạm với xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/016.mp4",
+      "durationSeconds": 20.233,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.35,
+          "end": 7.934
+        },
+        {
+          "score": 4,
+          "start": 7.934,
+          "end": 8.518
+        },
+        {
+          "score": 3,
+          "start": 8.518,
+          "end": 9.102
+        },
+        {
+          "score": 2,
+          "start": 9.102,
+          "end": 9.686
+        },
+        {
+          "score": 1,
+          "start": 9.686,
+          "end": 10.27
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 17,
+      "chapter": 1,
+      "title": "Xe buýt lấn làn đường vượt ẩu tại ngã tư có đèn giao thông",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/017.mp4",
+      "durationSeconds": 19.0,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.56,
+          "end": 5.108
+        },
+        {
+          "score": 4,
+          "start": 5.108,
+          "end": 5.656
+        },
+        {
+          "score": 3,
+          "start": 5.656,
+          "end": 6.204
+        },
+        {
+          "score": 2,
+          "start": 6.204,
+          "end": 6.752
+        },
+        {
+          "score": 1,
+          "start": 6.752,
+          "end": 7.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 18,
+      "chapter": 1,
+      "title": "Gặp tài xế xe đang dừng đỗ ven đường đột ngột mở cửa xe",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/018.mp4",
+      "durationSeconds": 21.3,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.5,
+          "end": 8.22
+        },
+        {
+          "score": 4,
+          "start": 8.22,
+          "end": 8.94
+        },
+        {
+          "score": 3,
+          "start": 8.94,
+          "end": 9.66
+        },
+        {
+          "score": 2,
+          "start": 9.66,
+          "end": 10.38
+        },
+        {
+          "score": 1,
+          "start": 10.38,
+          "end": 11.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 19,
+      "chapter": 1,
+      "title": "Tài xế xe dừng bên đường đang mở cửa xe",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/019.mp4",
+      "durationSeconds": 18.901,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.05,
+          "end": 9.55
+        },
+        {
+          "score": 4,
+          "start": 9.55,
+          "end": 10.05
+        },
+        {
+          "score": 3,
+          "start": 10.05,
+          "end": 10.55
+        },
+        {
+          "score": 2,
+          "start": 10.55,
+          "end": 11.05
+        },
+        {
+          "score": 1,
+          "start": 11.05,
+          "end": 11.55
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 20,
+      "chapter": 1,
+      "title": "Tài xế xe đang đỗ ven đường đi ra mở cửa xe tại khu vực đường hẹp đường hẹp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/020.mp4",
+      "durationSeconds": 27.285,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 15.08,
+          "end": 15.744
+        },
+        {
+          "score": 4,
+          "start": 15.744,
+          "end": 16.408
+        },
+        {
+          "score": 3,
+          "start": 16.408,
+          "end": 17.072
+        },
+        {
+          "score": 2,
+          "start": 17.072,
+          "end": 17.736
+        },
+        {
+          "score": 1,
+          "start": 17.736,
+          "end": 18.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 21,
+      "chapter": 1,
+      "title": "Xe tô tô phía dừng lại và lùi vào nơi đỗ tại khu vực đường hẹp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/021.mp4",
+      "durationSeconds": 29.418,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.0,
+          "end": 10.646
+        },
+        {
+          "score": 4,
+          "start": 10.646,
+          "end": 11.292
+        },
+        {
+          "score": 3,
+          "start": 11.292,
+          "end": 11.938
+        },
+        {
+          "score": 2,
+          "start": 11.938,
+          "end": 12.584
+        },
+        {
+          "score": 1,
+          "start": 12.584,
+          "end": 13.23
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 22,
+      "chapter": 1,
+      "title": "Gặp xe ô tô từ đường nhánh bên phải tại ngã ba đi ra với tốc độ nhanh",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/022.mp4",
+      "durationSeconds": 22.8,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.45,
+          "end": 10.042
+        },
+        {
+          "score": 4,
+          "start": 10.042,
+          "end": 10.634
+        },
+        {
+          "score": 3,
+          "start": 10.634,
+          "end": 11.226
+        },
+        {
+          "score": 2,
+          "start": 11.226,
+          "end": 11.818
+        },
+        {
+          "score": 1,
+          "start": 11.818,
+          "end": 12.41
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 23,
+      "chapter": 1,
+      "title": "Xe ô tô đối diện lấn làn vượt xe đang có tín hiệu dừng khẩn cấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/023.mp4",
+      "durationSeconds": 22.65,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.4,
+          "end": 11.96
+        },
+        {
+          "score": 4,
+          "start": 11.96,
+          "end": 12.52
+        },
+        {
+          "score": 3,
+          "start": 12.52,
+          "end": 13.08
+        },
+        {
+          "score": 2,
+          "start": 13.08,
+          "end": 13.64
+        },
+        {
+          "score": 1,
+          "start": 13.64,
+          "end": 14.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 24,
+      "chapter": 1,
+      "title": "Xe tải lớn ở làn đối diện lấn làn vượt xe đang thu gom rác",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/024.mp4",
+      "durationSeconds": 24.2,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.14,
+          "end": 10.74
+        },
+        {
+          "score": 4,
+          "start": 10.74,
+          "end": 11.34
+        },
+        {
+          "score": 3,
+          "start": 11.34,
+          "end": 11.94
+        },
+        {
+          "score": 2,
+          "start": 11.94,
+          "end": 12.54
+        },
+        {
+          "score": 1,
+          "start": 12.54,
+          "end": 13.14
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 25,
+      "chapter": 1,
+      "title": "Xe ô tô khách bất ngờ đi ra từ nơi đỗ tại đường hẹp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/025.mp4",
+      "durationSeconds": 35.178,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.2,
+          "end": 8.616
+        },
+        {
+          "score": 4,
+          "start": 8.616,
+          "end": 10.032
+        },
+        {
+          "score": 3,
+          "start": 10.032,
+          "end": 11.448
+        },
+        {
+          "score": 2,
+          "start": 11.448,
+          "end": 12.864
+        },
+        {
+          "score": 1,
+          "start": 12.864,
+          "end": 14.28
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 26,
+      "chapter": 1,
+      "title": "Tránh xe tại khu vực công trình sửa đường xuất hiện sau khúc cua",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/026.mp4",
+      "durationSeconds": 33.237,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.18,
+          "end": 10.154
+        },
+        {
+          "score": 4,
+          "start": 10.154,
+          "end": 11.128
+        },
+        {
+          "score": 3,
+          "start": 11.128,
+          "end": 12.102
+        },
+        {
+          "score": 2,
+          "start": 12.102,
+          "end": 13.076
+        },
+        {
+          "score": 1,
+          "start": 13.076,
+          "end": 14.05
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 27,
+      "chapter": 1,
+      "title": "Xe khách bật đèn cảnh báo dừng giữa ngã tư để đón khách",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/027.mp4",
+      "durationSeconds": 24.733,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.52,
+          "end": 11.116
+        },
+        {
+          "score": 4,
+          "start": 11.116,
+          "end": 11.712
+        },
+        {
+          "score": 3,
+          "start": 11.712,
+          "end": 12.308
+        },
+        {
+          "score": 2,
+          "start": 12.308,
+          "end": 12.904
+        },
+        {
+          "score": 1,
+          "start": 12.904,
+          "end": 13.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 28,
+      "chapter": 1,
+      "title": "Xe ô tô phía trước đang đi, đột ngột phanh gấp khi gặp vũng nước trên đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/028.mp4",
+      "durationSeconds": 25.941,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.28,
+          "end": 9.024
+        },
+        {
+          "score": 4,
+          "start": 9.024,
+          "end": 9.768
+        },
+        {
+          "score": 3,
+          "start": 9.768,
+          "end": 10.512
+        },
+        {
+          "score": 2,
+          "start": 10.512,
+          "end": 11.256
+        },
+        {
+          "score": 1,
+          "start": 11.256,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 29,
+      "chapter": 1,
+      "title": "Trời mưa, ô tô phía trước phanh gấp để tránh xe mô-tô tạt đầu khi gặp chướng ngại vật",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/029.mp4",
+      "durationSeconds": 23.978,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.27,
+          "end": 9.016
+        },
+        {
+          "score": 4,
+          "start": 9.016,
+          "end": 9.762
+        },
+        {
+          "score": 3,
+          "start": 9.762,
+          "end": 10.508
+        },
+        {
+          "score": 2,
+          "start": 10.508,
+          "end": 11.254
+        },
+        {
+          "score": 1,
+          "start": 11.254,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 30,
+      "chapter": 2,
+      "title": "Đường nông thôn, xe đi gặp đàn bò đang đứng trên đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/030.mp4",
+      "durationSeconds": 27.136,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.24,
+          "end": 8.192
+        },
+        {
+          "score": 4,
+          "start": 8.192,
+          "end": 9.144
+        },
+        {
+          "score": 3,
+          "start": 9.144,
+          "end": 10.096
+        },
+        {
+          "score": 2,
+          "start": 10.096,
+          "end": 11.048
+        },
+        {
+          "score": 1,
+          "start": 11.048,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 31,
+      "chapter": 2,
+      "title": "Đường nông thôn, gặp đàn bò đi từ dưới vệ đường băng qua đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/031.mp4",
+      "durationSeconds": 27.608,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.2,
+          "end": 7.22
+        },
+        {
+          "score": 4,
+          "start": 7.22,
+          "end": 8.24
+        },
+        {
+          "score": 3,
+          "start": 8.24,
+          "end": 9.26
+        },
+        {
+          "score": 2,
+          "start": 9.26,
+          "end": 10.28
+        },
+        {
+          "score": 1,
+          "start": 10.28,
+          "end": 11.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 32,
+      "chapter": 2,
+      "title": "Người đi bộ băng qua đường lúc chập tối ngay trước xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/032.mp4",
+      "durationSeconds": 19.477,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.16,
+          "end": 8.952
+        },
+        {
+          "score": 4,
+          "start": 8.952,
+          "end": 9.744
+        },
+        {
+          "score": 3,
+          "start": 9.744,
+          "end": 10.536
+        },
+        {
+          "score": 2,
+          "start": 10.536,
+          "end": 11.328
+        },
+        {
+          "score": 1,
+          "start": 11.328,
+          "end": 12.12
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 33,
+      "chapter": 2,
+      "title": "Học sinh đi ra đường tại khu vực gần trường học",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/033.mp4",
+      "durationSeconds": 23.402,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.08,
+          "end": 9.704
+        },
+        {
+          "score": 4,
+          "start": 9.704,
+          "end": 10.328
+        },
+        {
+          "score": 3,
+          "start": 10.328,
+          "end": 10.952
+        },
+        {
+          "score": 2,
+          "start": 10.952,
+          "end": 11.576
+        },
+        {
+          "score": 1,
+          "start": 11.576,
+          "end": 12.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 34,
+      "chapter": 2,
+      "title": "Gặp xe khách tại đoạn đường cong vào cua chiếm hết làn đường tại khu vực đường hẹp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/034.mp4",
+      "durationSeconds": 17.045,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 5.1,
+          "end": 5.92
+        },
+        {
+          "score": 4,
+          "start": 5.92,
+          "end": 6.74
+        },
+        {
+          "score": 3,
+          "start": 6.74,
+          "end": 7.56
+        },
+        {
+          "score": 2,
+          "start": 7.56,
+          "end": 8.38
+        },
+        {
+          "score": 1,
+          "start": 8.38,
+          "end": 9.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 35,
+      "chapter": 2,
+      "title": "Xe khách phía trước đột ngột phanh giảm tốc độ tránh xe đối diện tại đoạn đường cong",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/035.mp4",
+      "durationSeconds": 17.6,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 3.0,
+          "end": 3.632
+        },
+        {
+          "score": 4,
+          "start": 3.632,
+          "end": 4.264
+        },
+        {
+          "score": 3,
+          "start": 4.264,
+          "end": 4.896
+        },
+        {
+          "score": 2,
+          "start": 4.896,
+          "end": 5.528
+        },
+        {
+          "score": 1,
+          "start": 5.528,
+          "end": 6.16
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 36,
+      "chapter": 2,
+      "title": "Đường nông thôn, xuất hiện xe máy đi ra từ ngõ bên phải",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/036.mp4",
+      "durationSeconds": 24.405,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 13.22,
+          "end": 13.676
+        },
+        {
+          "score": 4,
+          "start": 13.676,
+          "end": 14.132
+        },
+        {
+          "score": 3,
+          "start": 14.132,
+          "end": 14.588
+        },
+        {
+          "score": 2,
+          "start": 14.588,
+          "end": 15.044
+        },
+        {
+          "score": 1,
+          "start": 15.044,
+          "end": 15.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 37,
+      "chapter": 2,
+      "title": "Đường nông thôn, nhóm xe đạp đi ra từ ngõ bên phải",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/037.mp4",
+      "durationSeconds": 25.472,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.21,
+          "end": 14.788
+        },
+        {
+          "score": 4,
+          "start": 14.788,
+          "end": 15.366
+        },
+        {
+          "score": 3,
+          "start": 15.366,
+          "end": 15.944
+        },
+        {
+          "score": 2,
+          "start": 15.944,
+          "end": 16.522
+        },
+        {
+          "score": 1,
+          "start": 16.522,
+          "end": 17.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 38,
+      "chapter": 2,
+      "title": "Ban đêm xe ô tô tải ngược chiều bật đèn chiếu xa làm 2 xe máy phía trước giảm tốc độ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/038.mp4",
+      "durationSeconds": 22.677,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.0,
+          "end": 8.608
+        },
+        {
+          "score": 4,
+          "start": 8.608,
+          "end": 9.216
+        },
+        {
+          "score": 3,
+          "start": 9.216,
+          "end": 9.824
+        },
+        {
+          "score": 2,
+          "start": 9.824,
+          "end": 10.432
+        },
+        {
+          "score": 1,
+          "start": 10.432,
+          "end": 11.04
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 39,
+      "chapter": 2,
+      "title": "Xe tải từ đường nhánh nhập làn nguy hiểm",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/039.mp4",
+      "durationSeconds": 21.888,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.35,
+          "end": 11.964
+        },
+        {
+          "score": 4,
+          "start": 11.964,
+          "end": 12.578
+        },
+        {
+          "score": 3,
+          "start": 12.578,
+          "end": 13.192
+        },
+        {
+          "score": 2,
+          "start": 13.192,
+          "end": 13.806
+        },
+        {
+          "score": 1,
+          "start": 13.806,
+          "end": 14.42
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 40,
+      "chapter": 2,
+      "title": "Gần cổng làng, phía sau có xe mô-tô lấn làn để vượt xe ô tô đang dừng đỗ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/040.mp4",
+      "durationSeconds": 24.833,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.18,
+          "end": 6.964
+        },
+        {
+          "score": 4,
+          "start": 6.964,
+          "end": 7.748
+        },
+        {
+          "score": 3,
+          "start": 7.748,
+          "end": 8.532
+        },
+        {
+          "score": 2,
+          "start": 8.532,
+          "end": 9.316
+        },
+        {
+          "score": 1,
+          "start": 9.316,
+          "end": 10.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 41,
+      "chapter": 2,
+      "title": "Xe con làn đối diện rẽ nhanh cắt qua đầu xe bạn tại ngã ba",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/041.mp4",
+      "durationSeconds": 23.5,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.24,
+          "end": 9.614
+        },
+        {
+          "score": 4,
+          "start": 9.614,
+          "end": 9.988
+        },
+        {
+          "score": 3,
+          "start": 9.988,
+          "end": 10.362
+        },
+        {
+          "score": 2,
+          "start": 10.362,
+          "end": 10.736
+        },
+        {
+          "score": 1,
+          "start": 10.736,
+          "end": 11.11
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 42,
+      "chapter": 2,
+      "title": "Tại ngã tư, đèn xanh, xe bạn bắt đầu di chuyển có xe mô-tô rẽ cắt ngang qua đầu xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/042.mp4",
+      "durationSeconds": 21.916,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.01,
+          "end": 7.608
+        },
+        {
+          "score": 4,
+          "start": 7.608,
+          "end": 8.206
+        },
+        {
+          "score": 3,
+          "start": 8.206,
+          "end": 8.804
+        },
+        {
+          "score": 2,
+          "start": 8.804,
+          "end": 9.402
+        },
+        {
+          "score": 1,
+          "start": 9.402,
+          "end": 10.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 43,
+      "chapter": 2,
+      "title": "Trời mưa, xe con giảm nhanh tốc độ để tránh xe tải chuyển làn đột ngột tránh chướng ngại vật phía trước",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/043.mp4",
+      "durationSeconds": 25.557,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.22,
+          "end": 7.016
+        },
+        {
+          "score": 4,
+          "start": 7.016,
+          "end": 7.812
+        },
+        {
+          "score": 3,
+          "start": 7.812,
+          "end": 8.608
+        },
+        {
+          "score": 2,
+          "start": 8.608,
+          "end": 9.404
+        },
+        {
+          "score": 1,
+          "start": 9.404,
+          "end": 10.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 44,
+      "chapter": 3,
+      "title": "Phía sau làn phải có xe con vượt lên và chuyển làn cắt ngang nguy hiểm trước mặt xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/044.mp4",
+      "durationSeconds": 17.088,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.48,
+          "end": 5.284
+        },
+        {
+          "score": 4,
+          "start": 5.284,
+          "end": 6.088
+        },
+        {
+          "score": 3,
+          "start": 6.088,
+          "end": 6.892
+        },
+        {
+          "score": 2,
+          "start": 6.892,
+          "end": 7.696
+        },
+        {
+          "score": 1,
+          "start": 7.696,
+          "end": 8.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 45,
+      "chapter": 3,
+      "title": "Xe tải ở làn phải vượt lên và đột ngột chuyển làn sang làn giữa làm xe phía trước phải phanh gấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/045.mp4",
+      "durationSeconds": 19.264,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.36,
+          "end": 9.948
+        },
+        {
+          "score": 4,
+          "start": 9.948,
+          "end": 10.536
+        },
+        {
+          "score": 3,
+          "start": 10.536,
+          "end": 11.124
+        },
+        {
+          "score": 2,
+          "start": 11.124,
+          "end": 11.712
+        },
+        {
+          "score": 1,
+          "start": 11.712,
+          "end": 12.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 46,
+      "chapter": 3,
+      "title": "Xe ô tô con ở làn bên trái vượt lên và chuyển làn phải cắt qua nguy hiểm trước đầu xe bạn để rẽ ra đường gom",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/046.mp4",
+      "durationSeconds": 27.05,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.5,
+          "end": 17.2
+        },
+        {
+          "score": 4,
+          "start": 17.2,
+          "end": 17.9
+        },
+        {
+          "score": 3,
+          "start": 17.9,
+          "end": 18.6
+        },
+        {
+          "score": 2,
+          "start": 18.6,
+          "end": 19.3
+        },
+        {
+          "score": 1,
+          "start": 19.3,
+          "end": 20.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 47,
+      "chapter": 3,
+      "title": "Xe cấp cứu xin đường, xe con bên trái tăng tốc vượt lên và chuyển làn cắt qua đầu xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/047.mp4",
+      "durationSeconds": 26.005,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.4,
+          "end": 15.12
+        },
+        {
+          "score": 4,
+          "start": 15.12,
+          "end": 15.84
+        },
+        {
+          "score": 3,
+          "start": 15.84,
+          "end": 16.56
+        },
+        {
+          "score": 2,
+          "start": 16.56,
+          "end": 17.28
+        },
+        {
+          "score": 1,
+          "start": 17.28,
+          "end": 18.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 48,
+      "chapter": 3,
+      "title": "Xe bạn có tín hiệu để chuyển làn trái thì có xe phía sau nháy pha liên tục để vượt",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/048.mp4",
+      "durationSeconds": 23.658,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.5,
+          "end": 5.04
+        },
+        {
+          "score": 4,
+          "start": 5.04,
+          "end": 5.58
+        },
+        {
+          "score": 3,
+          "start": 5.58,
+          "end": 6.12
+        },
+        {
+          "score": 2,
+          "start": 6.12,
+          "end": 6.66
+        },
+        {
+          "score": 1,
+          "start": 6.66,
+          "end": 7.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 49,
+      "chapter": 3,
+      "title": "Ô tô phía trước phanh gấp do có xe tải tạt sang đột ngột vì gặp chướng ngại vật",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/049.mp4",
+      "durationSeconds": 23.253,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.54,
+          "end": 7.632
+        },
+        {
+          "score": 4,
+          "start": 7.632,
+          "end": 8.724
+        },
+        {
+          "score": 3,
+          "start": 8.724,
+          "end": 9.816
+        },
+        {
+          "score": 2,
+          "start": 9.816,
+          "end": 10.908
+        },
+        {
+          "score": 1,
+          "start": 10.908,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 50,
+      "chapter": 3,
+      "title": "Xe tải phía trước làn phải đột ngột tăng tốc và chuyển sang làn giữa làm xe con phía trước phanh gấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/050.mp4",
+      "durationSeconds": 25.28,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.39,
+          "end": 9.312
+        },
+        {
+          "score": 4,
+          "start": 9.312,
+          "end": 10.234
+        },
+        {
+          "score": 3,
+          "start": 10.234,
+          "end": 11.156
+        },
+        {
+          "score": 2,
+          "start": 11.156,
+          "end": 12.078
+        },
+        {
+          "score": 1,
+          "start": 12.078,
+          "end": 13.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 51,
+      "chapter": 3,
+      "title": "Xe tải bật đèn cảnh báo đi ngược đường ở làn bên phải cao tốc",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/051.mp4",
+      "durationSeconds": 26.016,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.0,
+          "end": 10.0
+        },
+        {
+          "score": 4,
+          "start": 10.0,
+          "end": 11.0
+        },
+        {
+          "score": 3,
+          "start": 11.0,
+          "end": 12.0
+        },
+        {
+          "score": 2,
+          "start": 12.0,
+          "end": 13.0
+        },
+        {
+          "score": 1,
+          "start": 13.0,
+          "end": 14.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 52,
+      "chapter": 3,
+      "title": "Qua đoạn đường cong đột nhiên có xe tải đi lùi trong làn khẩn cấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/052.mp4",
+      "durationSeconds": 24.916,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 12.3,
+          "end": 13.06
+        },
+        {
+          "score": 4,
+          "start": 13.06,
+          "end": 13.82
+        },
+        {
+          "score": 3,
+          "start": 13.82,
+          "end": 14.58
+        },
+        {
+          "score": 2,
+          "start": 14.58,
+          "end": 15.34
+        },
+        {
+          "score": 1,
+          "start": 15.34,
+          "end": 16.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 53,
+      "chapter": 3,
+      "title": "Trên đường cao tốc ban đêm, đột nhiên có xe tải đi chiều ngược lại ở làn khẩn cấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/053.mp4",
+      "durationSeconds": 25.6,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 12.45,
+          "end": 13.22
+        },
+        {
+          "score": 4,
+          "start": 13.22,
+          "end": 13.99
+        },
+        {
+          "score": 3,
+          "start": 13.99,
+          "end": 14.76
+        },
+        {
+          "score": 2,
+          "start": 14.76,
+          "end": 15.53
+        },
+        {
+          "score": 1,
+          "start": 15.53,
+          "end": 16.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 54,
+      "chapter": 3,
+      "title": "Xe tải từ đường nhánh nhập vào cao tốc với tốc độ cao",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/054.mp4",
+      "durationSeconds": 21.418,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.14,
+          "end": 9.972
+        },
+        {
+          "score": 4,
+          "start": 9.972,
+          "end": 10.804
+        },
+        {
+          "score": 3,
+          "start": 10.804,
+          "end": 11.636
+        },
+        {
+          "score": 2,
+          "start": 11.636,
+          "end": 12.468
+        },
+        {
+          "score": 1,
+          "start": 12.468,
+          "end": 13.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 55,
+      "chapter": 3,
+      "title": "Cao tốc, xe tải đột ngột giảm tốc và chuyển sang làn xe bạn do gặp xe đang gặp sự cố trên đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/055.mp4",
+      "durationSeconds": 26.133,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.2,
+          "end": 8.0
+        },
+        {
+          "score": 4,
+          "start": 8.0,
+          "end": 8.8
+        },
+        {
+          "score": 3,
+          "start": 8.8,
+          "end": 9.6
+        },
+        {
+          "score": 2,
+          "start": 9.6,
+          "end": 10.4
+        },
+        {
+          "score": 1,
+          "start": 10.4,
+          "end": 11.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 56,
+      "chapter": 3,
+      "title": "Xe con đang dừng ở làn khẩn cấp xi nhan nhập làn trước xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/056.mp4",
+      "durationSeconds": 17.386,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.16,
+          "end": 7.728
+        },
+        {
+          "score": 4,
+          "start": 7.728,
+          "end": 8.296
+        },
+        {
+          "score": 3,
+          "start": 8.296,
+          "end": 8.864
+        },
+        {
+          "score": 2,
+          "start": 8.864,
+          "end": 9.432
+        },
+        {
+          "score": 1,
+          "start": 9.432,
+          "end": 10.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 57,
+      "chapter": 3,
+      "title": "Xe con phía trước giảm tốc độ và chuyển sang làn xe bạn do gặp đoạn đường đang sửa chữa phía trước",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/057.mp4",
+      "durationSeconds": 49.685,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 20.29,
+          "end": 21.666
+        },
+        {
+          "score": 4,
+          "start": 21.666,
+          "end": 23.042
+        },
+        {
+          "score": 3,
+          "start": 23.042,
+          "end": 24.418
+        },
+        {
+          "score": 2,
+          "start": 24.418,
+          "end": 25.794
+        },
+        {
+          "score": 1,
+          "start": 25.794,
+          "end": 27.17
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 58,
+      "chapter": 3,
+      "title": "Xe tải phía trước giảm tốc độ, chuyển sang làn giữa do gặp đoạn đường đang sửa chữa phía trước",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/058.mp4",
+      "durationSeconds": 36.942,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.15,
+          "end": 15.12
+        },
+        {
+          "score": 4,
+          "start": 15.12,
+          "end": 16.09
+        },
+        {
+          "score": 3,
+          "start": 16.09,
+          "end": 17.06
+        },
+        {
+          "score": 2,
+          "start": 17.06,
+          "end": 18.03
+        },
+        {
+          "score": 1,
+          "start": 18.03,
+          "end": 19.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 59,
+      "chapter": 3,
+      "title": "Xe container đang đi từ làn trái chuyển ra đường nhánh cắt qua làn đường xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/059.mp4",
+      "durationSeconds": 28.683,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.49,
+          "end": 17.196
+        },
+        {
+          "score": 4,
+          "start": 17.196,
+          "end": 17.902
+        },
+        {
+          "score": 3,
+          "start": 17.902,
+          "end": 18.608
+        },
+        {
+          "score": 2,
+          "start": 18.608,
+          "end": 19.314
+        },
+        {
+          "score": 1,
+          "start": 19.314,
+          "end": 20.02
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 60,
+      "chapter": 3,
+      "title": "Xe 16 chỗ từ làn đường khẩn cấp đi ra vào làn xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/060.mp4",
+      "durationSeconds": 23.765,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.2,
+          "end": 7.98
+        },
+        {
+          "score": 4,
+          "start": 7.98,
+          "end": 8.76
+        },
+        {
+          "score": 3,
+          "start": 8.76,
+          "end": 9.54
+        },
+        {
+          "score": 2,
+          "start": 9.54,
+          "end": 10.32
+        },
+        {
+          "score": 1,
+          "start": 10.32,
+          "end": 11.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 61,
+      "chapter": 3,
+      "title": "Xe con từ đường nhánh nhập làn nguy hiểm cắt qua đầu xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/061.mp4",
+      "durationSeconds": 27.413,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.38,
+          "end": 17.344
+        },
+        {
+          "score": 4,
+          "start": 17.344,
+          "end": 18.308
+        },
+        {
+          "score": 3,
+          "start": 18.308,
+          "end": 19.272
+        },
+        {
+          "score": 2,
+          "start": 19.272,
+          "end": 20.236
+        },
+        {
+          "score": 1,
+          "start": 20.236,
+          "end": 21.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 62,
+      "chapter": 3,
+      "title": "Xe con đi ngược chiều nguy hiểm tại làn đường tốc độ cao nhất trên cao tốc",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/062.mp4",
+      "durationSeconds": 26.901,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 15.4,
+          "end": 16.22
+        },
+        {
+          "score": 4,
+          "start": 16.22,
+          "end": 17.04
+        },
+        {
+          "score": 3,
+          "start": 17.04,
+          "end": 17.86
+        },
+        {
+          "score": 2,
+          "start": 17.86,
+          "end": 18.68
+        },
+        {
+          "score": 1,
+          "start": 18.68,
+          "end": 19.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 63,
+      "chapter": 3,
+      "title": "Đàn gia súc từ bên đường đi ra cắt qua làn đường xe bạn tại khu vực cao tốc bị hỏng hộ lan",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/063.mp4",
+      "durationSeconds": 20.131,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.25,
+          "end": 5.06
+        },
+        {
+          "score": 4,
+          "start": 5.06,
+          "end": 5.87
+        },
+        {
+          "score": 3,
+          "start": 5.87,
+          "end": 6.68
+        },
+        {
+          "score": 2,
+          "start": 6.68,
+          "end": 7.49
+        },
+        {
+          "score": 1,
+          "start": 7.49,
+          "end": 8.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 64,
+      "chapter": 4,
+      "title": "Phía đường cong xuất hiện xe tải đi đối diện làm xe khách phía trước giảm tốc độ đột ngột",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/064.mp4",
+      "durationSeconds": 23.233,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.0,
+          "end": 10.8
+        },
+        {
+          "score": 4,
+          "start": 10.8,
+          "end": 11.6
+        },
+        {
+          "score": 3,
+          "start": 11.6,
+          "end": 12.4
+        },
+        {
+          "score": 2,
+          "start": 12.4,
+          "end": 13.2
+        },
+        {
+          "score": 1,
+          "start": 13.2,
+          "end": 14.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 65,
+      "chapter": 4,
+      "title": "Đường đèo dốc ban đêm gần đoạn đường cong, đột ngột tại khúc cua có xe khách lấn làn vượt xe tải lớn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/065.mp4",
+      "durationSeconds": 32.853,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.5,
+          "end": 17.48
+        },
+        {
+          "score": 4,
+          "start": 17.48,
+          "end": 18.46
+        },
+        {
+          "score": 3,
+          "start": 18.46,
+          "end": 19.44
+        },
+        {
+          "score": 2,
+          "start": 19.44,
+          "end": 20.42
+        },
+        {
+          "score": 1,
+          "start": 20.42,
+          "end": 21.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 66,
+      "chapter": 4,
+      "title": "Đi phía sau xe tải chở vật liệu không được chằng buộc cẩn thận",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/066.mp4",
+      "durationSeconds": 18.033,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.19,
+          "end": 9.852
+        },
+        {
+          "score": 4,
+          "start": 9.852,
+          "end": 10.514
+        },
+        {
+          "score": 3,
+          "start": 10.514,
+          "end": 11.176
+        },
+        {
+          "score": 2,
+          "start": 11.176,
+          "end": 11.838
+        },
+        {
+          "score": 1,
+          "start": 11.838,
+          "end": 12.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 67,
+      "chapter": 4,
+      "title": "Xe ô tô phía trước phanh gấp do có động vật hoang dã đứng ven đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/067.mp4",
+      "durationSeconds": 28.883,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 12.37,
+          "end": 13.196
+        },
+        {
+          "score": 4,
+          "start": 13.196,
+          "end": 14.022
+        },
+        {
+          "score": 3,
+          "start": 14.022,
+          "end": 14.848
+        },
+        {
+          "score": 2,
+          "start": 14.848,
+          "end": 15.674
+        },
+        {
+          "score": 1,
+          "start": 15.674,
+          "end": 16.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 68,
+      "chapter": 4,
+      "title": "Đường núi, sương mù, có đàn bò đứng sát đường ngay sau đoạn đường cong",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/068.mp4",
+      "durationSeconds": 22.954,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.55,
+          "end": 11.24
+        },
+        {
+          "score": 4,
+          "start": 11.24,
+          "end": 11.93
+        },
+        {
+          "score": 3,
+          "start": 11.93,
+          "end": 12.62
+        },
+        {
+          "score": 2,
+          "start": 12.62,
+          "end": 13.31
+        },
+        {
+          "score": 1,
+          "start": 13.31,
+          "end": 14.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 69,
+      "chapter": 4,
+      "title": "Xe con vào cua lấn làn nguy hiểm va chạm với xe ngược chiều trên đường đồi núi",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/069.mp4",
+      "durationSeconds": 27.69,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.36,
+          "end": 14.788
+        },
+        {
+          "score": 4,
+          "start": 14.788,
+          "end": 15.216
+        },
+        {
+          "score": 3,
+          "start": 15.216,
+          "end": 15.644
+        },
+        {
+          "score": 2,
+          "start": 15.644,
+          "end": 16.072
+        },
+        {
+          "score": 1,
+          "start": 16.072,
+          "end": 16.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 70,
+      "chapter": 4,
+      "title": "Xe khách lấn làn vượt xe container ngay tại khúc cua trên đường núi",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/070.mp4",
+      "durationSeconds": 48.021,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 27.45,
+          "end": 28.36
+        },
+        {
+          "score": 4,
+          "start": 28.36,
+          "end": 29.27
+        },
+        {
+          "score": 3,
+          "start": 29.27,
+          "end": 30.18
+        },
+        {
+          "score": 2,
+          "start": 30.18,
+          "end": 31.09
+        },
+        {
+          "score": 1,
+          "start": 31.09,
+          "end": 32.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 71,
+      "chapter": 4,
+      "title": "Đường núi, trời mưa, xe phía trước đột ngột dừng lại vì hỏng máy",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/071.mp4",
+      "durationSeconds": 26.1,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.49,
+          "end": 12.432
+        },
+        {
+          "score": 4,
+          "start": 12.432,
+          "end": 13.374
+        },
+        {
+          "score": 3,
+          "start": 13.374,
+          "end": 14.316
+        },
+        {
+          "score": 2,
+          "start": 14.316,
+          "end": 15.258
+        },
+        {
+          "score": 1,
+          "start": 15.258,
+          "end": 16.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 72,
+      "chapter": 4,
+      "title": "Xe tải lấn làn đường xe bạn để vượt các xe khác trên đường núi thời tiết sương mù",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/072.mp4",
+      "durationSeconds": 26.965,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 14.52,
+          "end": 15.446
+        },
+        {
+          "score": 4,
+          "start": 15.446,
+          "end": 16.372
+        },
+        {
+          "score": 3,
+          "start": 16.372,
+          "end": 17.298
+        },
+        {
+          "score": 2,
+          "start": 17.298,
+          "end": 18.224
+        },
+        {
+          "score": 1,
+          "start": 18.224,
+          "end": 19.15
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 73,
+      "chapter": 4,
+      "title": "Xe con lấn làn xe bạn để vượt xe tải trên đường núi ngay tại đoạn đường quanh co",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/073.mp4",
+      "durationSeconds": 27.114,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 15.02,
+          "end": 15.506
+        },
+        {
+          "score": 4,
+          "start": 15.506,
+          "end": 15.992
+        },
+        {
+          "score": 3,
+          "start": 15.992,
+          "end": 16.478
+        },
+        {
+          "score": 2,
+          "start": 16.478,
+          "end": 16.964
+        },
+        {
+          "score": 1,
+          "start": 16.964,
+          "end": 17.45
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 74,
+      "chapter": 5,
+      "title": "Xe ô tô phía trước phanh gấp để tránh đoàn xe đạp từ đường nhánh đi ra",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/074.mp4",
+      "durationSeconds": 28.778,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.0,
+          "end": 11.826
+        },
+        {
+          "score": 4,
+          "start": 11.826,
+          "end": 12.652
+        },
+        {
+          "score": 3,
+          "start": 12.652,
+          "end": 13.478
+        },
+        {
+          "score": 2,
+          "start": 13.478,
+          "end": 14.304
+        },
+        {
+          "score": 1,
+          "start": 14.304,
+          "end": 15.13
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 75,
+      "chapter": 5,
+      "title": "Trẻ em đột ngột lao ra để nhặt quả bóng bị lăn ra đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/075.mp4",
+      "durationSeconds": 19.76,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 5.0,
+          "end": 5.6
+        },
+        {
+          "score": 4,
+          "start": 5.6,
+          "end": 6.2
+        },
+        {
+          "score": 3,
+          "start": 6.2,
+          "end": 6.8
+        },
+        {
+          "score": 2,
+          "start": 6.8,
+          "end": 7.4
+        },
+        {
+          "score": 1,
+          "start": 7.4,
+          "end": 8.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 76,
+      "chapter": 5,
+      "title": "Em bé đột ngột chạy ra đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/076.mp4",
+      "durationSeconds": 22.485,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.15,
+          "end": 6.8
+        },
+        {
+          "score": 4,
+          "start": 6.8,
+          "end": 7.45
+        },
+        {
+          "score": 3,
+          "start": 7.45,
+          "end": 8.1
+        },
+        {
+          "score": 2,
+          "start": 8.1,
+          "end": 8.75
+        },
+        {
+          "score": 1,
+          "start": 8.75,
+          "end": 9.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 77,
+      "chapter": 5,
+      "title": "Xe con từ làn phải (khuất tầm nhìn) cắt ngang qua các xe đang đi thẳng để sang đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/077.mp4",
+      "durationSeconds": 22.08,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.1,
+          "end": 6.88
+        },
+        {
+          "score": 4,
+          "start": 6.88,
+          "end": 7.66
+        },
+        {
+          "score": 3,
+          "start": 7.66,
+          "end": 8.44
+        },
+        {
+          "score": 2,
+          "start": 8.44,
+          "end": 9.22
+        },
+        {
+          "score": 1,
+          "start": 9.22,
+          "end": 10.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 78,
+      "chapter": 5,
+      "title": "Đèn vừa chuyển xanh, đột ngột xe mô-tô làn trái phía trước cố vượt đèn đỏ cắt qua trước đầu xe",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/078.mp4",
+      "durationSeconds": 20.6,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.16,
+          "end": 11.728
+        },
+        {
+          "score": 4,
+          "start": 11.728,
+          "end": 12.296
+        },
+        {
+          "score": 3,
+          "start": 12.296,
+          "end": 12.864
+        },
+        {
+          "score": 2,
+          "start": 12.864,
+          "end": 13.432
+        },
+        {
+          "score": 1,
+          "start": 13.432,
+          "end": 14.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 79,
+      "chapter": 5,
+      "title": "Xe mô-tô đi ra từ đường nhánh nguy hiểm phía sau xe buýt vừa đi qua.",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/079.mp4",
+      "durationSeconds": 24.234,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.24,
+          "end": 9.808
+        },
+        {
+          "score": 4,
+          "start": 9.808,
+          "end": 10.376
+        },
+        {
+          "score": 3,
+          "start": 10.376,
+          "end": 10.944
+        },
+        {
+          "score": 2,
+          "start": 10.944,
+          "end": 11.512
+        },
+        {
+          "score": 1,
+          "start": 11.512,
+          "end": 12.08
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 80,
+      "chapter": 5,
+      "title": "Xe mô tô vượt lên đột ngột giảm tốc và chuyển sang làn xe bạn để tránh chướng ngại vật trên đường",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/080.mp4",
+      "durationSeconds": 16.469,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.22,
+          "end": 6.776
+        },
+        {
+          "score": 4,
+          "start": 6.776,
+          "end": 7.332
+        },
+        {
+          "score": 3,
+          "start": 7.332,
+          "end": 7.888
+        },
+        {
+          "score": 2,
+          "start": 7.888,
+          "end": 8.444
+        },
+        {
+          "score": 1,
+          "start": 8.444,
+          "end": 9.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 81,
+      "chapter": 5,
+      "title": "Xe bán tải từ đường bên kia quay đầu đột ngột lấn làn xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/081.mp4",
+      "durationSeconds": 24.042,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 15.05,
+          "end": 15.682
+        },
+        {
+          "score": 4,
+          "start": 15.682,
+          "end": 16.314
+        },
+        {
+          "score": 3,
+          "start": 16.314,
+          "end": 16.946
+        },
+        {
+          "score": 2,
+          "start": 16.946,
+          "end": 17.578
+        },
+        {
+          "score": 1,
+          "start": 17.578,
+          "end": 18.21
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 82,
+      "chapter": 5,
+      "title": "Xe tải lớn ở làn đường ngược chiều lấn làn xe bạn để vượt qua xe buýt",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/082.mp4",
+      "durationSeconds": 25.194,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.2,
+          "end": 7.2
+        },
+        {
+          "score": 4,
+          "start": 7.2,
+          "end": 8.2
+        },
+        {
+          "score": 3,
+          "start": 8.2,
+          "end": 9.2
+        },
+        {
+          "score": 2,
+          "start": 9.2,
+          "end": 10.2
+        },
+        {
+          "score": 1,
+          "start": 10.2,
+          "end": 11.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 83,
+      "chapter": 5,
+      "title": "Xuất hiện gia súc từ vệ đường đi ra đường quốc lộ ngay trước mặt xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/083.mp4",
+      "durationSeconds": 20.416,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.19,
+          "end": 7.774
+        },
+        {
+          "score": 4,
+          "start": 7.774,
+          "end": 8.358
+        },
+        {
+          "score": 3,
+          "start": 8.358,
+          "end": 8.942
+        },
+        {
+          "score": 2,
+          "start": 8.942,
+          "end": 9.526
+        },
+        {
+          "score": 1,
+          "start": 9.526,
+          "end": 10.11
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 84,
+      "chapter": 5,
+      "title": "Xe con phía trước giảm tốc đột ngột và chuyển làn để tránh xe buýt đang dừng",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/084.mp4",
+      "durationSeconds": 21.61,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.14,
+          "end": 9.916
+        },
+        {
+          "score": 4,
+          "start": 9.916,
+          "end": 10.692
+        },
+        {
+          "score": 3,
+          "start": 10.692,
+          "end": 11.468
+        },
+        {
+          "score": 2,
+          "start": 11.468,
+          "end": 12.244
+        },
+        {
+          "score": 1,
+          "start": 12.244,
+          "end": 13.02
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 85,
+      "chapter": 5,
+      "title": "Khúc gỗ trên xe tải phía trước bị rơi xuống do xe phanh gấp",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/085.mp4",
+      "durationSeconds": 29.418,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.02,
+          "end": 16.46
+        },
+        {
+          "score": 4,
+          "start": 16.46,
+          "end": 16.9
+        },
+        {
+          "score": 3,
+          "start": 16.9,
+          "end": 17.34
+        },
+        {
+          "score": 2,
+          "start": 17.34,
+          "end": 17.78
+        },
+        {
+          "score": 1,
+          "start": 17.78,
+          "end": 18.22
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 86,
+      "chapter": 5,
+      "title": "Xe con đi phía trước giảm tốc và chuyển làn đột ngột để tránh chướng ngại vật",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/086.mp4",
+      "durationSeconds": 20.842,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 4.16,
+          "end": 4.98
+        },
+        {
+          "score": 4,
+          "start": 4.98,
+          "end": 5.8
+        },
+        {
+          "score": 3,
+          "start": 5.8,
+          "end": 6.62
+        },
+        {
+          "score": 2,
+          "start": 6.62,
+          "end": 7.44
+        },
+        {
+          "score": 1,
+          "start": 7.44,
+          "end": 8.26
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 87,
+      "chapter": 5,
+      "title": "Đi qua chỗ giao cắt với đường sắt ban đêm, không có đèn tín hiệu, phía sau xe con, đột nhiên có tàu đi tới",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/087.mp4",
+      "durationSeconds": 24.213,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 3.23,
+          "end": 4.184
+        },
+        {
+          "score": 4,
+          "start": 4.184,
+          "end": 5.138
+        },
+        {
+          "score": 3,
+          "start": 5.138,
+          "end": 6.092
+        },
+        {
+          "score": 2,
+          "start": 6.092,
+          "end": 7.046
+        },
+        {
+          "score": 1,
+          "start": 7.046,
+          "end": 8.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 88,
+      "chapter": 5,
+      "title": "Xe mô-tô phanh và chuyển làn để tránh xe buýt vào trả khách",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/088.mp4",
+      "durationSeconds": 21.269,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.1,
+          "end": 11.59
+        },
+        {
+          "score": 4,
+          "start": 11.59,
+          "end": 12.08
+        },
+        {
+          "score": 3,
+          "start": 12.08,
+          "end": 12.57
+        },
+        {
+          "score": 2,
+          "start": 12.57,
+          "end": 13.06
+        },
+        {
+          "score": 1,
+          "start": 13.06,
+          "end": 13.55
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 89,
+      "chapter": 5,
+      "title": "Xe đạp từ bên kia đường đối diện băng qua đường không quan sát trước mặt xe bạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/089.mp4",
+      "durationSeconds": 20.544,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.24,
+          "end": 8.992
+        },
+        {
+          "score": 4,
+          "start": 8.992,
+          "end": 9.744
+        },
+        {
+          "score": 3,
+          "start": 9.744,
+          "end": 10.496
+        },
+        {
+          "score": 2,
+          "start": 10.496,
+          "end": 11.248
+        },
+        {
+          "score": 1,
+          "start": 11.248,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 90,
+      "chapter": 5,
+      "title": "Xe bán tải phía trước giảm tốc độ và chuyển làn khẩn cấp để tránh xe mô-tô đi ngược chiều",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/090.mp4",
+      "durationSeconds": 19.072,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 6.26,
+          "end": 7.054
+        },
+        {
+          "score": 4,
+          "start": 7.054,
+          "end": 7.848
+        },
+        {
+          "score": 3,
+          "start": 7.848,
+          "end": 8.642
+        },
+        {
+          "score": 2,
+          "start": 8.642,
+          "end": 9.436
+        },
+        {
+          "score": 1,
+          "start": 9.436,
+          "end": 10.23
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 91,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe ô tô Innova lùi trên cao tốc Hà Nội - Thái Nguyên",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/091.mp4",
+      "durationSeconds": 20.95,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 5.34,
+          "end": 6.276
+        },
+        {
+          "score": 4,
+          "start": 6.276,
+          "end": 7.212
+        },
+        {
+          "score": 3,
+          "start": 7.212,
+          "end": 8.148
+        },
+        {
+          "score": 2,
+          "start": 8.148,
+          "end": 9.084
+        },
+        {
+          "score": 1,
+          "start": 9.084,
+          "end": 10.02
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 92,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe mô-tô lấn làn vượt ẩu trên đường núi, va chạm với xe khách đi ngược chiều",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/092.mp4",
+      "durationSeconds": 15.189,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 5.0,
+          "end": 5.64
+        },
+        {
+          "score": 4,
+          "start": 5.64,
+          "end": 6.28
+        },
+        {
+          "score": 3,
+          "start": 6.28,
+          "end": 6.92
+        },
+        {
+          "score": 2,
+          "start": 6.92,
+          "end": 7.56
+        },
+        {
+          "score": 1,
+          "start": 7.56,
+          "end": 8.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 93,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe con từ làn trong cùng bên trái lấn làn vượt ẩu để đi ra đường nhánh, va chạm với xe tải",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/093.mp4",
+      "durationSeconds": 26.816,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 12.59,
+          "end": 13.302
+        },
+        {
+          "score": 4,
+          "start": 13.302,
+          "end": 14.014
+        },
+        {
+          "score": 3,
+          "start": 14.014,
+          "end": 14.726
+        },
+        {
+          "score": 2,
+          "start": 14.726,
+          "end": 15.438
+        },
+        {
+          "score": 1,
+          "start": 15.438,
+          "end": 16.15
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 94,
+      "chapter": 6,
+      "title": "[Tai nạn] Tai nạn liên hoàn giữa 3 xe khách do đâm vào xe đang dừng đỗ để sửa chữa",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/094.mp4",
+      "durationSeconds": 30.833,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 17.0,
+          "end": 17.8
+        },
+        {
+          "score": 4,
+          "start": 17.8,
+          "end": 18.6
+        },
+        {
+          "score": 3,
+          "start": 18.6,
+          "end": 19.4
+        },
+        {
+          "score": 2,
+          "start": 19.4,
+          "end": 20.2
+        },
+        {
+          "score": 1,
+          "start": 20.2,
+          "end": 21.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 95,
+      "chapter": 6,
+      "title": "[Tai nạn] Tài xế giật mình đánh lái gấp đâm xe vào dải phân cách, xe đổ vào đám đông làm 5 người thiệt mạng",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/095.mp4",
+      "durationSeconds": 18.602,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 5.2,
+          "end": 6.18
+        },
+        {
+          "score": 4,
+          "start": 6.18,
+          "end": 7.16
+        },
+        {
+          "score": 3,
+          "start": 7.16,
+          "end": 8.14
+        },
+        {
+          "score": 2,
+          "start": 8.14,
+          "end": 9.12
+        },
+        {
+          "score": 1,
+          "start": 9.12,
+          "end": 10.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 96,
+      "chapter": 6,
+      "title": "[Tai nạn] Tai nạn xe container không làm chủ tốc độ đâm trực diện vào xe ô tô con đang dừng chờ đèn đỏ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/096.mp4",
+      "durationSeconds": 23.146,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 17.11,
+          "end": 17.744
+        },
+        {
+          "score": 4,
+          "start": 17.744,
+          "end": 18.378
+        },
+        {
+          "score": 3,
+          "start": 18.378,
+          "end": 19.012
+        },
+        {
+          "score": 2,
+          "start": 19.012,
+          "end": 19.646
+        },
+        {
+          "score": 1,
+          "start": 19.646,
+          "end": 20.28
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 97,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách vào cua với tốc độ cao, lấn sang đường ngược chiều va chạm với xe đi chiều ngược lại",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/097.mp4",
+      "durationSeconds": 36.288,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 18.55,
+          "end": 19.11
+        },
+        {
+          "score": 4,
+          "start": 19.11,
+          "end": 19.67
+        },
+        {
+          "score": 3,
+          "start": 19.67,
+          "end": 20.23
+        },
+        {
+          "score": 2,
+          "start": 20.23,
+          "end": 20.79
+        },
+        {
+          "score": 1,
+          "start": 20.79,
+          "end": 21.35
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 98,
+      "chapter": 6,
+      "title": "[Tai nạn] Tai nạn đèo Prenn xe khách mất lái đâm vào người điều tiết giao thông và xe khách đi ngược chiều",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/098.mp4",
+      "durationSeconds": 29.024,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 13.3,
+          "end": 14.064
+        },
+        {
+          "score": 4,
+          "start": 14.064,
+          "end": 14.828
+        },
+        {
+          "score": 3,
+          "start": 14.828,
+          "end": 15.592
+        },
+        {
+          "score": 2,
+          "start": 15.592,
+          "end": 16.356
+        },
+        {
+          "score": 1,
+          "start": 16.356,
+          "end": 17.12
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 99,
+      "chapter": 6,
+      "title": "[Tai nạn] Hầm Hải Vân xe kéo rơ mooc mất lái lấn làn đâm trực diện vào xe tải đi chiều ngược lại gây tai nạn",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/099.mp4",
+      "durationSeconds": 28.026,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.08,
+          "end": 16.688
+        },
+        {
+          "score": 4,
+          "start": 16.688,
+          "end": 17.296
+        },
+        {
+          "score": 3,
+          "start": 17.296,
+          "end": 17.904
+        },
+        {
+          "score": 2,
+          "start": 17.904,
+          "end": 18.512
+        },
+        {
+          "score": 1,
+          "start": 18.512,
+          "end": 19.12
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 100,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe ô tô con chở người đi qua đường sắt tại Nam Định không chú ý va chạm với tàu hỏa",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/100.mp4",
+      "durationSeconds": 20.616,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.48,
+          "end": 8.088
+        },
+        {
+          "score": 4,
+          "start": 8.088,
+          "end": 8.696
+        },
+        {
+          "score": 3,
+          "start": 8.696,
+          "end": 9.304
+        },
+        {
+          "score": 2,
+          "start": 9.304,
+          "end": 9.912
+        },
+        {
+          "score": 1,
+          "start": 9.912,
+          "end": 10.52
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 101,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe ô tô 16 chỗ chở khách rẽ trái qua đường sắt không chú ý va chạm với tàu hỏa",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/101.mp4",
+      "durationSeconds": 26.2,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.29,
+          "end": 11.738
+        },
+        {
+          "score": 4,
+          "start": 11.738,
+          "end": 12.186
+        },
+        {
+          "score": 3,
+          "start": 12.186,
+          "end": 12.634
+        },
+        {
+          "score": 2,
+          "start": 12.634,
+          "end": 13.082
+        },
+        {
+          "score": 1,
+          "start": 13.082,
+          "end": 13.53
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 102,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách va chạm với xe cứu hỏa đi ngược chiều tại nút giao Pháp Vân",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/102.mp4",
+      "durationSeconds": 21.12,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.51,
+          "end": 12.26
+        },
+        {
+          "score": 4,
+          "start": 12.26,
+          "end": 13.01
+        },
+        {
+          "score": 3,
+          "start": 13.01,
+          "end": 13.76
+        },
+        {
+          "score": 2,
+          "start": 13.76,
+          "end": 14.51
+        },
+        {
+          "score": 1,
+          "start": 14.51,
+          "end": 15.26
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 103,
+      "chapter": 6,
+      "title": "[Tai nạn] Phía trước đột nhiên có xe ô tô từ làn đối diện đi ngược chiều va chạm với xe con",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/103.mp4",
+      "durationSeconds": 26.346,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.05,
+          "end": 16.672
+        },
+        {
+          "score": 4,
+          "start": 16.672,
+          "end": 17.294
+        },
+        {
+          "score": 3,
+          "start": 17.294,
+          "end": 17.916
+        },
+        {
+          "score": 2,
+          "start": 17.916,
+          "end": 18.538
+        },
+        {
+          "score": 1,
+          "start": 18.538,
+          "end": 19.16
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 104,
+      "chapter": 6,
+      "title": "[Tai nạn] Tại ngã tư Hàng Xanh, lái xe ô tô con trong tình trạng có nồng độ cồn không làm chủ tốc độ đâm vào loạt xe  dừng chờ đèn đỏ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/104.mp4",
+      "durationSeconds": 30.037,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 18.55,
+          "end": 19.092
+        },
+        {
+          "score": 4,
+          "start": 19.092,
+          "end": 19.634
+        },
+        {
+          "score": 3,
+          "start": 19.634,
+          "end": 20.176
+        },
+        {
+          "score": 2,
+          "start": 20.176,
+          "end": 20.718
+        },
+        {
+          "score": 1,
+          "start": 20.718,
+          "end": 21.26
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 105,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách 45 chỗ đâm vào xe đầu kéo kéo rơ moóc chở máy ủi đi từ đường tránh ra gây tai nạn thảm khốc",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/105.mp4",
+      "durationSeconds": 20.466,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.15,
+          "end": 10.6
+        },
+        {
+          "score": 4,
+          "start": 10.6,
+          "end": 11.05
+        },
+        {
+          "score": 3,
+          "start": 11.05,
+          "end": 11.5
+        },
+        {
+          "score": 2,
+          "start": 11.5,
+          "end": 11.95
+        },
+        {
+          "score": 1,
+          "start": 11.95,
+          "end": 12.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 106,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách 48 chỗ thiếu kỹ năng điều khiển, không thông thuộc địa hình lao xuống vực tại Kon Tum",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/106.mp4",
+      "durationSeconds": 30.677,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 16.0,
+          "end": 16.62
+        },
+        {
+          "score": 4,
+          "start": 16.62,
+          "end": 17.24
+        },
+        {
+          "score": 3,
+          "start": 17.24,
+          "end": 17.86
+        },
+        {
+          "score": 2,
+          "start": 17.86,
+          "end": 18.48
+        },
+        {
+          "score": 1,
+          "start": 18.48,
+          "end": 19.1
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 107,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách chạy vượt xe tải, đâm trực diện vào xe khách đi chiều ngược lại gây tai nạn liên hoàn 3 xe",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/107.mp4",
+      "durationSeconds": 31.53,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 11.4,
+          "end": 12.0
+        },
+        {
+          "score": 4,
+          "start": 12.0,
+          "end": 12.6
+        },
+        {
+          "score": 3,
+          "start": 12.6,
+          "end": 13.2
+        },
+        {
+          "score": 2,
+          "start": 13.2,
+          "end": 13.8
+        },
+        {
+          "score": 1,
+          "start": 13.8,
+          "end": 14.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 108,
+      "chapter": 6,
+      "title": "[Tai nạn] Trời mưa, đường trơn trượt xe tải khi vào cua không làm chủ tốc độ đã đâm vào xe ben đi ngược chiều",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/108.mp4",
+      "durationSeconds": 26.773,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 19.3,
+          "end": 19.73
+        },
+        {
+          "score": 4,
+          "start": 19.73,
+          "end": 20.16
+        },
+        {
+          "score": 3,
+          "start": 20.16,
+          "end": 20.59
+        },
+        {
+          "score": 2,
+          "start": 20.59,
+          "end": 21.02
+        },
+        {
+          "score": 1,
+          "start": 21.02,
+          "end": 21.45
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 109,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe 16 chỗ từ đường nhánh, khuất tầm nhìn rẽ vào đường chính không giảm tốc độ, bị xe sơ mi rơ moóc đâm vào (tại Ngã 3 Nà Phặc - Bắc Kạn)",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/109.mp4",
+      "durationSeconds": 21.034,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.52,
+          "end": 9.228
+        },
+        {
+          "score": 4,
+          "start": 9.228,
+          "end": 9.936
+        },
+        {
+          "score": 3,
+          "start": 9.936,
+          "end": 10.644
+        },
+        {
+          "score": 2,
+          "start": 10.644,
+          "end": 11.352
+        },
+        {
+          "score": 1,
+          "start": 11.352,
+          "end": 12.06
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 110,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe container bất ngờ tông vào hàng loạt phương tiện đang dừng đèn đỏ tại quốc lộ 1, đoạn nút giao Mỹ Phước - Tân Vạn, Bình Dương",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/110.mp4",
+      "durationSeconds": 22.732,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.5,
+          "end": 9.1
+        },
+        {
+          "score": 4,
+          "start": 9.1,
+          "end": 9.7
+        },
+        {
+          "score": 3,
+          "start": 9.7,
+          "end": 10.3
+        },
+        {
+          "score": 2,
+          "start": 10.3,
+          "end": 10.9
+        },
+        {
+          "score": 1,
+          "start": 10.9,
+          "end": 11.5
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 111,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách lấn làn vượt xe tải chỗ đường cong, đâm vào xe khách đi ngược chiều Tai nạn tại km 1791+ 400 trên đường Hồ Chí Minh, đoạn qua thôn 7, xã Hoà Phú, TP.Buôn Ma Thuột (Đắk Lắk)",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/111.mp4",
+      "durationSeconds": 14.784,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.09,
+          "end": 8.694
+        },
+        {
+          "score": 4,
+          "start": 8.694,
+          "end": 9.298
+        },
+        {
+          "score": 3,
+          "start": 9.298,
+          "end": 9.902
+        },
+        {
+          "score": 2,
+          "start": 9.902,
+          "end": 10.506
+        },
+        {
+          "score": 1,
+          "start": 10.506,
+          "end": 11.11
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 112,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách 16 chỗ vượt ẩu qua xe đầu kéo va chạm với xe khách đang xuống dốc tốc độ cao, gây tai nạn liên hoàn giữa 3 xe tại km12+400 đoạn qua phường Hương Hồ, TP. Huế",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/112.mp4",
+      "durationSeconds": 17.229,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 3.5,
+          "end": 4.292
+        },
+        {
+          "score": 4,
+          "start": 4.292,
+          "end": 5.084
+        },
+        {
+          "score": 3,
+          "start": 5.084,
+          "end": 5.876
+        },
+        {
+          "score": 2,
+          "start": 5.876,
+          "end": 6.668
+        },
+        {
+          "score": 1,
+          "start": 6.668,
+          "end": 7.46
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 113,
+      "chapter": 6,
+      "title": "[Tai nạn] Khi đèn tín hiệu chuyển sang xanh, đột ngột có xe con cố vượt từ đường giao bên trái sang làm va chạm với xe con",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/113.mp4",
+      "durationSeconds": 22.89,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 13.32,
+          "end": 13.916
+        },
+        {
+          "score": 4,
+          "start": 13.916,
+          "end": 14.512
+        },
+        {
+          "score": 3,
+          "start": 14.512,
+          "end": 15.108
+        },
+        {
+          "score": 2,
+          "start": 15.108,
+          "end": 15.704
+        },
+        {
+          "score": 1,
+          "start": 15.704,
+          "end": 16.3
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 114,
+      "chapter": 6,
+      "title": "[Tai nạn] Ô tô 7 chỗ đi trên cầu treo hẹp ban đêm, tài xế lái xe va chạm với xe máy, xe đâm xuống sông tại cầu treo qua sông Giăng, Thanh Chương, Nghệ An",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/114.mp4",
+      "durationSeconds": 27.05,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.42,
+          "end": 9.34
+        },
+        {
+          "score": 4,
+          "start": 9.34,
+          "end": 10.26
+        },
+        {
+          "score": 3,
+          "start": 10.26,
+          "end": 11.18
+        },
+        {
+          "score": 2,
+          "start": 11.18,
+          "end": 12.1
+        },
+        {
+          "score": 1,
+          "start": 12.1,
+          "end": 13.02
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 115,
+      "chapter": 6,
+      "title": "[Tai nạn] Ban đêm, xe con phanh gấp tránh xe máy từ ngõ lao ra, xe khách không làm chủ tốc độ đã đâm trực diện vào xe con",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/115.mp4",
+      "durationSeconds": 20.522,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 9.16,
+          "end": 9.808
+        },
+        {
+          "score": 4,
+          "start": 9.808,
+          "end": 10.456
+        },
+        {
+          "score": 3,
+          "start": 10.456,
+          "end": 11.104
+        },
+        {
+          "score": 2,
+          "start": 11.104,
+          "end": 11.752
+        },
+        {
+          "score": 1,
+          "start": 11.752,
+          "end": 12.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 116,
+      "chapter": 6,
+      "title": "[Tai nạn] Phía trước có đá lở đột ngột và rơi xuống (tai nạn tại Đồng Văn, Hà Giang)",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/116.mp4",
+      "durationSeconds": 20.062,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.1,
+          "end": 7.96
+        },
+        {
+          "score": 4,
+          "start": 7.96,
+          "end": 8.82
+        },
+        {
+          "score": 3,
+          "start": 8.82,
+          "end": 9.68
+        },
+        {
+          "score": 2,
+          "start": 9.68,
+          "end": 10.54
+        },
+        {
+          "score": 1,
+          "start": 10.54,
+          "end": 11.4
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 117,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe con phanh gấp tránh xe máy từ ngõ lao ra, xe khách không làm chủ tốc độ đã đâm trực diện vào xe con",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/117.mp4",
+      "durationSeconds": 15.68,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.21,
+          "end": 7.778
+        },
+        {
+          "score": 4,
+          "start": 7.778,
+          "end": 8.346
+        },
+        {
+          "score": 3,
+          "start": 8.346,
+          "end": 8.914
+        },
+        {
+          "score": 2,
+          "start": 8.914,
+          "end": 9.482
+        },
+        {
+          "score": 1,
+          "start": 9.482,
+          "end": 10.05
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 118,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe 16 chỗ rẽ không quan sát, không làm chủ tốc độ đâm vào xe bán tải đang lùi",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/118.mp4",
+      "durationSeconds": 19.65,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 7.1,
+          "end": 8.08
+        },
+        {
+          "score": 4,
+          "start": 8.08,
+          "end": 9.06
+        },
+        {
+          "score": 3,
+          "start": 9.06,
+          "end": 10.04
+        },
+        {
+          "score": 2,
+          "start": 10.04,
+          "end": 11.02
+        },
+        {
+          "score": 1,
+          "start": 11.02,
+          "end": 12.0
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 119,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe khách không tuân thủ khoảng cách an toàn, xử lý tình huống không kịp dẫn tới va chạm với xe tải đang dừng đỗ",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/119.mp4",
+      "durationSeconds": 26.304,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 8.33,
+          "end": 8.904
+        },
+        {
+          "score": 4,
+          "start": 8.904,
+          "end": 9.478
+        },
+        {
+          "score": 3,
+          "start": 9.478,
+          "end": 10.052
+        },
+        {
+          "score": 2,
+          "start": 10.052,
+          "end": 10.626
+        },
+        {
+          "score": 1,
+          "start": 10.626,
+          "end": 11.2
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    },
+    {
+      "id": 120,
+      "chapter": 6,
+      "title": "[Tai nạn] Xe tải không làm chủ được tốc độ mất lái lao vào chợ dân sinh và va chạm với các xe đang đi phía trước",
+      "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/120.mp4",
+      "durationSeconds": 30.058,
+      "scoreWindows": [
+        {
+          "score": 5,
+          "start": 10.19,
+          "end": 10.756
+        },
+        {
+          "score": 4,
+          "start": 10.756,
+          "end": 11.322
+        },
+        {
+          "score": 3,
+          "start": 11.322,
+          "end": 11.888
+        },
+        {
+          "score": 2,
+          "start": 11.888,
+          "end": 12.454
+        },
+        {
+          "score": 1,
+          "start": 12.454,
+          "end": 13.02
+        }
+      ],
+      "source": {
+        "url": "https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO",
+        "version": "OnTapMoPhongSetup v2.0.0 x64",
+        "rightsReference": "owner-confirmed-authorized-package"
+      }
+    }
+  ]
 }
