@@ -74,6 +74,7 @@ jobs:
         run: |
           mkdir -p media encoded diagnostics
           : > diagnostics/converted.txt
+          : > diagnostics/recovered.txt
           : > diagnostics/failures.txt
           expected=(29 14 20 10 17 30)
           for chapter in 1 2 3 4 5 6; do
@@ -90,8 +91,9 @@ jobs:
             fi
             while IFS= read -r -d '' f; do
               name=$(basename "$f" .pt)
+              id=$(echo "$name" | sed -E 's/.*_th([0-9]+)$/\1/')
               echo "converting ${name}"
-              rm -f /tmp/source.mp4
+              rm -f /tmp/source.mp4 "media/${name}.mp4"
               if ! python /tmp/decode.py "$f" /tmp/source.mp4 "$MEDIA_KEY"; then
                 echo "${name}: decode failed" | tee -a diagnostics/failures.txt
                 rm -f "$f" /tmp/source.mp4
@@ -104,21 +106,44 @@ jobs:
                 continue
               fi
               if ! ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.ffmpeg.log"; then
-                echo "${name}: ffmpeg failed" | tee -a diagnostics/failures.txt
-                cat "diagnostics/${name}.ffmpeg.log"
+                echo "${name}: normal encode failed; retrying tolerant video-only recovery"
+                rm -f "media/${name}.mp4"
+                if ! ffmpeg -nostdin -hide_banner -loglevel error -y -fflags +discardcorrupt -err_detect ignore_err -i /tmp/source.mp4 -map 0:v:0 -an -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.recovery.log"; then
+                  echo "${name}: recovery encode failed" | tee -a diagnostics/failures.txt
+                  cat "diagnostics/${name}.recovery.log"
+                  rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                  continue
+                fi
+                echo "${name}" >> diagnostics/recovered.txt
+              fi
+              if ! ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "media/${name}.mp4" | grep -qx h264; then
+                echo "${name}: encoded video validation failed" | tee -a diagnostics/failures.txt
                 rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
                 continue
               fi
-              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log" "diagnostics/${name}.ffmpeg.log"
+              actual=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "media/${name}.mp4")
+              danger_end=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | .dangerEnd' public/data/mo-phong-120-timing-source.json)
+              if ! python - "$actual" "$danger_end" <<'PY'
+          import sys
+          actual=float(sys.argv[1]); danger_end=float(sys.argv[2])
+          raise SystemExit(0 if actual >= danger_end + 0.25 else 1)
+          PY
+              then
+                echo "${name}: encoded duration ${actual}s does not cover dangerEnd ${danger_end}s" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log"
               echo "${name}" >> diagnostics/converted.txt
-              echo "converted ${name}"
+              echo "converted ${name}; duration=${actual}s"
             done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
             rm -rf encoded/*
-            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt)"
+            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt), recovered: $(wc -l < diagnostics/recovered.txt)"
             df -h .
           done
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
           echo "converted videos: $total"
+          echo "recovered videos: $(wc -l < diagnostics/recovered.txt)"
           du -sh media || true
           if [ -s diagnostics/failures.txt ]; then
             echo "Conversion failures:"
