@@ -2,8 +2,14 @@ name: Build simulation media artifacts
 on:
   push:
     branches: [docs/simulation-media-source-audit]
-    paths: [.github/workflows/build-simulation-media.yml]
+    paths:
+      - .github/workflows/build-simulation-media.yml
+      - scripts/test-simulation-media.mjs
+      - public/data/mo-phong-120-timing-source.json
   workflow_dispatch:
+concurrency:
+  group: simulation-media-build-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
   id-token: write
@@ -122,20 +128,20 @@ jobs:
                 continue
               fi
               actual=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "media/${name}.mp4")
-              danger_end=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | .dangerEnd' public/data/mo-phong-120-timing-source.json)
-              if ! python - "$actual" "$danger_end" <<'PY'
+              expected_duration=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | (.durationMilliseconds / 1000)' public/data/mo-phong-120-timing-source.json)
+              if ! python - "$actual" "$expected_duration" <<'PY'
           import sys
-          actual=float(sys.argv[1]); danger_end=float(sys.argv[2])
-          raise SystemExit(0 if actual >= danger_end + 0.25 else 1)
+          actual=float(sys.argv[1]); expected=float(sys.argv[2])
+          raise SystemExit(0 if abs(actual-expected) <= 0.25 else 1)
           PY
               then
-                echo "${name}: encoded duration ${actual}s does not cover dangerEnd ${danger_end}s" | tee -a diagnostics/failures.txt
+                echo "${name}: encoded duration ${actual}s differs from expected ${expected_duration}s by more than 0.25s" | tee -a diagnostics/failures.txt
                 rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
                 continue
               fi
               rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log"
               echo "${name}" >> diagnostics/converted.txt
-              echo "converted ${name}; duration=${actual}s"
+              echo "converted ${name}; duration=${actual}s expected=${expected_duration}s"
             done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
             rm -rf encoded/*
             echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt), recovered: $(wc -l < diagnostics/recovered.txt)"
