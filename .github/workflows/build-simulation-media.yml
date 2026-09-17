@@ -189,11 +189,36 @@ jobs:
           while IFS= read -r -d '' f; do
             id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
             test "$id" -ge 1 -a "$id" -le 120
-            OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
-            resp=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION")
-            signed=$(echo "$resp" | jq -r .signedUrl)
-            test -n "$signed" -a "$signed" != null
-            curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
+            public_url=$(printf '%s/%03d.mp4' "$PUBLIC_MEDIA_BASE" "$id")
+            if curl -fsSL --retry 2 --retry-all-errors --connect-timeout 15 --max-time 30 -r 0-0 "$public_url" -o /dev/null; then
+              printf 'already uploaded %03d\n' "$id"
+              continue
+            fi
+            ok=0
+            for attempt in 1 2 3 4 5; do
+              printf 'uploading %03d attempt %d/5\n' "$id" "$attempt"
+              OIDC=''
+              resp=''
+              signed=''
+              if OIDC=$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 1 --connect-timeout 15 --max-time 30 -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value); then
+                if [ -n "$OIDC" ] && [ "$OIDC" != null ]; then
+                  if resp=$(curl -fsSL --retry 2 --retry-all-errors --retry-delay 1 --connect-timeout 15 --max-time 30 -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION"); then
+                    signed=$(echo "$resp" | jq -r '.signedUrl // empty')
+                    if [ -n "$signed" ]; then
+                      if curl -fsSL --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 20 --max-time 180 -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null; then
+                        ok=1
+                        break
+                      fi
+                    fi
+                  fi
+                fi
+              fi
+              sleep $((attempt * 2))
+            done
+            if [ "$ok" -ne 1 ]; then
+              printf 'failed to upload %03d after 5 attempts\n' "$id" >&2
+              exit 1
+            fi
             printf 'uploaded %03d\n' "$id"
           done < <(find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z)
 
