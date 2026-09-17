@@ -69,18 +69,17 @@ jobs:
           ls -lh Setup*.cab
           df -h .
 
-      - name: Prepare decoder
+      - name: Prepare decoder matching authorized application
         run: |
           python - <<'PY'
           from pathlib import Path
-          Path('/tmp/decode.py').write_text('''import sys\nfrom pathlib import Path\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3]); s=list(range(256)); j=0\nfor i in range(256): j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n while chunk:=fi.read(1048576):\n  out=bytearray(len(chunk))\n  for n,x in enumerate(chunk):\n   i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n  fo.write(out)\n''')
+          Path('/tmp/decode.py').write_text('''import shutil, sys\nfrom pathlib import Path\n\nsrc=Path(sys.argv[1]); dst=Path(sys.argv[2]); key=bytes.fromhex(sys.argv[3])\ns=list(range(256)); j=0\nfor i in range(256):\n j=(j+s[i]+key[i%len(key)])&255; s[i],s[j]=s[j],s[i]\ni=j=0\nwith src.open("rb") as fi,dst.open("wb") as fo:\n chunk=fi.read(1048576)\n out=bytearray(len(chunk))\n for n,x in enumerate(chunk):\n  i=(i+1)&255; j=(j+s[i])&255; s[i],s[j]=s[j],s[i]; out[n]=x^s[(s[i]+s[j])&255]\n fo.write(out)\n shutil.copyfileobj(fi,fo,length=1048576)\n''')
           PY
 
-      - name: Extract and convert all 120 videos
+      - name: Extract, decrypt and convert all 120 videos
         run: |
           mkdir -p media encoded diagnostics
           : > diagnostics/converted.txt
-          : > diagnostics/recovered.txt
           : > diagnostics/failures.txt
           expected=(29 14 20 10 17 30)
           for chapter in 1 2 3 4 5 6; do
@@ -106,29 +105,35 @@ jobs:
                 continue
               fi
               if ! ffprobe -v error /tmp/source.mp4 >/dev/null 2>"diagnostics/${name}.ffprobe.log"; then
-                echo "${name}: ffprobe failed" | tee -a diagnostics/failures.txt
+                echo "${name}: decrypted source validation failed" | tee -a diagnostics/failures.txt
                 cat "diagnostics/${name}.ffprobe.log"
                 rm -f "$f" /tmp/source.mp4
                 continue
               fi
+              expected_duration=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | (.durationMilliseconds / 1000)' public/data/mo-phong-120-timing-source.json)
+              source_duration=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 /tmp/source.mp4)
+              if ! python - "$source_duration" "$expected_duration" <<'PY'
+          import sys
+          actual=float(sys.argv[1]); expected=float(sys.argv[2])
+          raise SystemExit(0 if abs(actual-expected) <= 0.25 else 1)
+          PY
+              then
+                echo "${name}: decrypted source duration ${source_duration}s differs from expected ${expected_duration}s" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4
+                continue
+              fi
               if ! ffmpeg -nostdin -hide_banner -loglevel error -y -i /tmp/source.mp4 -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -c:a aac -b:a 64k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.ffmpeg.log"; then
-                echo "${name}: normal encode failed; retrying tolerant video-only recovery"
-                rm -f "media/${name}.mp4"
-                if ! ffmpeg -nostdin -hide_banner -loglevel error -y -fflags +discardcorrupt -err_detect ignore_err -i /tmp/source.mp4 -map 0:v:0 -an -vf 'scale=-2:720,fps=30' -c:v libx264 -preset veryfast -b:v 850k -maxrate 1100k -bufsize 2200k -movflags +faststart "media/${name}.mp4" 2>"diagnostics/${name}.recovery.log"; then
-                  echo "${name}: recovery encode failed" | tee -a diagnostics/failures.txt
-                  cat "diagnostics/${name}.recovery.log"
-                  rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
-                  continue
-                fi
-                echo "${name}" >> diagnostics/recovered.txt
+                echo "${name}: clean web encode failed" | tee -a diagnostics/failures.txt
+                cat "diagnostics/${name}.ffmpeg.log"
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
               fi
               if ! ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nw=1:nk=1 "media/${name}.mp4" | grep -qx h264; then
-                echo "${name}: encoded video validation failed" | tee -a diagnostics/failures.txt
+                echo "${name}: encoded video is not H.264" | tee -a diagnostics/failures.txt
                 rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
                 continue
               fi
               actual=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "media/${name}.mp4")
-              expected_duration=$(jq -r --argjson id "$id" '.scenarios[] | select(.id == $id) | (.durationMilliseconds / 1000)' public/data/mo-phong-120-timing-source.json)
               if ! python - "$actual" "$expected_duration" <<'PY'
           import sys
           actual=float(sys.argv[1]); expected=float(sys.argv[2])
@@ -139,17 +144,28 @@ jobs:
                 rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
                 continue
               fi
-              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log"
+              size=$(stat -c%s "media/${name}.mp4")
+              min_size=$(python - "$expected_duration" <<'PY'
+          import sys
+          duration=float(sys.argv[1])
+          print(max(250000,int(duration*40000)))
+          PY
+              )
+              if [ "$size" -lt "$min_size" ]; then
+                echo "${name}: encoded file too small (${size} bytes, minimum ${min_size})" | tee -a diagnostics/failures.txt
+                rm -f "$f" /tmp/source.mp4 "media/${name}.mp4"
+                continue
+              fi
+              rm -f "$f" /tmp/source.mp4 "diagnostics/${name}.ffprobe.log" "diagnostics/${name}.ffmpeg.log"
               echo "${name}" >> diagnostics/converted.txt
-              echo "converted ${name}; duration=${actual}s expected=${expected_duration}s"
+              echo "converted ${name}; source=${source_duration}s output=${actual}s bytes=${size}"
             done < <(find encoded -type f -name "chapter${chapter}_th*.pt" -print0 | sort -z)
             rm -rf encoded/*
-            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt), recovered: $(wc -l < diagnostics/recovered.txt)"
+            echo "chapter ${chapter} complete; converted so far: $(wc -l < diagnostics/converted.txt)"
             df -h .
           done
           total=$(find media -type f -name 'chapter*_th*.mp4' | wc -l)
           echo "converted videos: $total"
-          echo "recovered videos: $(wc -l < diagnostics/recovered.txt)"
           du -sh media || true
           if [ -s diagnostics/failures.txt ]; then
             echo "Conversion failures:"
@@ -170,16 +186,28 @@ jobs:
       - name: Upload 120 videos to Supabase Storage
         run: |
           URL="${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=simulation-media-upload"
-          OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
           while IFS= read -r -d '' f; do
             id=$(basename "$f" .mp4 | sed -E 's/.*_th([0-9]+)$/\1/')
             test "$id" -ge 1 -a "$id" -le 120
+            OIDC=$(curl -fsSL -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" "$URL" | jq -r .value)
             resp=$(curl -fsSL -H "Authorization: Bearer $OIDC" -H 'content-type: application/json' --data "{\"id\":$id}" "$UPLOAD_FUNCTION")
             signed=$(echo "$resp" | jq -r .signedUrl)
             test -n "$signed" -a "$signed" != null
             curl -fsSL -X PUT -H 'content-type: video/mp4' -H 'cache-control: max-age=31536000' --data-binary @"$f" "$signed" >/dev/null
             printf 'uploaded %03d\n' "$id"
           done < <(find media -type f -name 'chapter*_th*.mp4' -print0 | sort -z)
+
+      - name: Verify all public media URLs
+        run: |
+          failures=0
+          for id in $(seq 1 120); do
+            url=$(printf '%s/%03d.mp4' "$PUBLIC_MEDIA_BASE" "$id")
+            if ! curl -fsSL --retry 3 --retry-delay 1 -r 0-0 "$url" -o /dev/null; then
+              echo "public media unavailable: $url"
+              failures=$((failures+1))
+            fi
+          done
+          test "$failures" -eq 0
 
       - name: Build and verify production manifest
         run: |
