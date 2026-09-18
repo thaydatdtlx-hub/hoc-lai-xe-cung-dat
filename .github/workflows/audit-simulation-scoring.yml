@@ -82,7 +82,7 @@ jobs:
           print('string_rva', hex(rva))
           print('string_va', hex(target))
 
-          textsec=next((s for s in pe.sections if s.Name.rstrip(b'\\0')==b'.text'), None)
+          textsec=next((s for s in pe.sections if s.Name.rstrip(b'\x00')==b'.text'), None)
           if not textsec:
               print('no .text')
               raise SystemExit(0)
