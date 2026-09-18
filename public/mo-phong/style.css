@@ -34,3 +34,73 @@ body[data-mode="exam"] .review-panel{display:none}
 body[data-mode="exam"] .actions{margin-top:12px}
 @media(max-width:1100px){.practice-layout{grid-template-columns:360px minmax(0,1fr)}}
 @media(max-width:760px){.practice-layout{grid-template-columns:1fr}.scenario-panel{max-height:none}}
+
+/* Fidelity pass based on the supplied kiemtramophong.com reference screenshots */
+:root{--sidebar:#343a40;--sidebar-active:#4b5157;--chapter:#eaf4ff;--panel:#f4f6f8;--option:#fff}
+html,body{background:#f1f3f5;color:#2b333b}
+.app-shell{grid-template-columns:226px minmax(0,1fr)}
+.sidebar{padding:0 8px 18px;background:#343a40}
+.brand{min-height:78px;padding:8px 4px 12px;border-bottom:1px solid #495057;gap:7px}
+.brand img{width:58px;height:54px}
+.brand strong{font-size:15px;letter-spacing:0;color:#fff;white-space:nowrap}
+.brand strong em{font-style:normal;color:#24aef3}
+.brand span{margin-top:3px;font-size:7px;letter-spacing:.45px;color:#b8c0c7;font-weight:700}
+.student-mini{min-height:104px;padding:18px 10px}
+.student-avatar{position:relative;width:40px;height:40px;overflow:hidden;padding:0;border:2px solid #fff;background:#eef2f5}
+.student-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.student-avatar span{font-size:11px}
+.student-mini strong{font-size:12px;line-height:1.6;color:#f3f5f6}
+.student-mini span{display:none}
+.side-menu{gap:2px;padding-top:12px}
+.menu-head{min-height:42px;padding:10px 10px;background:transparent;border-radius:3px;font-size:13px}
+.menu-group.active .menu-head{background:#4b5157}
+.menu-sub{min-height:38px;padding:9px 10px 9px 28px;font-size:12px}
+.menu-sub.selected{background:transparent;font-weight:500}
+.menu-sub.selected i{background:transparent;box-shadow:none}
+.menu-link{min-height:40px;padding:10px 10px;font-size:13px}
+.topbar{height:52px;padding:0 16px;gap:18px}
+.topbar a{font-size:12px}
+.hamburger,.fullscreen{font-size:18px}
+main{padding:12px 12px 0}
+.module-card{border:0;background:#f4f6f8;box-shadow:none}
+.module-titlebar{height:42px;display:flex;align-items:center;padding:0 14px;background:#343a40;font-size:13px}
+.notice-row{display:none!important}
+.practice-layout{grid-template-columns:445px minmax(0,1fr);min-height:calc(100vh - 106px);background:#f4f6f8}
+.scenario-panel{max-height:calc(100vh - 106px);border-right:1px solid #d9dee3;background:#fff;scrollbar-width:thin;scrollbar-color:#aaa transparent}
+.scenario-panel::-webkit-scrollbar{width:9px}
+.scenario-panel::-webkit-scrollbar-thumb{background:#aaa;border-radius:8px}
+.chapter-block{border-bottom:0}
+.chapter-heading{position:static;height:42px;display:flex;align-items:center;padding:0 12px;background:#eaf4ff;font-size:12px;font-weight:800;color:#263238}
+.chapter-grid{grid-template-columns:repeat(7,1fr);gap:8px;padding:10px 12px 12px}
+.chapter-grid button{height:49px;border:1px solid #dfe5eb;border-radius:9px;background:#fff;color:#2e3944;font-size:13px;font-weight:700}
+.chapter-grid button:hover:enabled{background:#f7fbff}
+.chapter-grid button[aria-current=true]{background:#168ce8;color:#fff;border-color:#168ce8;box-shadow:none}
+.chapter-grid .high{background:#fff;border-color:#dfe5eb;color:#2e3944}
+.legend{display:none}
+.player{padding:0 12px 22px;background:#f4f6f8}
+.player h1{height:42px;display:flex;align-items:center;margin:0;padding:0 0 0 2px;font-size:14px;font-weight:500;color:#2f363d}
+.player h1::before{content:"▣";color:#168ce8;font-size:17px;margin-right:7px}
+video{width:100%;aspect-ratio:16/9;background:#050505;border-radius:2px;box-shadow:none}
+body[data-mode="study"] #playerStatus{display:none}
+.review-panel{margin-top:10px}
+.review-note{height:28px;display:flex;align-items:center;margin:0 0 8px;color:#7a858e;font-size:12px}
+.review-questions{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 14px}
+.review-card{min-height:214px;padding:10px;border:1px solid #e2e6ea;border-radius:9px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.review-card h3{margin:0 0 10px;font-size:13px;font-weight:700;color:#343b43}
+.review-index{width:18px;height:18px;border-radius:4px;background:#168ce8;font-size:11px}
+.review-options{gap:8px}
+.review-option{min-height:40px;padding:10px 34px 10px 10px;border:1px solid #e6eaee;border-radius:8px;background:#fff;color:#30373d;font-size:12px;font-weight:500}
+.review-option::before{width:12px;height:12px;border-width:1.5px}
+.review-option.correct{background:#edf9f1;border-color:#c6ead2;color:#237344}
+.review-option.wrong{background:#fff0f1;border-color:#f2c9ce;color:#c93448}
+.review-pending{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;padding:0;border:0;background:transparent}
+.review-pending-card{min-height:214px;padding:10px;border:1px solid #e2e6ea;border-radius:9px;background:#fff}
+.review-pending-card h3{display:flex;align-items:center;gap:6px;margin:0 0 10px;font-size:13px}
+.review-pending-option{height:40px;margin-top:8px;border:1px dashed #dfe5ea;border-radius:8px;background:#fafbfc;display:flex;align-items:center;padding:0 10px;color:#a0a9b1;font-size:12px}
+.review-result{margin:8px 0 0}
+.actions.study-actions{display:none!important}
+#result:empty,#summary:empty{display:none}
+#historyPanel{border:0;background:#fff}
+@media(max-width:1200px){.practice-layout{grid-template-columns:380px minmax(0,1fr)}.chapter-grid{gap:6px}.chapter-grid button{height:45px}}
+@media(max-width:900px){.review-questions,.review-pending{grid-template-columns:1fr}.practice-layout{grid-template-columns:320px minmax(0,1fr)}}
+@media(max-width:760px){main{padding:8px}.practice-layout{grid-template-columns:1fr;min-height:0}.scenario-panel{max-height:none}.review-questions,.review-pending{grid-template-columns:1fr}.player{padding:0 8px 16px}}
