@@ -186,3 +186,7 @@ body.exam-result-mode .exam-statusbar{display:none!important}
   .exam-result-heading{align-items:flex-start;flex-direction:column}
   .exam-final-actions button,.exam-intro-actions button{flex:1 1 100%}
 }
+
+body.exam-result-mode .scenario-panel{display:none}
+body.exam-result-mode .practice-layout{grid-template-columns:minmax(0,1fr)}
+body.exam-result-mode .player{max-width:1180px;width:100%;margin:0 auto;padding:14px 18px 24px}
