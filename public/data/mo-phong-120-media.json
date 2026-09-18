@@ -1,6 +1,6 @@
 {
   "version": "2.0.0-web-2026-09-17",
-  "note": "120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.",
+  "note": "dangerStart and dangerEnd are verified directly against tss.db; the 5→1 training bands are evenly interpolated between those source markers because tss.db contains no separate score-boundary columns.",
   "scenarios": [
     {
       "id": 1,
@@ -188,7 +188,7 @@
         {
           "score": 1,
           "start": 12.11,
-          "end": 13.0
+          "end": 13
         }
       ],
       "source": {
@@ -227,7 +227,7 @@
         {
           "score": 1,
           "start": 12.284,
-          "end": 13.0
+          "end": 13
         }
       ],
       "source": {
@@ -440,7 +440,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 10.0,
+          "start": 10,
           "end": 10.44
         },
         {
@@ -631,7 +631,7 @@
       "chapter": 1,
       "title": "Xe buýt lấn làn đường vượt ẩu tại ngã tư có đèn giao thông",
       "videoUrl": "https://pkzxkvcncipfszeukpwu.supabase.co/storage/v1/object/public/simulation-120/v2/017.mp4",
-      "durationSeconds": 19.0,
+      "durationSeconds": 19,
       "scoreWindows": [
         {
           "score": 5,
@@ -791,7 +791,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 10.0,
+          "start": 10,
           "end": 10.646
         },
         {
@@ -1085,7 +1085,7 @@
         {
           "score": 1,
           "start": 11.256,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -1124,7 +1124,7 @@
         {
           "score": 1,
           "start": 11.254,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -1163,7 +1163,7 @@
         {
           "score": 1,
           "start": 11.048,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -1337,7 +1337,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 3.0,
+          "start": 3,
           "end": 3.632
         },
         {
@@ -1454,7 +1454,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 8.0,
+          "start": 8,
           "end": 8.608
         },
         {
@@ -1631,7 +1631,7 @@
         {
           "score": 1,
           "start": 9.402,
-          "end": 10.0
+          "end": 10
         }
       ],
       "source": {
@@ -1787,7 +1787,7 @@
         {
           "score": 1,
           "start": 19.3,
-          "end": 20.0
+          "end": 20
         }
       ],
       "source": {
@@ -1826,7 +1826,7 @@
         {
           "score": 1,
           "start": 17.28,
-          "end": 18.0
+          "end": 18
         }
       ],
       "source": {
@@ -1904,7 +1904,7 @@
         {
           "score": 1,
           "start": 10.908,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -1943,7 +1943,7 @@
         {
           "score": 1,
           "start": 12.078,
-          "end": 13.0
+          "end": 13
         }
       ],
       "source": {
@@ -1961,28 +1961,28 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 9.0,
-          "end": 10.0
+          "start": 9,
+          "end": 10
         },
         {
           "score": 4,
-          "start": 10.0,
-          "end": 11.0
+          "start": 10,
+          "end": 11
         },
         {
           "score": 3,
-          "start": 11.0,
-          "end": 12.0
+          "start": 11,
+          "end": 12
         },
         {
           "score": 2,
-          "start": 12.0,
-          "end": 13.0
+          "start": 12,
+          "end": 13
         },
         {
           "score": 1,
-          "start": 13.0,
-          "end": 14.0
+          "start": 13,
+          "end": 14
         }
       ],
       "source": {
@@ -2118,11 +2118,11 @@
         {
           "score": 5,
           "start": 7.2,
-          "end": 8.0
+          "end": 8
         },
         {
           "score": 4,
-          "start": 8.0,
+          "start": 8,
           "end": 8.8
         },
         {
@@ -2177,7 +2177,7 @@
         {
           "score": 1,
           "start": 9.432,
-          "end": 10.0
+          "end": 10
         }
       ],
       "source": {
@@ -2255,7 +2255,7 @@
         {
           "score": 1,
           "start": 18.03,
-          "end": 19.0
+          "end": 19
         }
       ],
       "source": {
@@ -2468,7 +2468,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 10.0,
+          "start": 10,
           "end": 10.8
         },
         {
@@ -2489,7 +2489,7 @@
         {
           "score": 1,
           "start": 13.2,
-          "end": 14.0
+          "end": 14
         }
       ],
       "source": {
@@ -2645,7 +2645,7 @@
         {
           "score": 1,
           "start": 13.31,
-          "end": 14.0
+          "end": 14
         }
       ],
       "source": {
@@ -2723,7 +2723,7 @@
         {
           "score": 1,
           "start": 31.09,
-          "end": 32.0
+          "end": 32
         }
       ],
       "source": {
@@ -2858,7 +2858,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 11.0,
+          "start": 11,
           "end": 11.826
         },
         {
@@ -2897,7 +2897,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 5.0,
+          "start": 5,
           "end": 5.6
         },
         {
@@ -2918,7 +2918,7 @@
         {
           "score": 1,
           "start": 7.4,
-          "end": 8.0
+          "end": 8
         }
       ],
       "source": {
@@ -2996,7 +2996,7 @@
         {
           "score": 1,
           "start": 9.22,
-          "end": 10.0
+          "end": 10
         }
       ],
       "source": {
@@ -3035,7 +3035,7 @@
         {
           "score": 1,
           "start": 13.432,
-          "end": 14.0
+          "end": 14
         }
       ],
       "source": {
@@ -3113,7 +3113,7 @@
         {
           "score": 1,
           "start": 8.444,
-          "end": 9.0
+          "end": 9
         }
       ],
       "source": {
@@ -3386,7 +3386,7 @@
         {
           "score": 1,
           "start": 7.046,
-          "end": 8.0
+          "end": 8
         }
       ],
       "source": {
@@ -3464,7 +3464,7 @@
         {
           "score": 1,
           "start": 11.248,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -3560,7 +3560,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 5.0,
+          "start": 5,
           "end": 5.64
         },
         {
@@ -3638,7 +3638,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 17.0,
+          "start": 17,
           "end": 17.8
         },
         {
@@ -3659,7 +3659,7 @@
         {
           "score": 1,
           "start": 20.2,
-          "end": 21.0
+          "end": 21
         }
       ],
       "source": {
@@ -4106,7 +4106,7 @@
       "scoreWindows": [
         {
           "score": 5,
-          "start": 16.0,
+          "start": 16,
           "end": 16.62
         },
         {
@@ -4146,11 +4146,11 @@
         {
           "score": 5,
           "start": 11.4,
-          "end": 12.0
+          "end": 12
         },
         {
           "score": 4,
-          "start": 12.0,
+          "start": 12,
           "end": 12.6
         },
         {
@@ -4595,7 +4595,7 @@
         {
           "score": 1,
           "start": 11.02,
-          "end": 12.0
+          "end": 12
         }
       ],
       "source": {
@@ -4682,5 +4682,6 @@
         "rightsReference": "owner-confirmed-authorized-package"
       }
     }
-  ]
+  ],
+  "scoringMethod": "linear-interpolation-between-source-start-end"
 }
