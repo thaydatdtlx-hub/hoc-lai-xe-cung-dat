@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#343a40">
+  <title>Kiểm tra hết môn | Học lái xe cùng Đạt</title>
+  <link rel="stylesheet" href="/mo-phong/style.css">
+  <link rel="stylesheet" href="/final-exam.css?v=1">
+</head>
+<body class="final-exam-page">
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Điều hướng học viên">
+    <a class="brand" href="/" aria-label="Học lái xe cùng Đạt">
+      <img src="/logo-thay-dat-compact.webp" alt="">
+      <div><strong>HỌC LÁI XE <em>CÙNG ĐẠT</em></strong><span>HỆ THỐNG HỌC VIÊN</span></div>
+    </a>
+
+    <div class="student-mini">
+      <div class="student-avatar" aria-hidden="true">
+        <img id="sidebarStudentPhoto" alt="" hidden>
+        <span id="sidebarStudentInitials">HV</span>
+      </div>
+      <div><strong id="sidebarStudentName">Học viên</strong><span>Hệ thống học tập</span></div>
+    </div>
+
+    <nav class="side-menu">
+      <div class="menu-group active">
+        <div class="menu-head"><span>▣</span> Kiểm tra hết môn <b>⌄</b></div>
+        <a class="menu-sub selected" href="/kiem-tra-het-mon.html"><i></i>Làm bài thi</a>
+      </div>
+      <div class="menu-group">
+        <a class="menu-head" href="/mo-phong-120.html"><span>🚗</span> Mô phỏng <b>›</b></a>
+        <a class="menu-sub" href="/mo-phong-120.html"><i></i>Ôn tập mô phỏng</a>
+        <a class="menu-sub" href="/mo-phong-120.html#kiem-tra"><i></i>Kiểm tra mô phỏng</a>
+      </div>
+      <a class="menu-link" href="/hoc-vien.html">🔑 <span>Thông tin cá nhân</span></a>
+      <a class="menu-link" href="/">↪ <span>Thoát</span></a>
+    </nav>
+  </aside>
+
+  <div class="page">
+    <header class="topbar">
+      <button class="hamburger" id="sidebarToggle" type="button" aria-label="Thu gọn menu">☰</button>
+      <a href="/hoc-vien.html">Trang Chủ</a>
+      <span class="topbar-spacer"></span>
+      <button class="fullscreen" id="fullscreenToggle" type="button" aria-label="Toàn màn hình">⛶</button>
+    </header>
+
+    <main class="final-main">
+      <div class="module-titlebar">Làm bài thi</div>
+
+      <section id="examPicker" class="exam-picker">
+        <div class="exam-hero">
+          <div class="exam-hero-icon">✓</div>
+          <div>
+            <small>THI LÝ THUYẾT</small>
+            <h1>Chọn đề và bắt đầu làm bài</h1>
+            <p>Đọc kỹ thông tin từng đề trước khi bắt đầu.</p>
+          </div>
+        </div>
+
+        <div class="exam-guide">
+          <strong>ⓘ Hướng dẫn làm bài</strong>
+          <ul>
+            <li>Chọn một đề thi phù hợp bên dưới.</li>
+            <li>Đọc kỹ từng câu hỏi và chọn một đáp án.</li>
+            <li>Kiểm tra lại bài làm trước khi nộp bài.</li>
+          </ul>
+        </div>
+
+        <div id="examCards" class="exam-card-grid" aria-label="Danh sách đề kiểm tra hết môn"></div>
+      </section>
+
+      <section id="examRunner" class="exam-runner" hidden>
+        <div class="runner-head">
+          <button id="backToPicker" type="button">← Chọn đề khác</button>
+          <div>
+            <small id="runnerKicker">THI LÝ THUYẾT</small>
+            <h1 id="runnerTitle">Đang tải đề thi…</h1>
+          </div>
+          <strong id="runnerProgress">1 / 10</strong>
+        </div>
+
+        <div class="runner-layout">
+          <aside class="question-palette-panel">
+            <h2>Danh sách câu</h2>
+            <div id="questionPalette" class="question-palette-grid"></div>
+            <div class="palette-note"><span><i></i> Đã trả lời</span><span><i></i> Đang xem</span></div>
+          </aside>
+
+          <section class="runner-stage">
+            <article class="final-question-card">
+              <p id="questionNumber">CÂU 1 / 10</p>
+              <h2 id="questionText">Đang tải câu hỏi…</h2>
+              <figure id="questionFigure" class="final-question-figure" hidden>
+                <img id="questionImage" alt="Hình minh họa câu hỏi">
+              </figure>
+              <div id="answerOptions" class="final-answer-options"></div>
+            </article>
+
+            <div class="runner-actions">
+              <button id="prevQuestion" type="button">← Câu trước</button>
+              <button id="submitExam" class="submit-exam" type="button">Nộp bài</button>
+              <button id="nextQuestion" class="next-question" type="button">Câu tiếp →</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <dialog id="resultDialog" class="final-result-dialog">
+        <div class="result-mark">✓</div>
+        <small>KẾT QUẢ KIỂM TRA HẾT MÔN</small>
+        <h2 id="resultTitle">Hoàn thành bài thi</h2>
+        <strong id="resultScore">0/10</strong>
+        <p id="resultText"></p>
+        <div class="result-actions">
+          <button id="reviewResult" type="button">Xem lại bài</button>
+          <button id="retryExam" type="button">Làm lại đề</button>
+          <button id="closeResult" type="button">Về danh sách đề</button>
+        </div>
+      </dialog>
+    </main>
+  </div>
+</div>
+
+<script type="module" src="/final-exam.js?v=1"></script>
+</body>
+</html>
