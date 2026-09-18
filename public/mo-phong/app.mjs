@@ -15,7 +15,6 @@ function newer(a,b){return !a?b:!b?a:new Date(a.date||0)>=new Date(b.date||0)?a:
 async function loadRemote(){if(!token())return;try{const r=await rpc('app_student_get_simulation_progress',{p_token:token()});const p=r?.progress_data||{};if(p.attempts&&typeof p.attempts==='object'){for(const[id,a]of Object.entries(p.attempts))state.attempts[id]=newer(state.attempts[id],a)}state.last=p.last||r?.last_scenario_id||state.last;state.totalAttempts=Math.max(state.totalAttempts||0,r?.total_attempts||0);if(Array.isArray(r?.history)&&r.history.length){state.history=r.history.map(h=>({date:h.submitted_at,version:data.version,total:h.score,answers:[]})).slice(0,50)}saveLocal();$('storageNotice').textContent='Đã đồng bộ tiến độ từ tài khoản học viên.'}catch{$('storageNotice').textContent='Đang dùng tiến độ trên thiết bị; chưa tải được dữ liệu tài khoản.'}}
 const CHAPTER_LABELS=['Giao thông trong đô thị, khu đông dân cư','Giao thông trên đường nông thôn','Giao thông trên đường cao tốc','Giao thông trên đường núi','Giao thông trên quốc lộ','Các tình huống thực tế'];
 function saveReview(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviewState))}catch{}}
-function saveReview(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviewState))}catch{}}
 function normalizedReviewQuestions(s){
   const raw=Array.isArray(s?.reviewQuestions)?s.reviewQuestions:[];
   return raw.slice(0,4).map((q,i)=>({
