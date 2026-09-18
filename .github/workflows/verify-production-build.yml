@@ -2,7 +2,7 @@ name: Verify production build
 
 on:
   push:
-    branches: [main, docs/simulation-media-source-audit, fix/simulation-scoring-provenance-20260918]
+    branches: [main, docs/simulation-media-source-audit]
   workflow_dispatch:
 
 permissions:
