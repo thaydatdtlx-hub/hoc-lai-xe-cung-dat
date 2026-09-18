@@ -108,7 +108,7 @@ jobs:
               start=float(x['dangerStart']); end=float(x['dangerEnd']); step=(end-start)/5
               windows=[{'score':score,'start':round(start+i*step,3),'end':round(start+(i+1)*step,3)} for i,score in enumerate((5,4,3,2,1))]
               scenarios.append({'id':x['id'],'chapter':x['chapter'],'title':x['title'],'videoUrl':f"{base}/{x['id']:03d}.mp4",'durationSeconds':round(x['durationMilliseconds']/1000,3),'scoreWindows':windows,'source':{'url':'https://drive.google.com/drive/folders/1AdpFdu_pHIV9rmagkSb1CFcdkjRX2qTO','version':'OnTapMoPhongSetup v2.0.0 x64','rightsReference':'owner-confirmed-authorized-package'}})
-          out={'version':'2.0.0-web-2026-09-17','note':'120 authorized simulation videos optimized for web; score bands derived from verified 5-point and 0-point markers.','scenarios':scenarios}
+          out={'version':'2.0.0-web-2026-09-17','note':'dangerStart and dangerEnd are verified directly against tss.db; the 5→1 training bands are evenly interpolated between those source markers because tss.db contains no separate score-boundary columns.','scoringMethod':'linear-interpolation-between-source-start-end','scenarios':scenarios}
           with open('public/data/mo-phong-120-media.json','w',encoding='utf-8') as f: json.dump(out,f,ensure_ascii=False,indent=2); f.write('\n')
           PY
           node scripts/test-simulation-media.mjs
