@@ -2,7 +2,7 @@ name: Verify production build
 
 on:
   push:
-    branches: [main, docs/simulation-media-source-audit, fix/simulation-reference-ui-fidelity]
+    branches: [main, docs/simulation-media-source-audit]
   workflow_dispatch:
 
 permissions:
