@@ -15,37 +15,26 @@ function newer(a,b){return !a?b:!b?a:new Date(a.date||0)>=new Date(b.date||0)?a:
 async function loadRemote(){if(!token())return;try{const r=await rpc('app_student_get_simulation_progress',{p_token:token()});const p=r?.progress_data||{};if(p.attempts&&typeof p.attempts==='object'){for(const[id,a]of Object.entries(p.attempts))state.attempts[id]=newer(state.attempts[id],a)}state.last=p.last||r?.last_scenario_id||state.last;state.totalAttempts=Math.max(state.totalAttempts||0,r?.total_attempts||0);if(Array.isArray(r?.history)&&r.history.length){state.history=r.history.map(h=>({date:h.submitted_at,version:data.version,total:h.score,answers:[]})).slice(0,50)}saveLocal();$('storageNotice').textContent='Đã đồng bộ tiến độ từ tài khoản học viên.'}catch{$('storageNotice').textContent='Đang dùng tiến độ trên thiết bị; chưa tải được dữ liệu tài khoản.'}}
 const CHAPTER_LABELS=['Giao thông trong đô thị, khu đông dân cư','Giao thông trên đường nông thôn','Giao thông trên đường cao tốc','Giao thông trên đường núi','Giao thông trên quốc lộ','Các tình huống thực tế'];
 function saveReview(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviewState))}catch{}}
-function sampleDistractors(s,count=2){
-  return data.scenarios.filter(x=>x.chapter===s.chapter&&x.id!==s.id).slice(Math.max(0,data.scenarios.findIndex(x=>x.id===s.id)-2),Math.max(0,data.scenarios.findIndex(x=>x.id===s.id)-2)+count).map(x=>x.title);
-}
-function indirectCue(s){
-  const t=s.title.toLowerCase();
-  if(/mưa|sương mù|ban đêm|chập tối/.test(t))return 'Tầm nhìn hoặc độ bám đường bị giảm, cần tăng mức độ quan sát';
-  if(/đường nhánh|ngõ|ngã ba|ngã tư|giao lộ/.test(t))return 'Có điểm giao cắt, phương tiện hoặc người có thể xuất hiện từ hướng khuất';
-  if(/xe tải|container|xe buýt|xe khách|xe bồn/.test(t))return 'Phương tiện kích thước lớn có thể che khuất tầm nhìn hoặc thay đổi quỹ đạo';
-  if(/người đi bộ|trẻ em|học sinh|xe đạp/.test(t))return 'Đối tượng dễ tổn thương có thể thay đổi hướng di chuyển bất ngờ';
-  if(/cao tốc/.test(t))return 'Tốc độ cao và chuyển làn làm thời gian xử lý bị rút ngắn';
-  if(/đường núi|đèo|khúc cua|đường cong/.test(t))return 'Tầm nhìn hạn chế bởi cua, dốc hoặc địa hình';
-  if(/bò|gia súc|động vật/.test(t))return 'Động vật có thể bất ngờ đi vào phần đường xe chạy';
-  if(/đường sắt|tàu/.test(t))return 'Có giao cắt đường sắt, cần đặc biệt chú ý khả năng tàu xuất hiện';
-  return 'Diễn biến phía trước có dấu hiệu thay đổi quỹ đạo hoặc tốc độ, cần chủ động quan sát';
-}
-function directCue(s){return 'Diễn biến nguy hiểm chính: '+s.title;}
-function handlingAnswer(){return 'Giảm tốc độ, tăng khoảng cách an toàn, sẵn sàng phanh và chủ động nhường đường để tránh xung đột';}
-function reviewQuestionsFor(s){
-  const distract=sampleDistractors(s,2);
-  return [
-    {title:'Nhận biết tên tình huống',options:[distract[0]||'Tình huống giao thông thông thường',distract[1]||'Phương tiện di chuyển ổn định',s.title],correct:2},
-    {title:'Dấu hiệu nhận biết gián tiếp',options:['Mọi phương tiện đang di chuyển ổn định, không có yếu tố cần chú ý',indirectCue(s),'Chỉ cần quan sát biển báo, không cần quan sát diễn biến xung quanh'],correct:1},
-    {title:'Dấu hiệu nhận biết trực tiếp',options:['Chưa xuất hiện diễn biến có nguy cơ xung đột',directCue(s),'Các phương tiện giữ nguyên hướng và tốc độ nên không cần xử lý'],correct:1},
-    {title:'Phương án xử lý',options:['Giữ nguyên tốc độ vì phương tiện phía trước sẽ tự tránh',handlingAnswer(),'Tăng tốc đi qua nhanh trước khi tình huống phát triển','Bám sát phương tiện phía trước để không cho xe khác chen vào'],correct:1}
-  ];
+function saveReview(){try{localStorage.setItem(REVIEW_KEY,JSON.stringify(reviewState))}catch{}}
+function normalizedReviewQuestions(s){
+  const raw=Array.isArray(s?.reviewQuestions)?s.reviewQuestions:[];
+  return raw.slice(0,4).map((q,i)=>({
+    title:String(q?.title||['Nhận biết tên tình huống','Dấu hiệu nhận biết gián tiếp','Dấu hiệu nhận biết trực tiếp','Phương án xử lý'][i]||('Câu '+(i+1))),
+    options:Array.isArray(q?.options)?q.options.map(String):[],
+    correct:Number.isInteger(q?.correct)?q.correct:-1
+  })).filter(q=>q.options.length>=2&&q.correct>=0&&q.correct<q.options.length);
 }
 function renderReview(s){
   const panel=$('reviewPanel'),host=$('reviewQuestions'),result=$('reviewResult');
   if(!panel||!host||mode!=='study'){if(panel)panel.hidden=true;return}
   panel.hidden=false;host.replaceChildren();result.textContent='';
-  const questions=reviewQuestionsFor(s),saved=reviewState.answers[s.id]||{};
+  const questions=normalizedReviewQuestions(s);
+  if(questions.length!==4){
+    const pending=document.createElement('div');pending.className='review-pending';
+    pending.innerHTML='<strong>Bộ 4 câu hỏi ôn tập đang được cập nhật.</strong><span>Video và dữ liệu tình huống vẫn giữ nguyên. Hệ thống sẽ chỉ mở đáp án khi có dữ liệu đã được xác minh.</span>';
+    host.append(pending);$('next').disabled=false;return;
+  }
+  const saved=reviewState.answers[s.id]||{};
   questions.forEach((q,qi)=>{
     const card=document.createElement('article');card.className='review-card';
     const h=document.createElement('h3');h.innerHTML='<span class="review-index">'+(qi+1)+'</span>'+q.title;
@@ -77,7 +66,6 @@ function renderReview(s){
     $('next').disabled=false;
   }
 }
-
 function drawGrid(){
   $('grid').replaceChildren();
   let done=0;
@@ -109,7 +97,7 @@ function detect(){if(!current||!mediaReady||video.paused||video.ended||finished|
 video.addEventListener('loadedmetadata',()=>{if(!current)return;if(!Number.isFinite(video.duration)||Math.abs(video.duration-current.durationSeconds)>.25){mediaReady=false;video.pause();video.controls=false;$('play').disabled=true;$('playerStatus').textContent='Video không khớp thời lượng dữ liệu. Tạm dừng chấm điểm để kiểm tra nguồn.';return}mediaReady=true;$('play').disabled=mode==='study';$('playerStatus').textContent=mode==='study'?'Xem video và trả lời 4 câu hỏi ôn tập bên dưới.':'Nhấn Phát video, sau đó bấm Space hoặc nút phát hiện khi thấy nguy hiểm.'});
 video.addEventListener('playing',()=>{if(!mediaReady)video.pause();else $('detect').disabled=mark!==null||finished});video.addEventListener('pause',()=>{$('detect').disabled=true});video.addEventListener('ended',()=>{if(!mediaReady)return;finished=true;$('detect').disabled=true;if(mode==='exam'){record();$('next').disabled=false;$('play').disabled=true}else if(reviewState.completed[current?.id])$('next').disabled=false});video.addEventListener('error',()=>{mediaReady=false;$('detect').disabled=true;$('play').disabled=true;$('playerStatus').textContent='Không tải được video. Kiểm tra mạng hoặc chọn lại tình huống. Kết quả chưa được ghi.'});
 $('play').onclick=async()=>{if(!current||!mediaReady)return;if(finished){select(current);return}try{await video.play()}catch{$('playerStatus').textContent='Không phát được video. Hãy thử lại.'}};$('detect').onclick=detect;document.addEventListener('keydown',e=>{if(e.code!=='Space'||e.repeat||/INPUT|TEXTAREA|SELECT|BUTTON|VIDEO/.test(e.target.tagName)||e.target.isContentEditable)return;if(current&&mediaReady&&!video.paused&&!finished){e.preventDefault();detect()}});
-function setMode(nextMode){video.pause();mode=nextMode;if($('reviewPanel'))$('reviewPanel').hidden=mode!=='study';$('study').setAttribute('aria-pressed',String(mode==='study'));$('exam').setAttribute('aria-pressed',String(mode==='exam'));$('continue').disabled=mode==='exam'||!data.scenarios.some(s=>s.id===state.last);$('exam').disabled=mode==='exam'||data.scenarios.length!==120||data.version==='pending';$('chapter').disabled=mode==='exam';drawGrid()}
+function setMode(nextMode){video.pause();mode=nextMode;document.body.dataset.mode=mode;if($('moduleTitlebar'))$('moduleTitlebar').textContent=mode==='study'?'Ôn mô phỏng các tình huống giao thông':'Kiểm tra mô phỏng các tình huống giao thông';$('menuStudy')?.classList.toggle('selected',mode==='study');$('menuExam')?.classList.toggle('selected',mode==='exam');if($('reviewPanel'))$('reviewPanel').hidden=mode!=='study';$('study').setAttribute('aria-pressed',String(mode==='study'));$('exam').setAttribute('aria-pressed',String(mode==='exam'));$('continue').disabled=mode==='exam'||!data.scenarios.some(s=>s.id===state.last);$('exam').disabled=mode==='exam'||data.scenarios.length!==120||data.version==='pending';$('chapter').disabled=mode==='exam';drawGrid()}
 $('study').onclick=()=>{if(mode==='exam'&&!confirm('Kết thúc bài luyện đề đang làm? Bài chưa hoàn thành sẽ không được lưu vào lịch sử luyện đề.'))return;setMode('study');if(current)select(current)};$('continue').onclick=()=>{const s=data.scenarios.find(s=>s.id===state.last);if(s)select(s)};$('exam').onclick=()=>{queue=makeExam(data.scenarios);index=0;answers=[];examStartedAt=Date.now();setMode('exam');select(queue[0])};
 $('next').onclick=async()=>{if(mode==='study'){const i=data.scenarios.findIndex(s=>s.id===current.id);select(data.scenarios[(i+1)%data.scenarios.length]);return}if(!finished||!recorded)return;if(++index<queue.length){select(queue[index]);return}const total=answers.reduce((n,a)=>n+a.score,0),date=new Date().toISOString();state.history.unshift({date,version:data.version,total,answers:[...answers]});state.history=state.history.slice(0,50);save();if(token()){rpc('app_student_save_simulation_exam',{p_token:token(),p_score:total,p_scenario_ids:answers.map(a=>a.id),p_scenario_scores:answers.map(a=>a.score),p_elapsed_seconds:Math.max(0,Math.round((Date.now()-examStartedAt)/1000))}).catch(()=>{})}setMode('study');$('next').disabled=true;$('play').disabled=true;$('result').textContent=`Kết quả luyện tập: ${total}/50 · ${total>=35?'Đạt mục tiêu 35 điểm':'Chưa đạt mục tiêu 35 điểm'}`;const table=document.createElement('table');for(const a of answers){const tr=document.createElement('tr');for(const value of[`Tình huống ${a.id}`,`${a.score}/5`,a.time===null?'Không bấm':`${a.time.toFixed(3)} giây`]){const td=document.createElement('td');td.textContent=value;tr.append(td)}table.append(tr)}$('summary').append(table);$('playerStatus').textContent='Đã lưu kết quả. Chọn tình huống hoặc bắt đầu lượt luyện đề mới.'};
 $('chapter').onchange=drawGrid;$('history').onclick=()=>{$('historyPanel').hidden=!$('historyPanel').hidden;$('historyList').replaceChildren();if(!state.history.length)$('historyList').textContent='Chưa có lượt luyện đề hoàn thành.';for(const item of state.history){const p=document.createElement('p');p.textContent=`${new Date(item.date).toLocaleString('vi-VN')} · ${item.total}/50 · Bộ dữ liệu ${item.version}`;$('historyList').append(p)}};
@@ -131,5 +119,6 @@ $('sidebarToggle')?.addEventListener('click',()=>{
 $('fullscreenToggle')?.addEventListener('click',async()=>{
   try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen()}catch{}
 });
+$('menuStudy')?.addEventListener('click',e=>{e.preventDefault();if(mode==='exam'&&!confirm('Kết thúc bài kiểm tra đang làm?'))return;setMode('study');if(current)select(current)});
 $('menuExam')?.addEventListener('click',()=>{if(!$('exam').disabled)$('exam').click()});
 loadStudentShell();
