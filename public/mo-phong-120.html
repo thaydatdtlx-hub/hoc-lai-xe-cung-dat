@@ -77,13 +77,18 @@
               <option value="6">6 · Các tình huống thực tế</option>
             </select>
             <div id="grid" class="chapter-list" aria-label="Danh sách 120 tình huống"></div>
-            <p class="legend">✓ 4–5 điểm · ~ 1–3 điểm · × 0 điểm · — Chưa có dữ liệu</p>
+            <p class="legend">✓ Đã ôn đủ 4 nội dung · • Chưa ôn · — Chưa có dữ liệu</p>
           </aside>
 
           <section class="player">
             <h1 id="title">Chọn tình huống để bắt đầu</h1>
             <video id="video" playsinline preload="metadata" controls aria-label="Video tình huống"></video>
             <p id="playerStatus" role="status">Video sẽ hiện khi dữ liệu đã sẵn sàng.</p>
+            <section id="reviewPanel" class="review-panel" hidden>
+              <p class="review-note">ⓘ Xem video và ôn lại 4 câu hỏi của tình huống này.</p>
+              <div id="reviewQuestions" class="review-questions"></div>
+              <p id="reviewResult" class="review-result" aria-live="polite"></p>
+            </section>
             <div class="actions">
               <button id="play" disabled>Phát video</button>
               <button id="detect" disabled>Phát hiện nguy hiểm · Space</button>
