@@ -1,9 +1,117 @@
 <!doctype html>
-<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mô phỏng 120 tình huống | Học lái xe cùng Đạt</title><link rel="stylesheet" href="/mo-phong/style.css"></head>
-<body><header><a href="/600-cau-hoi.html">← Học lái xe cùng Đạt</a><span>Luyện nhận biết nguy hiểm</span></header>
-<main><section class="hero"><p class="eyebrow">QUAN SÁT • NHẬN BIẾT • PHẢN XẠ</p><h1>Mô phỏng<br>120 tình huống</h1><p>Luyện theo từng chương và xem lại thời điểm phát hiện nguy hiểm.</p><p role="note"><strong>Lưu ý:</strong> Từ 01/07/2026, mô phỏng không còn là nội dung sát hạch GPLX; module này dùng để luyện kỹ năng nhận biết và xử lý tình huống nguy hiểm.</p><p id="status" role="status">Đang tải dữ liệu…</p><button id="retry">Tải lại dữ liệu</button></section>
-<nav aria-label="Chế độ học"><button id="study" aria-pressed="true">Ôn tập</button><button id="continue" disabled>Tiếp tục học</button><button id="exam" disabled>Luyện đề 10 tình huống</button><button id="history">Lịch sử luyện đề</button></nav>
-<p id="storageNotice">Tiến độ được lưu riêng trong trình duyệt này, chưa đồng bộ tài khoản.</p><p id="progress"></p>
-<section class="layout"><aside><h2>Danh sách tình huống</h2><label for="chapter">Chọn chương</label><select id="chapter"><option value="0">Tất cả 6 chương</option><option value="1">1 · Đường phố</option><option value="2">2 · Nông thôn</option><option value="3">3 · Cao tốc</option><option value="4">4 · Đường núi</option><option value="5">5 · Quốc lộ</option><option value="6">6 · Tình huống thực tế</option></select><div id="grid" class="grid"></div><p class="legend">✓ 4–5 điểm · ~ 1–3 điểm · × 0 điểm · — Chưa có dữ liệu</p></aside>
-<section class="player"><h2 id="title">Chọn tình huống để bắt đầu</h2><video id="video" playsinline preload="metadata" controls aria-label="Video tình huống"></video><p id="playerStatus" role="status">Video sẽ hiện khi dữ liệu đã sẵn sàng.</p><div class="actions"><button id="play" disabled>Phát video</button><button id="detect" disabled>Phát hiện nguy hiểm · Space</button><button id="next" disabled>Tiếp theo</button></div><p id="result" aria-live="polite"></p><details id="explanation" hidden><summary>Xem mốc điểm và gợi ý</summary><div id="windows"></div><p id="hint"></p></details><div id="summary" aria-live="polite"></div></section></section>
-<section id="historyPanel" hidden><h2>Lịch sử luyện đề</h2><div id="historyList"></div></section></main><script type="module" src="/mo-phong/app.mjs"></script></body></html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ôn tập mô phỏng 120 tình huống | Học lái xe cùng Đạt</title>
+  <link rel="stylesheet" href="/mo-phong/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" aria-label="Điều hướng học viên">
+    <a class="brand" href="/600-cau-hoi.html" aria-label="Học lái xe cùng Đạt">
+      <img src="/logo-thay-dat-compact.webp" alt="">
+      <div><strong>HỌC LÁI XE</strong><span>CÙNG ĐẠT</span></div>
+    </a>
+
+    <div class="student-mini">
+      <div class="student-avatar" aria-hidden="true">HV</div>
+      <div><strong id="sidebarStudentName">Học viên</strong><span>Hệ thống ôn tập</span></div>
+    </div>
+
+    <nav class="side-menu">
+      <div class="menu-group">
+        <a class="menu-head" href="/600-cau-hoi.html"><span>▣</span> Kiểm tra hết môn <b>›</b></a>
+        <a class="menu-sub" href="/600-cau-hoi.html"><i></i>Làm bài thi</a>
+      </div>
+      <div class="menu-group active">
+        <div class="menu-head"><span>🚗</span> Mô phỏng <b>⌄</b></div>
+        <a class="menu-sub selected" id="menuStudy" href="/mo-phong-120.html"><i></i>Ôn tập mô phỏng</a>
+        <button class="menu-sub menu-action" id="menuExam" type="button"><i></i>Kiểm tra mô phỏng</button>
+      </div>
+      <a class="menu-link" href="/hoc-vien.html">🔑 <span>Thông tin cá nhân</span></a>
+      <a class="menu-link" href="/">↪ <span>Thoát</span></a>
+    </nav>
+  </aside>
+
+  <div class="page">
+    <header class="topbar">
+      <button class="hamburger" id="sidebarToggle" type="button" aria-label="Thu gọn menu">☰</button>
+      <a href="/600-cau-hoi.html">Trang Chủ</a>
+      <span class="topbar-spacer"></span>
+      <button class="fullscreen" id="fullscreenToggle" type="button" aria-label="Toàn màn hình">⛶</button>
+    </header>
+
+    <main>
+      <section class="module-card">
+        <div class="module-titlebar" id="moduleTitlebar">Ôn mô phỏng các tình huống giao thông</div>
+
+        <div class="module-toolbar">
+          <nav class="mode-tabs" aria-label="Chế độ học">
+            <button id="study" aria-pressed="true">Ôn tập</button>
+            <button id="continue" disabled>Tiếp tục học</button>
+            <button id="exam" disabled>Luyện đề 10 tình huống</button>
+            <button id="history">Lịch sử luyện đề</button>
+          </nav>
+          <div class="dataset-status">
+            <span id="status" role="status">Đang tải dữ liệu…</span>
+            <button id="retry" type="button">Tải lại dữ liệu</button>
+          </div>
+        </div>
+
+        <div class="notice-row">
+          <p id="storageNotice">Tiến độ được lưu riêng trong trình duyệt này, chưa đồng bộ tài khoản.</p>
+          <p id="progress"></p>
+        </div>
+
+        <section class="practice-layout">
+          <aside class="scenario-panel">
+            <label class="visually-hidden" for="chapter">Chọn chương</label>
+            <select id="chapter" aria-label="Lọc chương">
+              <option value="0">Tất cả 6 chương</option>
+              <option value="1">1 · Giao thông trong đô thị, khu đông dân cư</option>
+              <option value="2">2 · Giao thông trên đường nông thôn</option>
+              <option value="3">3 · Giao thông trên đường cao tốc</option>
+              <option value="4">4 · Giao thông trên đường núi</option>
+              <option value="5">5 · Giao thông trên quốc lộ</option>
+              <option value="6">6 · Các tình huống thực tế</option>
+            </select>
+            <div id="grid" class="chapter-list" aria-label="Danh sách 120 tình huống"></div>
+            <p class="legend">✓ Đã ôn đủ 4 nội dung · • Chưa ôn · — Chưa có dữ liệu</p>
+          </aside>
+
+          <section class="player">
+            <h1 id="title">Chọn tình huống để bắt đầu</h1>
+            <video id="video" playsinline preload="metadata" controls aria-label="Video tình huống"></video>
+            <p id="playerStatus" role="status">Video sẽ hiện khi dữ liệu đã sẵn sàng.</p>
+            <section id="reviewPanel" class="review-panel" hidden>
+              <p class="review-note">ⓘ Xem video và ôn lại 4 câu hỏi của tình huống này.</p>
+              <div id="reviewQuestions" class="review-questions"></div>
+              <p id="reviewResult" class="review-result" aria-live="polite"></p>
+            </section>
+            <div class="actions">
+              <button id="play" disabled>Phát video</button>
+              <button id="detect" disabled>Phát hiện nguy hiểm · Space</button>
+              <button id="next" disabled>Tiếp theo</button>
+            </div>
+            <p id="result" aria-live="polite"></p>
+            <details id="explanation" hidden>
+              <summary>Xem mốc điểm và gợi ý</summary>
+              <div id="windows"></div>
+              <p id="hint"></p>
+            </details>
+            <div id="summary" aria-live="polite"></div>
+          </section>
+        </section>
+      </section>
+
+      <section id="historyPanel" hidden>
+        <h2>Lịch sử luyện đề</h2>
+        <div id="historyList"></div>
+      </section>
+    </main>
+  </div>
+</div>
+<script type="module" src="/mo-phong/app.mjs"></script>
+</body>
+</html>
