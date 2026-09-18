@@ -1,0 +1,64 @@
+name: Audit simulation scoring algorithm
+
+on:
+  push:
+    branches:
+      - audit/simulation-scoring-algorithm
+    paths:
+      - .github/workflows/audit-simulation-scoring.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cabextract binutils file
+          python -m pip install --disable-pip-version-check gdown pefile
+
+      - name: Download and extract application
+        run: |
+          gdown 'https://drive.google.com/uc?id=1ikfLw9io14py41qRbycRZg2trWL6m2iF' -O Setup1.cab
+          mkdir -p extracted report
+          cabextract -q -d extracted -F OnTapMoPhong.exe Setup1.cab
+          test -s extracted/OnTapMoPhong.exe
+
+      - name: Inspect executable format and imports
+        run: |
+          file extracted/OnTapMoPhong.exe | tee report/file.txt
+          objdump -p extracted/OnTapMoPhong.exe > report/objdump-p.txt || true
+          strings -a extracted/OnTapMoPhong.exe > report/strings-ascii.txt
+          strings -a -el extracted/OnTapMoPhong.exe > report/strings-utf16.txt || true
+          grep -Ei 'mscoree|clr|qt[0-9]|score|point|diem|start|end|video|sqlite|chacha' report/strings-ascii.txt report/strings-utf16.txt | head -300 | tee report/scoring-related-strings.txt || true
+
+      - name: Inspect PE metadata
+        run: |
+          python - <<'PY' > report/pe-metadata.txt
+          import pefile
+          pe = pefile.PE('extracted/OnTapMoPhong.exe')
+          print('Machine', hex(pe.FILE_HEADER.Machine))
+          print('Sections', pe.FILE_HEADER.NumberOfSections)
+          print('EntryPoint', hex(pe.OPTIONAL_HEADER.AddressOfEntryPoint))
+          print('ImageBase', hex(pe.OPTIONAL_HEADER.ImageBase))
+          print('COM_DESCRIPTOR', pe.OPTIONAL_HEADER.DATA_DIRECTORY[14].VirtualAddress)
+          print('Imports:')
+          for entry in getattr(pe, 'DIRECTORY_ENTRY_IMPORT', []):
+              print(entry.dll.decode(errors='replace'))
+              for imp in entry.imports[:80]:
+                  if imp.name:
+                      print('  ', imp.name.decode(errors='replace'))
+          PY
+          cat report/pe-metadata.txt
+
+      - name: Upload audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: simulation-scoring-audit
+          path: report/
+          retention-days: 1
