@@ -2,7 +2,7 @@ name: Verify production build
 
 on:
   push:
-    branches: [main, docs/simulation-media-source-audit, feat/final-course-exam-ui]
+    branches: [main, docs/simulation-media-source-audit]
   workflow_dispatch:
 
 permissions:
