@@ -2,8 +2,11 @@ name: Inspect simulation database
 
 on:
   push:
-    branches: [docs/simulation-media-source-audit]
-    paths: [.github/workflows/inspect-simulation-db.yml]
+    branches:
+      - docs/simulation-media-source-audit
+      - fix/simulation-db-inspection-v2
+    paths:
+      - .github/workflows/inspect-simulation-db.yml
   workflow_dispatch:
 
 permissions:
@@ -19,33 +22,62 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cabextract msitools build-essential cmake
           python -m pip install --disable-pip-version-check gdown
+
       - name: Download first package cabinet
         run: |
           gdown 'https://drive.google.com/uc?id=1ikfLw9io14py41qRbycRZg2trWL6m2iF' -O Setup1.cab
           mkdir -p extracted report
           cabextract -q -d extracted -F tss.db Setup1.cab
           cabextract -q -d extracted -F OnTapMoPhong.exe Setup1.cab
+          test -s extracted/tss.db
+          test -s extracted/OnTapMoPhong.exe
+          sha256sum extracted/tss.db | tee report/tss-db-sha256.txt
+
       - name: Build compatible SQLite3MC shell
         run: |
           git clone --depth 1 https://github.com/utelle/SQLite3MultipleCiphers.git sqlite3mc-src
-          cd sqlite3mc-src
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          cmake --build . -j2
-          find . -type f -perm -111 -name 'sqlite3*' -print | tee ../../report/sqlite3mc-binaries.txt
+          cmake -S sqlite3mc-src -B sqlite3mc-build -DCMAKE_BUILD_TYPE=Release
+          cmake --build sqlite3mc-build -j2
+          find sqlite3mc-build -type f -perm -111 -name 'sqlite3*' -print | tee report/sqlite3mc-binaries.txt
+          test -s report/sqlite3mc-binaries.txt
+
       - name: Inspect video table
         shell: bash
         run: |
-          set +e
-          SHELL_BIN=$(find sqlite3mc-src/build -type f -perm -111 -name 'sqlite3*' | head -1)
-          DB_PASS=$(strings -a extracted/OnTapMoPhong.exe | grep -E '^db[0-9a-f]{30,}$' | head -1)
+          set -u
+          SHELL_BIN=$(find sqlite3mc-build -type f -perm -111 -name 'sqlite3*' | head -1)
+          test -n "$SHELL_BIN"
+          DB_PASS=$(strings -a extracted/OnTapMoPhong.exe | grep -E '^db[0-9a-f]{30,}$' | head -1 || true)
+          test -n "$DB_PASS"
+          echo "::add-mask::$DB_PASS"
+          : > report/database-probe.txt
+          success=0
           for cipher in chacha20 sqlcipher aes256cbc aes128cbc rc4; do
             URI="file:extracted/tss.db?cipher=${cipher}&key=${DB_PASS}"
-            echo "Trying ${cipher}" >> report/database-probe.txt
-            "$SHELL_BIN" "$URI" ".tables" >> report/database-probe.txt 2>&1
-            "$SHELL_BIN" -header -csv "$URI" "select * from video order by chapter, th;" > "report/video-${cipher}.csv" 2>"report/video-${cipher}.err"
+            echo "Trying ${cipher}" | tee -a report/database-probe.txt
+            tables=$("$SHELL_BIN" "$URI" ".tables" 2>&1 || true)
+            printf '%s\n' "$tables" >> report/database-probe.txt
+            if printf '%s\n' "$tables" | grep -qw video; then
+              success=1
+              echo "WORKING_CIPHER=${cipher}" | tee report/working-cipher.txt
+              "$SHELL_BIN" "$URI" ".schema video" > report/video-schema.sql
+              "$SHELL_BIN" -header -csv "$URI" "pragma table_info(video);" > report/video-table-info.csv
+              "$SHELL_BIN" -header -csv "$URI" "select count(*) as row_count from video;" > report/video-count.csv
+              "$SHELL_BIN" -header -csv "$URI" "select * from video order by chapter, th;" > report/video.csv
+              "$SHELL_BIN" "$URI" ".schema" > report/database-schema.sql
+              break
+            fi
           done
+          test "$success" -eq 1
+          echo "Video table columns:"
+          cat report/video-table-info.csv
+          echo "Video rows:"
+          cat report/video-count.csv
+          echo "First rows:"
+          head -6 report/video.csv
+
       - name: Upload report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: simulation-database-inspection
