@@ -61,6 +61,10 @@ jobs:
           PY
           cat report/pe-metadata.txt
 
+      - name: Dump string neighborhood around scoring configuration
+        run: |
+          strings -a -t x extracted/OnTapMoPhong.exe | awk '$1 >= "00065000" && $1 <= "00065800" {print}' | tee report/rank-score-string-neighborhood.txt
+
       - name: Locate native xrefs to scoring configuration
         run: |
           python - <<'PY' | tee report/rank-score-xrefs.txt
