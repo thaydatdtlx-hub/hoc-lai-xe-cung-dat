@@ -76,6 +76,58 @@ jobs:
           echo "First rows:"
           head -6 report/video.csv
 
+      - name: Validate 120 source timings against tss.db
+        run: |
+          python - <<'PY'
+          import csv, json, hashlib, sys
+          from pathlib import Path
+
+          timing = json.loads(Path('public/data/mo-phong-120-timing-source.json').read_text(encoding='utf-8'))
+          rows = list(csv.DictReader(Path('report/video.csv').open(encoding='utf-8', newline='')))
+          rows = [r for r in rows if int(r['chapter'] or 0) > 0]
+
+          def parse_mark(value):
+              a, b, c = [int(x) for x in value.split(':')]
+              return round(a * 60 + b + c / 100, 2)
+
+          errors = []
+          if len(rows) != 120:
+              errors.append(f'tss.db has {len(rows)} scenario rows, expected 120')
+          if timing.get('scenarioCount') != 120 or len(timing.get('scenarios', [])) != 120:
+              errors.append('timing source does not contain exactly 120 scenarios')
+
+          db_sha = hashlib.sha256(Path('extracted/tss.db').read_bytes()).hexdigest()
+          if timing.get('sourceDatabaseSha256') != db_sha:
+              errors.append(f'sourceDatabaseSha256 mismatch: {db_sha}')
+
+          by_id = {int(x['id']): x for x in timing.get('scenarios', [])}
+          for r in rows:
+              sid = int(r['th'])
+              x = by_id.get(sid)
+              if not x:
+                  errors.append(f'missing timing-source scenario {sid}')
+                  continue
+              checks = [
+                  ('chapter', int(r['chapter']), int(x['chapter'])),
+                  ('file', r['name'], x['file']),
+                  ('durationMilliseconds', int(r['duration']), int(x['durationMilliseconds'])),
+                  ('dangerStart', parse_mark(r['start']), round(float(x['dangerStart']), 2)),
+                  ('dangerEnd', parse_mark(r['end']), round(float(x['dangerEnd']), 2)),
+                  ('title', r['description'], x['title']),
+              ]
+              for field, actual, expected in checks:
+                  if actual != expected:
+                      errors.append(f'scenario {sid} {field}: db={actual!r} timing={expected!r}')
+
+          if errors:
+              print('\n'.join(errors[:50]))
+              print(f'TOTAL_ERRORS={len(errors)}')
+              sys.exit(1)
+
+          print('PASS: tss.db matches committed timing source for all 120 scenarios.')
+          print('PASS: source table exposes only start/end timing markers; no separate 5/4/3/2/1 columns exist.')
+          PY
+
       - name: Upload report
         if: always()
         uses: actions/upload-artifact@v4
