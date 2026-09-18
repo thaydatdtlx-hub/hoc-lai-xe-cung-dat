@@ -1,0 +1,16 @@
+name: Inspect simulation database v3
+
+on:
+  push:
+    branches:
+      - fix/simulation-db-inspection-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "simulation DB workflow trigger OK"
