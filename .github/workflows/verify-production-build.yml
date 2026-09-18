@@ -2,7 +2,7 @@ name: Verify production build
 
 on:
   push:
-    branches: [main, docs/simulation-media-source-audit, feat/simulation-review-question-bank]
+    branches: [main, docs/simulation-media-source-audit]
   workflow_dispatch:
 
 permissions:
