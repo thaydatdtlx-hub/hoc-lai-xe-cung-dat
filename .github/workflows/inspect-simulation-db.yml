@@ -116,7 +116,7 @@ jobs:
                   ('durationMilliseconds', int(r['duration']), int(x['durationMilliseconds'])),
                   ('dangerStart', parse_mark(r['start']), round(float(x['dangerStart']), 2)),
                   ('dangerEnd', parse_mark(r['end']), round(float(x['dangerEnd']), 2)),
-                  ('title', r['description'], x['title']),
+                  ('title', r['description'].strip(), x['title'].strip()),
               ]
               for field, actual, expected in checks:
                   if actual != expected:
