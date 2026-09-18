@@ -19,3 +19,18 @@
 .actions.exam-actions #play,.actions.exam-actions #detect{display:inline-flex}
 .actions.study-actions{justify-content:flex-end}
 @media(max-width:900px){.review-questions{grid-template-columns:1fr}}
+
+/* Reference-flow polish: navigation through sidebar, compact study canvas */
+.module-toolbar{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.notice-row{padding:6px 12px;background:#f4f7fa}
+.scenario-panel>select{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.practice-layout{grid-template-columns:445px minmax(0,1fr)}
+.scenario-panel{max-height:calc(100vh - 116px)}
+.player{padding-top:0}
+.review-pending{grid-column:1/-1;border:1px dashed #cbd7e2;border-radius:10px;background:#f8fbfd;padding:18px;color:#52616e;display:flex;flex-direction:column;gap:5px}
+.review-pending strong{color:#26394a}
+.review-pending span{font-size:12px}
+body[data-mode="exam"] .review-panel{display:none}
+body[data-mode="exam"] .actions{margin-top:12px}
+@media(max-width:1100px){.practice-layout{grid-template-columns:360px minmax(0,1fr)}}
+@media(max-width:760px){.practice-layout{grid-template-columns:1fr}.scenario-panel{max-height:none}}
