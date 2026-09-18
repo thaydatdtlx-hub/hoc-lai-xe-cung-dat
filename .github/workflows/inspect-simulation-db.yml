@@ -3,7 +3,7 @@ name: Inspect simulation database
 on:
   push:
     branches:
-      - docs/simulation-media-source-audit
+      - main
       - fix/simulation-db-inspection-v2
     paths:
       - .github/workflows/inspect-simulation-db.yml
