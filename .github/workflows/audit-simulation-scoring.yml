@@ -26,8 +26,13 @@ jobs:
         run: |
           gdown 'https://drive.google.com/uc?id=1ikfLw9io14py41qRbycRZg2trWL6m2iF' -O Setup1.cab
           mkdir -p extracted report
+          cabextract -l Setup1.cab > report/cab-list.txt
           cabextract -q -d extracted -F OnTapMoPhong.exe Setup1.cab
+          cabextract -q -d extracted -F rank_score.csv Setup1.cab || true
           test -s extracted/OnTapMoPhong.exe
+          find extracted -maxdepth 3 -type f -print | sort | tee report/extracted-files.txt
+          grep -i 'rank_score\|config' report/cab-list.txt | tee report/rank-score-cab-matches.txt || true
+          find extracted -type f -iname 'rank_score.csv' -print -exec sh -c 'echo "--- {} ---"; cat "$1"' _ {} \; | tee report/rank-score.txt || true
 
       - name: Inspect executable format and imports
         run: |
