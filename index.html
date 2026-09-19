@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <script id="auth-first-paint-guard">(()=>{try{if(localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token"))document.documentElement.classList.add("auth-restoring")}catch{}})();</script>
+  <style id="auth-first-paint-style">html.auth-restoring body{background:#f4f7fb!important}html.auth-restoring #login{visibility:hidden!important}html.auth-restoring body::before{content:"";position:fixed;inset:0;z-index:2147483000;background:#f4f7fb}</style>
   <meta name="theme-color" content="#07182f">
   <meta name="description" content="Hệ thống quản lý hồ sơ, học phí, tiến độ và lịch đào tạo học viên lái xe Thầy Đạt.">
   <meta name="robots" content="noindex,nofollow,noarchive">
@@ -25,78 +27,78 @@
   <link rel="stylesheet" href="styles.css?v=4"><link rel="stylesheet" href="theme.css?v=15"><link rel="stylesheet" href="/contact-footer.css?v=1"><link rel="stylesheet" href="/professional.css?v=15"><link rel="stylesheet" href="/pwa-install.css?v=1"><link rel="stylesheet" href="/mobile-app.css?v=1"><link rel="stylesheet" href="/driving-refresh.css?v=1">
   <link rel="stylesheet" href="/admin-toolbar-unified.css?v=2">
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
+  <link rel="preload" as="image" href="/login-cars-approved-v24.webp?v=24">
+  <link rel="preload" as="image" href="/logo-thay-dat-compact.webp?v=15">
+  <link rel="stylesheet" href="/login-isolated-v20.css?v=3" data-login-isolated-v20="true">
+  <link rel="stylesheet" href="/login-final-v24.css?v=24" data-login-final-v24="true">
+  <link rel="stylesheet" href="/login-final-v28.css?v=28-1" data-login-final-v28="true">
 </head>
-<body>
-  <div id="login" class="login-page" data-vip-version="15-professional">
-    <a class="skip-link" href="#loginForm">Chuyển đến đăng nhập</a>
-    <div class="login-shell">
+<body class="login-v20-active">
+  <div id="login" class="login-page login-v20" data-vip-version="15-professional">
+    <a class="skip-link login-v20-skip" href="#loginForm">Chuyển đến đăng nhập</a>
+    <div class="login-shell login-v20-shell">
       <div class="login-bg-shape login-bg-shape-one" aria-hidden="true"></div>
       <div class="login-bg-shape login-bg-shape-two" aria-hidden="true"></div>
       <div class="login-dots" aria-hidden="true"></div>
 
-      <div class="login-layout">
-        <section class="login-intro" aria-label="Giới thiệu hệ thống">
-          <div class="intro-brand">
-            <span class="intro-mark"><img src="/logo-thay-dat-compact.webp?v=15" alt=""></span>
-            <div><strong>THẦY ĐẠT</strong><small>Đào tạo lái xe trọn gói</small></div>
+      <div class="login-layout login-v20-layout">
+        <section class="login-intro login-v20-intro" aria-label="Giới thiệu hệ thống">
+          <div class="intro-brand login-v20-brand">
+            <span class="intro-mark login-v20-mark"><img src="/logo-thay-dat-compact.webp?v=15" alt=""></span>
+            <div class="login-v20-brand-copy"><strong>HỌC LÁI XE CÙNG ĐẠT</strong><small>ĐÀO TẠO VÀ HỖ TRỢ HỌC VIÊN LÁI XE</small></div>
           </div>
-          <span class="intro-vip-badge">PREMIUM LEARNING PLATFORM</span>
           <h2>HỆ THỐNG QUẢN LÝ<br><span>ĐÀO TẠO HỌC VIÊN LÁI XE</span></h2>
           <p>Học lý thuyết, theo dõi tiến độ và chủ động lịch học trên một nền tảng duy nhất.</p>
-          <a class="intro-refresh-cta" href="/bo-tuc-tay-lai.html">
-            <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 17 3 15v-4l2-5h14l2 5v4l-2 2Z"/><path d="M5 11h14M7 17v2M17 17v2"/><circle cx="7" cy="14" r="1"/><circle cx="17" cy="14" r="1"/></svg></span>
-            <div><strong>ĐĂNG KÝ BỔ TÚC TAY LÁI</strong><small>Tính chi phí · Chọn loại xe · Đăng ký lịch phù hợp</small></div>
-            <b aria-hidden="true">→</b>
-          </a>
-          <div class="intro-features">
-            <span>🛡️ An toàn bảo mật</span>
-            <span>✓ Dữ liệu chính xác</span>
-            <span>👥 Đồng hành cùng học viên</span>
+          <div class="intro-features login-v20-features" data-v20-built="1">
+            <article class="login-v20-feature"><span class="login-v20-feature-icon" aria-hidden="true">▣</span><strong>Học tập<br>trực tuyến</strong></article>
+            <article class="login-v20-feature"><span class="login-v20-feature-icon" aria-hidden="true">▥</span><strong>Theo dõi<br>tiến độ</strong></article>
+            <article class="login-v20-feature"><span class="login-v20-feature-icon" aria-hidden="true">▦</span><strong>Lịch học<br>chủ động</strong></article>
           </div>
-          <div class="intro-hero-visual" aria-hidden="true">
+          <div class="intro-hero-visual login-v20-car-stage" aria-hidden="true">
             <img src="/hero-vip-navy-champagne.webp?v=2" alt="">
           </div>
         </section>
 
-        <form id="loginForm" class="login-card">
-        <div class="login-lock" aria-hidden="true">
+        <form id="loginForm" class="login-card login-v20-card">
+        <div class="login-lock login-v20-logo" aria-hidden="true">
           <img src="/logo-thay-dat-compact.webp?v=15" alt="">
         </div>
-        <div class="mobile-brand"><strong>THẦY ĐẠT</strong><span>Đào tạo lái xe trọn gói</span></div>
-        <div class="login-heading">
-          <p class="eyebrow">CỔNG ĐÀO TẠO THẦY ĐẠT</p>
+        <div class="mobile-brand login-v20-mobile-brand"><strong>THẦY ĐẠT</strong><span>Đào tạo lái xe trọn gói</span></div>
+        <div class="login-heading login-v20-heading">
+          <p class="eyebrow login-v20-eyebrow">CỔNG ĐÀO TẠO THẦY ĐẠT</p>
           <h1>Đăng nhập hệ thống</h1>
-          <p class="muted">Dành cho quản trị viên, tài khoản quản lý và học viên.</p>
+          <p class="muted">Chào mừng bạn trở lại!</p>
         </div>
 
-        <label class="login-label" for="username">Tên đăng nhập</label>
-        <div class="input-shell">
+        <label class="login-label login-v20-label" for="username">Tên đăng nhập</label>
+        <div class="input-shell login-v20-input">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z"/></svg>
           <input id="username" autocomplete="username" placeholder="Nhập tên đăng nhập" required>
         </div>
 
-        <label class="login-label" for="password">Mật khẩu</label>
-        <div class="input-shell">
+        <label class="login-label login-v20-label" for="password">Mật khẩu</label>
+        <div class="input-shell login-v20-input">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1Z"/></svg>
           <input id="password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required>
-          <button id="togglePassword" class="password-toggle" type="button" aria-label="Hiện mật khẩu" aria-pressed="false">
+          <button id="togglePassword" class="password-toggle login-v20-eye" type="button" aria-label="Hiện mật khẩu" aria-pressed="false">
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
         </div>
 
-        <div class="login-options">
-          <label class="remember-option"><input id="rememberLogin" type="checkbox"><span aria-hidden="true"></span>Ghi nhớ đăng nhập</label>
+        <div class="login-options login-v20-options">
+          <label class="remember-option login-v20-remember"><input id="rememberLogin" type="checkbox"><span aria-hidden="true"></span>Ghi nhớ đăng nhập</label>
           <a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Quên mật khẩu?</a>
         </div>
 
-        <p id="loginError" class="error login-error" role="alert"></p>
-        <button id="loginBtn" class="primary login-submit" type="submit"><span>Đăng nhập</span><span aria-hidden="true">→</span></button>
+        <p id="loginError" class="error login-error login-v20-error" role="alert"></p>
+        <button id="loginBtn" class="primary login-submit login-v20-submit" type="submit"><span>Đăng nhập</span><span aria-hidden="true">→</span></button>
 
-        <div class="login-divider"><span>hoặc</span></div>
-        <button id="openPublicRegisterBtn" class="public-register-cta" type="button"><span>＋</span><div><strong>Tạo tài khoản học 600 câu</strong><small>Dành cho người học chưa phải học viên Thầy Đạt</small></div><b>→</b></button>
-        <a class="zalo-contact" href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer"><strong>Z</strong><span>Cần hỗ trợ? Liên hệ qua Zalo</span></a>
-        <p class="login-register">Đã có tài khoản? Đăng nhập ngay phía trên.</p>
-        <div class="login-security" aria-label="Kết nối bảo mật">
+        <div class="login-divider login-v20-divider"><span>hoặc</span></div>
+        <a id="loginCourseRegistrationBtn" class="login-v28-row login-v28-course" data-v28-static="1" href="/dang-ky-hoc-lai-xe.html"><span class="login-v28-icon" aria-hidden="true">🚘</span><span class="login-v28-text">Đăng ký học lái xe mới<small class="login-v28-sub">B tự động · B số sàn · C1 · nhận tư vấn lộ trình</small></span><span class="login-v28-arrow" aria-hidden="true">→</span></a>
+        <button id="openPublicRegisterBtn" class="login-v28-row login-v28-theory" data-v28-static="1" type="button"><span class="login-v28-icon" aria-hidden="true">＋</span><span class="login-v28-text">Tạo tài khoản học 600 câu<small class="login-v28-sub">Dành cho người học chưa phải học viên Thầy Đạt</small></span><span class="login-v28-arrow" aria-hidden="true">→</span></button>
+        <a class="zalo-contact login-v28-row login-v28-zalo" data-v28-static="1" href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer"><span class="login-v28-icon" aria-hidden="true">Z</span><span class="login-v28-text">Cần hỗ trợ? Liên hệ qua Zalo</span><span class="login-v28-arrow" aria-hidden="true">→</span></a>
+        <p class="login-register login-v20-register-note">Đã có tài khoản? Đăng nhập ngay phía trên.</p>
+        <div class="login-security login-v20-security" aria-label="Kết nối bảo mật">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.9 8.1 7 10 4.1-1.9 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
           <span>Dữ liệu được bảo vệ và mã hóa an toàn</span>
         </div>
