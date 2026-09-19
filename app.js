@@ -126,15 +126,16 @@ async function boot(){
 }
 function clearAuth(){for(const store of [localStorage,sessionStorage]){store.removeItem("hv_token");store.removeItem("hv_auth_kind")}token="";authKind=""}
 function saveAuth(remember){for(const store of [localStorage,sessionStorage]){store.removeItem("hv_token");store.removeItem("hv_auth_kind")}const store=remember?localStorage:sessionStorage;store.setItem("hv_token",token);store.setItem("hv_auth_kind",authKind)}
+function releaseAuthFirstPaint(){document.documentElement.classList.remove("auth-restoring")}
 function showLogin(){
   const login=$("login"),app=$("app");
   login.hidden=false;login.removeAttribute("aria-hidden");login.style.removeProperty("display");login.classList.remove("hidden");
-  app.classList.add("hidden");app.hidden=true;
+  app.classList.add("hidden");app.hidden=true;releaseAuthFirstPaint();
 }
 function showApp(){
   const login=$("login"),app=$("app");
   login.classList.add("hidden");login.hidden=true;login.setAttribute("aria-hidden","true");login.style.setProperty("display","none","important");
-  app.hidden=false;app.classList.remove("hidden");app.removeAttribute("aria-hidden");app.style.removeProperty("display");
+  app.hidden=false;app.classList.remove("hidden");app.removeAttribute("aria-hidden");app.style.removeProperty("display");releaseAuthFirstPaint();
   $("accountName").textContent=me.role==="admin"?`${me.username} · Admin`:me.username;
   document.querySelectorAll(".admin-only").forEach(x=>x.classList.toggle("hidden",me.role!=="admin"));
   $("ownerFilter").classList.toggle("hidden",me.role!=="admin");
