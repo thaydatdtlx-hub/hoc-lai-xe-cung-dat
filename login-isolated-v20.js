@@ -29,7 +29,7 @@ function setFlatAction(node,{kind,icon,title,subtitle="",href=""}){
   if(stable)node.dataset.v28Static="1";
   if(href&&node.tagName==="A")node.href=href;
   if(stable)return;
-  const next=`<span class="login-v28-icon" aria-hidden="true">${icon}</span><span class="login-v28-text">${title}${subtitle?`<small class="login-v28-sub">${subtitle}</small>`:""}</span><span class="login-v28-arrow" aria-hidden="true">→</span>`;
+  const next=`<span class="login-v28-icon" aria-hidden="true">${icon}</span><span class="login-v28-text">${kind==="course"?`<strong class="login-v28-title">${title}</strong>`:title}${subtitle?`<small class="login-v28-sub">${subtitle}</small>`:""}</span><span class="login-v28-arrow" aria-hidden="true">→</span>`;
   if(node.dataset.v28Markup!==next){node.innerHTML=next;node.dataset.v28Markup=next}
   hardLockAction(node,kind);
 }
@@ -42,7 +42,7 @@ function ensureCourseRegistration(card){
   if(!link)link=courseRegistrationCandidates(card).find(node=>node.tagName==="A")||null;
   if(!link)link=document.createElement("a");
   link.id="loginCourseRegistrationBtn";
-  setFlatAction(link,{kind:"course",icon:"🚘",title:"Đăng ký học lái xe mới",subtitle:"B tự động · B số sàn · C1 · nhận tư vấn lộ trình",href:"/dang-ky-hoc-lai-xe.html"});
+  setFlatAction(link,{kind:"course",icon:"🚘",title:"Đăng ký học lái xe mới",subtitle:"B tự động · B số sàn · C1 · hỗ trợ hồ sơ và tư vấn lộ trình",href:"/dang-ky-hoc-lai-xe.html"});
   courseRegistrationCandidates(card).forEach(node=>{if(node!==link)node.remove()});
   const publicRegister=card.querySelector("#openPublicRegisterBtn");
   const zalo=card.querySelector(".zalo-contact,.login-v20-zalo,.login-v27-zalo,.login-v28-zalo");
