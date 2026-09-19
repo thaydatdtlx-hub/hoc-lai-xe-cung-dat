@@ -136,6 +136,26 @@
   text-overflow:clip!important;
   transform:translateY(-50%)!important;
 }
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text{
+  font-size:0!important;
+}
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-title{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  color:#0a2d58!important;
+  font-size:14px!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  text-overflow:clip!important;
+}
 #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{
   display:block!important;
   width:auto!important;
@@ -186,7 +206,8 @@ body.login-v20-active .ai-chat-panel{display:none!important}
   #login.login-v20 #loginCourseRegistrationBtn.login-v28-row{min-height:70px!important;padding:0!important}
   #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-icon{left:10px!important}
   #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text{left:62px!important;right:48px!important;font-size:13px!important}
-  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{font-size:9.4px!important}
+  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-title{font-size:13px!important}
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{font-size:9.4px!important}
 }
 
 @media(max-width:430px){
@@ -207,5 +228,6 @@ body.login-v20-active .ai-chat-panel{display:none!important}
   #login.login-v20 .login-v28-arrow{right:9px!important;width:28px!important;height:28px!important}
   #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-icon{left:9px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:38px!important}
   #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text{left:57px!important;right:43px!important;font-size:12.2px!important}
-  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{font-size:9px!important}
+  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-title{font-size:12.2px!important}
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{font-size:9px!important}
 }
