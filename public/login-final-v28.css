@@ -175,6 +175,47 @@
   top:50%!important;
 }
 
+
+/* v28.2: keep the course-registration copy full-width and stable. */
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text{
+  left:64px!important;
+  right:52px!important;
+  width:calc(100% - 116px)!important;
+  max-width:calc(100% - 116px)!important;
+  min-width:0!important;
+}
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-title{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+#login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  white-space:nowrap!important;
+  word-break:normal!important;
+  overflow-wrap:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+@media(max-width:430px){
+  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row{
+    min-height:78px!important;
+  }
+  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text{
+    width:calc(100% - 100px)!important;
+    max-width:calc(100% - 100px)!important;
+  }
+  #login.login-v20 #loginCourseRegistrationBtn.login-v28-row>.login-v28-text>.login-v28-sub{
+    white-space:normal!important;
+    line-height:1.25!important;
+  }
+}
+
 /* Force old action descendants out of the layout if a cached DOM survives. */
 #login.login-v20 .login-v20-action-copy,
 #login.login-v20 .login-v27-action-copy,
