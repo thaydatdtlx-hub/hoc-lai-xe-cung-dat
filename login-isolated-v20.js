@@ -24,8 +24,11 @@ function hardLockAction(node,kind){
 
 function setFlatAction(node,{kind,icon,title,subtitle="",href=""}){
   if(!node)return;
+  const stable=node.dataset.v28Static==="1";
   node.className=`login-v28-row login-v28-${kind}`;
+  if(stable)node.dataset.v28Static="1";
   if(href&&node.tagName==="A")node.href=href;
+  if(stable)return;
   const next=`<span class="login-v28-icon" aria-hidden="true">${icon}</span><span class="login-v28-text">${title}${subtitle?`<small class="login-v28-sub">${subtitle}</small>`:""}</span><span class="login-v28-arrow" aria-hidden="true">→</span>`;
   if(node.dataset.v28Markup!==next){node.innerHTML=next;node.dataset.v28Markup=next}
   hardLockAction(node,kind);
