@@ -464,3 +464,14 @@ body.registration-reference .mobile-contact-bar{display:none}
   body.registration-reference .license-card{flex-basis:47vw}
   body.registration-reference .hero-copy{padding-bottom:215px}
 }
+
+@media(max-width:1000px){
+  body.registration-reference .desktop-nav.mobile-open{
+    position:absolute;left:14px;right:14px;top:68px;z-index:130;
+    display:grid!important;gap:2px;padding:10px;border:1px solid #dbe7f1;border-radius:12px;
+    background:#fff;box-shadow:0 16px 38px rgba(8,54,98,.16)
+  }
+  body.registration-reference .desktop-nav.mobile-open a{
+    padding:11px 12px;border-radius:8px;font-size:11px
+  }
+}
