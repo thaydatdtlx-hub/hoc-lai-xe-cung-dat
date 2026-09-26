@@ -49,21 +49,44 @@ function dateLabel(value){
   return match?`${match[3]}/${match[2]}/${match[1]}`:value;
 }
 
+function visualIcon(license){
+  const icons={
+    "A1":"🛵",
+    "A":"🏍️",
+    "B số sàn":"🚙",
+    "B số tự động":"🚗",
+    "C1":"🚚"
+  };
+  return icons[license]||"🚘";
+}
+
 function card(plan,index){
   const hasSeparateFees=plan.fees.length>0;
   const hasQuotedTuition=Number(plan.tuition)>0;
   const promo=promotionActive(plan);
   const discount=promo?Math.min(Number(plan.discount_amount)||0,Number(plan.tuition)||0):0;
   const finalTuition=Math.max(0,(Number(plan.tuition)||0)-discount);
-  const promoHtml=promo?`<div class="tuition-promotion"><b>${plan.promotion_title||"Ưu đãi hiện tại"}</b>${plan.promotion_description?`<span>${plan.promotion_description}</span>`:""}${discount?`<strong>Giảm ${money(discount)}</strong>`:""}${plan.promotion_end?`<small>Áp dụng đến ${dateLabel(plan.promotion_end)}</small>`:""}</div>`:"";
-  const priceHtml=discount?`<small>Học phí ưu đãi</small><del>${money(plan.tuition)}</del><strong>${money(finalTuition)}</strong>`:hasQuotedTuition?`<small>Học phí & hồ sơ</small><strong>${money(plan.tuition)}</strong>`:`<small>Học phí khóa học</small><strong>Liên hệ tư vấn</strong>`;
+  const finalTotal=hasQuotedTuition?total(plan,finalTuition):0;
+  const priceLabel=discount?"Học phí ưu đãi":"Học phí khóa học";
+  const priceValue=hasQuotedTuition?money(finalTuition):"Liên hệ tư vấn";
+  const feeRows=hasSeparateFees?plan.fees.map(([name,value])=>`<div class="tuition-fee-row"><span>${name}</span><b>${money(value)}</b></div>`).join(""):"";
+  const promoHtml=promo?`<div class="tuition-promotion"><div class="tuition-promotion__icon">◆</div><div><b>${plan.promotion_title||"Ưu đãi hiện tại"}</b>${plan.promotion_description?`<span>${plan.promotion_description}</span>`:""}${discount?`<strong>Giảm ${money(discount)}</strong>`:""}${plan.promotion_end?`<small>Áp dụng đến ${dateLabel(plan.promotion_end)}</small>`:""}</div></div>`:"";
+  const totalHtml=hasSeparateFees?`<div class="tuition-summary"><span>Tổng dự kiến${discount?' sau ưu đãi':''}</span><strong>${hasQuotedTuition?money(finalTotal):"Liên hệ tư vấn"}</strong></div>`:`<div class="tuition-summary tuition-summary--simple"><span>Học phí khóa đào tạo</span><strong>${priceValue}</strong></div>`;
   return `<article class="tuition-card${promo?' has-promotion':''}" data-tuition-card="${plan.license}">
-    <div class="tuition-card__top"><div><span class="tuition-card__badge">${plan.badge}</span><h3>${plan.title}</h3><p>${plan.description}</p></div><div class="tuition-price">${priceHtml}</div></div>
+    <div class="tuition-card__header">
+      <div class="tuition-card__identity">
+        <span class="tuition-card__icon" aria-hidden="true">${visualIcon(plan.license)}</span>
+        <div><span class="tuition-card__badge">${plan.badge}</span><h3>${plan.title}</h3><p>${plan.description}</p></div>
+      </div>
+      <span class="tuition-card__selected">Đang chọn</span>
+    </div>
     <div class="tuition-card__body">
+      <div class="tuition-price-panel"><small>${priceLabel}</small>${discount?`<del>${money(plan.tuition)}</del>`:""}<strong>${priceValue}</strong></div>
       ${promoHtml}
-      ${hasSeparateFees?`<div class="tuition-fees">${plan.fees.map(([name,value])=>`<div><span>${name}</span><b>${money(value)}</b></div>`).join("")}</div><div class="tuition-total"><span>Tổng dự kiến gồm học phí và khoản nộp riêng${discount?' sau ưu đãi':''}</span><strong>${hasQuotedTuition?money(total(plan,finalTuition)):"Liên hệ tư vấn"}</strong></div>`:`<div class="tuition-total"><span>Học phí khóa đào tạo${discount?' sau ưu đãi':''}</span><strong>${hasQuotedTuition?money(finalTuition):"Liên hệ tư vấn"}</strong></div>`}
-      <ul>${plan.included.map(item=>`<li>${item}</li>`).join("")}</ul>
-      <button type="button" data-tuition-license="${plan.license}">Đăng ký tư vấn ${plan.title}</button>
+      ${feeRows?`<div class="tuition-fees">${feeRows}</div>`:""}
+      ${totalHtml}
+      <ul class="tuition-included">${plan.included.map(item=>`<li>${item}</li>`).join("")}</ul>
+      <button type="button" data-tuition-license="${plan.license}"><span>Đăng ký tư vấn ${plan.title}</span><b>→</b></button>
     </div>
   </article>`;
 }
