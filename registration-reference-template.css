@@ -1,0 +1,480 @@
+/* Reference template 2026 — built to match the approved desktop/mobile composition.
+   Presentation only: no Supabase/API/data mutations. */
+:root{
+  --ref-navy:#073c82;
+  --ref-blue:#0876df;
+  --ref-blue2:#1a92ff;
+  --ref-green:#40bd2f;
+  --ref-green2:#83d91e;
+  --ref-red:#ff3028;
+  --ref-yellow:#ffbd16;
+  --ref-ink:#0b2c62;
+  --ref-text:#304d6f;
+  --ref-muted:#6d8299;
+  --ref-line:#dce9f5;
+  --ref-soft:#f3f9ff;
+  --ref-shadow:0 14px 38px rgba(11,61,112,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body.registration-reference{
+  margin:0;background:#f4faff;color:var(--ref-ink);
+  font-family:Inter,"Segoe UI",Arial,sans-serif;overflow-x:hidden
+}
+body.registration-reference a{text-decoration:none;color:inherit}
+body.registration-reference button,
+body.registration-reference input,
+body.registration-reference select,
+body.registration-reference textarea{font:inherit}
+body.registration-reference button{cursor:pointer}
+body.registration-reference img{display:block;max-width:100%}
+body.registration-reference .skip-link{
+  position:fixed;left:12px;top:10px;z-index:9999;transform:translateY(-170%);
+  padding:10px 14px;border-radius:8px;background:#fff;border:1px solid var(--ref-line)
+}
+body.registration-reference .skip-link:focus{transform:none}
+
+/* HEADER */
+body.registration-reference .site-header{
+  position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;
+  gap:22px;min-height:74px;padding:7px max(4vw,22px);background:#fff;
+  border-bottom:1px solid #e4edf6;box-shadow:0 4px 18px rgba(12,55,99,.07)
+}
+body.registration-reference .brand{display:flex;align-items:center;gap:10px;min-width:235px}
+body.registration-reference .brand img{width:58px;height:58px;object-fit:contain}
+body.registration-reference .brand-copy{display:grid;gap:1px}
+body.registration-reference .brand-copy strong{
+  color:#06397e;font-size:15px;line-height:1.05;font-weight:950
+}
+body.registration-reference .brand-copy strong span{display:block;color:#43aa32}
+body.registration-reference .brand-copy small{font-size:9px;color:#67809a}
+body.registration-reference .desktop-nav{display:flex;align-items:center;gap:3px}
+body.registration-reference .desktop-nav a{
+  padding:8px 9px;border-radius:7px;color:#123968;font-size:11px;font-weight:800
+}
+body.registration-reference .desktop-nav a:hover{background:#eef7ff;color:var(--ref-blue)}
+body.registration-reference .hotline-pill{
+  display:flex;align-items:center;gap:10px;min-width:174px;padding:7px 14px;border-radius:999px;
+  color:#fff;background:linear-gradient(135deg,#096ec9,#52bf20);box-shadow:0 8px 22px rgba(22,111,106,.18)
+}
+body.registration-reference .hotline-pill b{font-size:20px}
+body.registration-reference .hotline-pill span{display:grid;line-height:1.1}
+body.registration-reference .hotline-pill strong{font-size:14px}
+body.registration-reference .hotline-pill small{font-size:9px;opacity:.9}
+body.registration-reference .mobile-nav-toggle{display:none}
+
+/* HERO */
+body.registration-reference .hero{
+  position:relative;overflow:hidden;background:#cfeeff;
+  border-bottom:1px solid #d6e7f3
+}
+body.registration-reference .hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.18),rgba(255,255,255,.04)),
+    url('/hero-student-car.webp') center/cover no-repeat;
+  filter:saturate(1.02)
+}
+body.registration-reference .hero-bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(219,241,255,.92) 0%,rgba(224,243,255,.60) 43%,rgba(255,255,255,.08) 69%,rgba(255,255,255,.04) 100%)
+}
+body.registration-reference .hero-shell{
+  position:relative;z-index:2;width:min(1200px,94%);margin:auto;
+  display:grid;grid-template-columns:minmax(0,1.12fr) minmax(340px,.62fr);gap:32px;
+  padding:32px 0 24px;align-items:start
+}
+body.registration-reference .hero-copy{padding:20px 0 108px;max-width:700px}
+body.registration-reference .hero-kicker{
+  display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;
+  background:#e8f3ff;color:#074184;font-size:10px;font-weight:900;letter-spacing:.02em
+}
+body.registration-reference .hero h1{
+  margin:13px 0 7px;font-size:clamp(42px,5vw,66px);line-height:.96;
+  letter-spacing:-.045em;color:#092e62;text-shadow:0 1px 0 rgba(255,255,255,.35)
+}
+body.registration-reference .hero h1 span{display:block;color:#32ad31}
+body.registration-reference .hero-subtitle{margin:0 0 10px;font-size:17px;font-weight:800;color:#183b62}
+body.registration-reference .hero-intro{max-width:580px;margin:0 0 12px;color:#365875;font-size:13px;line-height:1.55}
+body.registration-reference .hero-checks{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
+body.registration-reference .hero-checks li{display:flex;gap:8px;align-items:center;color:#274a69;font-size:13px}
+body.registration-reference .hero-checks i{
+  display:grid;place-items:center;width:18px;height:18px;flex:0 0 18px;border-radius:50%;
+  background:#39b62e;color:#fff;font-style:normal;font-size:11px;font-weight:950
+}
+
+/* hero actual registration form */
+body.registration-reference .hero-form{
+  align-self:start;margin-top:0;padding:15px 16px 13px;border-radius:15px;
+  background:rgba(255,255,255,.97);border:1px solid rgba(255,255,255,.95);
+  box-shadow:0 16px 42px rgba(7,48,92,.18);backdrop-filter:blur(8px)
+}
+body.registration-reference .form-heading{
+  padding:0 0 8px;text-align:center;border:0
+}
+body.registration-reference .form-heading h2{
+  margin:0;color:#093a79;font-size:20px;font-weight:950
+}
+body.registration-reference .form-heading p{margin:3px 0 0;color:#647d96;font-size:9px}
+body.registration-reference .hero-form-grid{display:grid;grid-template-columns:1fr;gap:7px}
+body.registration-reference .hero-form label{display:block;margin:0;color:#35536f;font-size:10px;font-weight:700}
+body.registration-reference .field-row{
+  position:relative;display:flex;align-items:center;gap:7px;min-height:38px;padding:0 9px;
+  border:1px solid #cfdfed;border-radius:6px;background:#fff
+}
+body.registration-reference .field-row .field-icon{width:18px;text-align:center;color:#3473ba;font-size:13px}
+body.registration-reference .field-row input,
+body.registration-reference .field-row select{
+  width:100%;min-width:0;height:36px;padding:0;border:0;background:transparent;color:#284967;outline:none;font-size:10px
+}
+body.registration-reference .field-row select{appearance:auto}
+body.registration-reference .hero-form details{margin-top:7px}
+body.registration-reference .hero-form details summary{
+  cursor:pointer;color:#4e6b84;font-size:9px;font-weight:750
+}
+body.registration-reference .optional-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+body.registration-reference .hero-form textarea{
+  width:100%;min-height:48px;padding:9px;border:1px solid #cfdfed;border-radius:6px;
+  resize:vertical;outline:none;color:#284967;font-size:10px
+}
+body.registration-reference .consent-field{
+  display:flex!important;gap:6px!important;align-items:flex-start!important;margin-top:7px!important;
+  color:#60778e!important;font-size:8.5px!important;font-weight:600!important
+}
+body.registration-reference .consent-field input{width:14px!important;height:14px!important;min-height:0!important;accent-color:var(--ref-green)}
+body.registration-reference .honeypot{position:absolute!important;left:-9999px!important}
+body.registration-reference .form-error{min-height:13px;margin:5px 0 0;color:#c63832;font-size:9px}
+body.registration-reference .submit-button{
+  display:flex;width:100%;min-height:44px;align-items:center;justify-content:center;gap:10px;
+  margin-top:2px;border:0;border-radius:6px;color:#fff;
+  background:linear-gradient(90deg,#0871dd,#57c61c);font-size:13px;font-weight:950;
+  box-shadow:0 8px 18px rgba(15,112,140,.18)
+}
+body.registration-reference .privacy-note{
+  margin:7px 0 0;text-align:center;color:#667d93;font-size:8px
+}
+body.registration-reference .registration-success{
+  display:grid;min-height:360px;place-items:center;align-content:center;gap:8px;text-align:center
+}
+body.registration-reference .registration-success>span{
+  display:grid;width:60px;height:60px;place-items:center;border-radius:50%;background:#e8f8eb;color:#22993a;font-size:30px
+}
+
+/* feature strip overlays hero */
+body.registration-reference .hero-features{
+  position:absolute;left:7%;bottom:0;z-index:3;display:grid;grid-template-columns:repeat(4,1fr);
+  width:min(620px,52%);border-radius:16px 16px 0 0;overflow:hidden;
+  background:rgba(255,255,255,.94);box-shadow:0 -2px 20px rgba(8,58,108,.07)
+}
+body.registration-reference .hero-feature{
+  display:grid;place-items:center;gap:6px;padding:13px 8px;text-align:center;border-right:1px solid #e8eff5
+}
+body.registration-reference .hero-feature:last-child{border-right:0}
+body.registration-reference .hero-feature i{
+  display:grid;width:36px;height:36px;place-items:center;border-radius:50%;
+  background:#eaf5ff;color:#0b76df;font-style:normal;font-size:17px
+}
+body.registration-reference .hero-feature:nth-child(4) i{background:#eaf8ec;color:#2ea42d}
+body.registration-reference .hero-feature strong{font-size:10px;color:#153a64}
+body.registration-reference .hero-feature small{font-size:8px;color:#6d8298}
+
+/* COURSE CARDS */
+body.registration-reference .course-section{padding:18px 0 6px;background:#fff}
+body.registration-reference .section-shell{width:min(1160px,94%);margin:auto}
+body.registration-reference .section-title{text-align:center;margin:0 0 14px}
+body.registration-reference .section-title h2{margin:0;color:#0b3371;font-size:23px;line-height:1.05}
+body.registration-reference .section-title h2 span{color:#28a936}
+body.registration-reference .section-title p{margin:5px 0 0;color:#6b8095;font-size:10px}
+body.registration-reference .license-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:12px
+}
+body.registration-reference .license-card{
+  position:relative;display:grid;grid-template-rows:84px auto;min-height:260px;padding:0;
+  overflow:hidden;border:1px solid #d8e6f1;border-radius:8px;background:#fff;color:var(--ref-ink);
+  text-align:left;box-shadow:0 6px 15px rgba(12,58,101,.07);transition:.18s
+}
+body.registration-reference .license-card:hover{transform:translateY(-3px);box-shadow:var(--ref-shadow)}
+body.registration-reference .license-card.active{border:2px solid #4cbe3e}
+body.registration-reference .license-card.active::before{
+  content:"PHỔ BIẾN NHẤT";position:absolute;left:0;top:0;z-index:2;padding:5px 9px;
+  border-radius:0 0 8px 0;color:#fff;background:#43b93e;font-size:8px;font-weight:950
+}
+body.registration-reference .course-visual{
+  display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(180deg,#eef8ff 0%,#f9fcff 58%,#e7f5ff 59%,#eef7f7 100%);
+  border-bottom:1px solid #e5edf4;font-size:48px
+}
+body.registration-reference .course-body{display:grid;gap:5px;padding:10px 10px 9px}
+body.registration-reference .course-body strong{font-size:14px;color:#0a3472}
+body.registration-reference .course-body small{font-size:8.5px;color:#627a91}
+body.registration-reference .course-points{display:grid;gap:4px;margin:4px 0 2px;padding:0;list-style:none}
+body.registration-reference .course-points li{font-size:8.5px;color:#45637b}
+body.registration-reference .course-points li::before{content:"✓";margin-right:5px;color:#28ae31;font-weight:950}
+body.registration-reference .course-price{display:flex;align-items:end;gap:4px;margin-top:2px;color:#143b68;font-size:9px;font-weight:800}
+body.registration-reference .course-price b{color:var(--ref-red);font-size:15px}
+body.registration-reference .license-card i{
+  display:flex;align-items:center;justify-content:center;min-height:30px;margin-top:auto;
+  border-radius:4px;color:#fff;background:linear-gradient(90deg,#0872da,#5ac61b);
+  font-style:normal;font-size:9px;font-weight:950
+}
+body.registration-reference .selected-bar{display:none}
+
+/* trust strip */
+body.registration-reference .trust-strip{
+  margin-top:7px;background:#e9f6ff;border-top:1px solid #d8e9f6;border-bottom:1px solid #d8e9f6
+}
+body.registration-reference .trust-grid{
+  width:min(1160px,94%);margin:auto;display:grid;grid-template-columns:repeat(4,1fr)
+}
+body.registration-reference .trust-item{
+  display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 8px
+}
+body.registration-reference .trust-item i{color:#0f7bea;font-size:20px;font-style:normal}
+body.registration-reference .trust-item strong{display:block;font-size:9px;color:#173c67}
+body.registration-reference .trust-item small{display:block;font-size:7.5px;color:#6c8296}
+
+/* Why */
+body.registration-reference .why-section{padding:11px 0;background:linear-gradient(90deg,#f6fbff,#eef8ff)}
+body.registration-reference .why-grid{
+  width:min(1160px,94%);margin:auto;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:12px
+}
+body.registration-reference .why-heading{
+  display:grid;align-content:center;min-height:118px;padding:12px 16px;border-left:5px solid #0b7bdf;border-radius:6px;background:#fff
+}
+body.registration-reference .why-heading h2{margin:0;color:#0a3270;font-size:22px;line-height:1.04}
+body.registration-reference .why-heading p{margin:7px 0;color:#617991;font-size:9px;line-height:1.45}
+body.registration-reference .why-heading a{
+  width:max-content;padding:8px 14px;border-radius:999px;color:#fff;background:linear-gradient(90deg,#0b728a,#57bd25);
+  font-size:9px;font-weight:900
+}
+body.registration-reference .why-col{display:grid;gap:10px}
+body.registration-reference .why-card{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;background:#fff;
+  border:1px solid #e3edf4;box-shadow:0 4px 12px rgba(11,59,101,.04)
+}
+body.registration-reference .why-card i{
+  display:grid;width:38px;height:38px;place-items:center;flex:0 0 38px;border-radius:50%;
+  background:#e9f5ff;color:#1680e7;font-style:normal;font-size:18px
+}
+body.registration-reference .why-card.green i{background:#eaf8ed;color:#26a63b}
+body.registration-reference .why-card strong{display:block;font-size:9px;color:#173e69}
+body.registration-reference .why-card small{display:block;margin-top:2px;font-size:7.5px;color:#72879a}
+
+/* PROCESS */
+body.registration-reference .reference-process-section{padding:8px 0 14px;background:#fff}
+body.registration-reference .process-title{text-align:center;margin-bottom:10px;color:#0a3270;font-size:14px;font-weight:950}
+body.registration-reference .process-grid{
+  width:min(1160px,94%);margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:0
+}
+body.registration-reference .process-step{position:relative;text-align:center;padding:0 9px}
+body.registration-reference .process-step:not(:last-child)::after{
+  content:"›";position:absolute;right:-3px;top:12px;color:#1181e4;font-size:26px;font-weight:300
+}
+body.registration-reference .process-step b{
+  display:grid;width:38px;height:38px;margin:0 auto 5px;place-items:center;border-radius:50%;
+  color:#fff;background:linear-gradient(135deg,#0a77dc,#2c9cff);font-size:10px
+}
+body.registration-reference .process-step:nth-child(3) b,
+body.registration-reference .process-step:nth-child(5) b{background:linear-gradient(135deg,#2ba841,#5dcc2b)}
+body.registration-reference .process-step strong{display:block;font-size:9px;color:#163d68}
+body.registration-reference .process-step small{display:block;margin-top:3px;font-size:7.4px;color:#73879a;line-height:1.35}
+
+/* Testimonials from existing script */
+body.registration-reference .student-social-proof{
+  width:100%!important;margin:0!important;padding:10px 0 14px!important;background:#edf8ff!important
+}
+body.registration-reference .student-social-proof__grid{
+  width:min(1160px,94%)!important;margin:auto!important;display:grid!important;
+  grid-template-columns:1fr!important;gap:0!important
+}
+body.registration-reference .student-offers{display:none!important}
+body.registration-reference .student-testimonials{
+  padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important
+}
+body.registration-reference .student-social-proof__title{
+  text-align:center!important;color:#0b3471!important;font-size:14px!important;margin:0 0 10px!important
+}
+body.registration-reference .student-testimonials__heading{display:block!important}
+body.registration-reference .student-testimonials__add,
+body.registration-reference .student-testimonials__admin-note{display:none!important}
+body.registration-reference .student-testimonials__stage{overflow:hidden!important}
+body.registration-reference .student-testimonials__track{
+  display:grid!important;grid-auto-flow:column!important;grid-auto-columns:minmax(280px,1fr)!important;
+  gap:12px!important;overflow-x:auto!important;scroll-snap-type:x mandatory!important;padding:0 2px 5px!important
+}
+body.registration-reference .student-testimonial-card{
+  border:1px solid #dce8f2!important;border-radius:8px!important;background:#fff!important;
+  box-shadow:0 5px 13px rgba(11,58,100,.05)!important;overflow:hidden!important
+}
+body.registration-reference .student-testimonial-card img{height:100px!important;width:100%!important;object-fit:cover!important}
+body.registration-reference .student-testimonials__nav{margin-top:7px!important}
+body.registration-reference .student-testimonials__status{font-size:9px!important}
+
+/* Keep dynamic tuition source but visually fold it away: pricing is already shown on course cards. */
+body.registration-reference .tuition-section{display:none!important}
+
+/* FAQ and legacy sections not in approved reference */
+body.registration-reference .intro-section,
+body.registration-reference .stats-section,
+body.registration-reference .schedule-section,
+body.registration-reference .training-map-section,
+body.registration-reference .gallery-section,
+body.registration-reference .faq-section,
+body.registration-reference .cta-section,
+body.registration-reference .registration-section,
+body.registration-reference .training-detail-section,
+body.registration-reference .license-eligibility-section,
+body.registration-reference .registration-procedure-section,
+body.registration-reference .td-online-banner,
+body.registration-reference .site-location,
+body.registration-reference .site-status-lookup,
+body.registration-reference .site-intakes{display:none!important}
+
+/* FOOTER */
+body.registration-reference .pro-footer{
+  margin-top:0;background:#052e5d;color:#fff;border-top:4px solid #0f79dd
+}
+body.registration-reference .pro-footer__main{
+  width:min(1160px,94%);margin:auto;display:grid;grid-template-columns:1.4fr 1.05fr .8fr .9fr 1.3fr;
+  gap:22px;padding:20px 0 16px
+}
+body.registration-reference .pro-footer__brand-top{display:flex;align-items:center;gap:9px}
+body.registration-reference .pro-footer__logo{width:54px;height:54px;object-fit:contain}
+body.registration-reference .pro-footer__brand-copy{display:grid;gap:2px}
+body.registration-reference .pro-footer__brand-copy strong{font-size:12px}
+body.registration-reference .pro-footer__brand-copy small{font-size:8px;color:#b8cde1}
+body.registration-reference .pro-footer__badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+body.registration-reference .pro-footer__badge{padding:4px 6px;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:7px}
+body.registration-reference .pro-footer__slogan{font-size:8px;color:#c4d7e8}
+body.registration-reference .pro-footer__slogan span{display:block;color:#8bd393}
+body.registration-reference .pro-footer__heading{margin:0 0 9px;font-size:10px}
+body.registration-reference .pro-footer__links{display:grid;gap:5px}
+body.registration-reference .pro-footer__links a{color:#c4d6e5;font-size:8px}
+body.registration-reference .pro-footer__contact-list{display:grid;gap:6px}
+body.registration-reference .pro-footer__contact-item{display:flex;gap:7px}
+body.registration-reference .pro-footer__contact-icon{display:none}
+body.registration-reference .pro-footer__contact-text{display:grid;gap:1px}
+body.registration-reference .pro-footer__contact-text a,
+body.registration-reference .pro-footer__contact-text strong{font-size:8px}
+body.registration-reference .pro-footer__contact-text small{font-size:7px;color:#a9bfd2}
+body.registration-reference .pro-footer__newsletter-title{display:none}
+body.registration-reference .pro-footer__newsletter-form{display:flex;gap:5px}
+body.registration-reference .pro-footer__newsletter-form input{
+  min-width:0;flex:1;padding:7px 8px;border:1px solid rgba(255,255,255,.16);border-radius:6px;background:rgba(255,255,255,.08);color:#fff;font-size:8px
+}
+body.registration-reference .pro-footer__newsletter-form button{border:0;border-radius:6px;background:#1985df;color:#fff;font-size:8px;font-weight:800}
+body.registration-reference .pro-footer__socials{display:flex;gap:5px;margin-top:8px}
+body.registration-reference .pro-footer__social{display:grid;place-items:center;min-width:28px;height:28px;padding:0 6px;border-radius:6px;background:rgba(255,255,255,.09);font-size:8px}
+body.registration-reference .pro-footer__bottom{
+  width:min(1160px,94%);margin:auto;display:flex;justify-content:space-between;gap:15px;
+  padding:8px 0;border-top:1px solid rgba(255,255,255,.10);color:#9eb4c8;font-size:7px
+}
+body.registration-reference .pro-footer__legal{display:flex;gap:10px}
+body.registration-reference .floating-contact{display:none}
+body.registration-reference .mobile-contact-bar{display:none}
+
+@media(max-width:1000px){
+  body.registration-reference .desktop-nav{display:none}
+  body.registration-reference .hotline-pill{display:none}
+  body.registration-reference .mobile-nav-toggle{
+    display:grid;width:42px;height:42px;place-items:center;border:0;background:transparent;color:#0c3d77;font-size:28px
+  }
+  body.registration-reference .hero-shell{grid-template-columns:1fr 340px}
+  body.registration-reference .license-grid{grid-template-columns:repeat(3,1fr)}
+  body.registration-reference .pro-footer__main{grid-template-columns:1.3fr 1fr 1fr}
+  body.registration-reference .pro-footer__newsletter{grid-column:span 2}
+}
+@media(max-width:760px){
+  body.registration-reference{padding-bottom:64px;background:#fff}
+  body.registration-reference .site-header{min-height:76px;padding:8px 16px}
+  body.registration-reference .brand{min-width:0}
+  body.registration-reference .brand img{width:55px;height:55px}
+  body.registration-reference .brand-copy strong{font-size:14px}
+  body.registration-reference .brand-copy small{font-size:8px}
+  body.registration-reference .hero{background:#d9efff}
+  body.registration-reference .hero-bg{
+    background:
+      linear-gradient(180deg,rgba(219,241,255,.92) 0%,rgba(219,241,255,.73) 35%,rgba(255,255,255,.10) 67%,rgba(255,255,255,.05)),
+      url('/hero-student-car.webp') center top/cover no-repeat
+  }
+  body.registration-reference .hero-bg::after{display:none}
+  body.registration-reference .hero-shell{width:100%;display:block;padding:14px 14px 0}
+  body.registration-reference .hero-copy{padding:0 0 224px;text-align:center}
+  body.registration-reference .hero-kicker{font-size:8px;padding:6px 10px}
+  body.registration-reference .hero h1{font-size:35px;line-height:1.0;margin:10px 0 5px}
+  body.registration-reference .hero-subtitle{font-size:13px}
+  body.registration-reference .hero-intro{display:none}
+  body.registration-reference .hero-checks{
+    display:grid;width:min(330px,92%);margin:11px auto 0;text-align:left;gap:5px
+  }
+  body.registration-reference .hero-checks li{font-size:10px}
+  body.registration-reference .hero-checks i{width:16px;height:16px;flex-basis:16px;font-size:9px}
+  body.registration-reference .hero-form{margin:0 -1px 0;padding:14px 12px 12px;border-radius:13px 13px 0 0}
+  body.registration-reference .form-heading h2{font-size:17px}
+  body.registration-reference .field-row{min-height:39px}
+  body.registration-reference .field-row input,
+  body.registration-reference .field-row select{height:37px;font-size:10px}
+  body.registration-reference .hero-features{
+    position:absolute;left:12px;right:12px;bottom:420px;width:auto;grid-template-columns:repeat(4,1fr);
+    border-radius:13px;box-shadow:0 8px 22px rgba(8,57,105,.12)
+  }
+  body.registration-reference .hero-feature{padding:9px 3px}
+  body.registration-reference .hero-feature i{width:34px;height:34px;font-size:16px}
+  body.registration-reference .hero-feature strong{font-size:8px}
+  body.registration-reference .hero-feature small{display:none}
+  body.registration-reference .optional-grid{grid-template-columns:1fr}
+  body.registration-reference .course-section{padding:14px 0 6px}
+  body.registration-reference .section-title h2{font-size:18px}
+  body.registration-reference .section-title p{font-size:8px}
+  body.registration-reference .license-grid{
+    display:flex;gap:9px;overflow-x:auto;padding:0 0 8px;scroll-snap-type:x mandatory;scrollbar-width:none
+  }
+  body.registration-reference .license-grid::-webkit-scrollbar{display:none}
+  body.registration-reference .license-card{flex:0 0 44vw;min-height:210px;grid-template-rows:68px auto;scroll-snap-align:start}
+  body.registration-reference .course-visual{font-size:38px}
+  body.registration-reference .course-body{padding:8px}
+  body.registration-reference .course-body strong{font-size:11px}
+  body.registration-reference .course-body small,
+  body.registration-reference .course-points li{font-size:7px}
+  body.registration-reference .course-price b{font-size:12px}
+  body.registration-reference .trust-grid{grid-template-columns:repeat(2,1fr)}
+  body.registration-reference .why-grid{grid-template-columns:1fr}
+  body.registration-reference .why-heading{text-align:center}
+  body.registration-reference .why-heading a{margin:auto}
+  body.registration-reference .process-grid{
+    display:flex;overflow-x:auto;gap:6px;padding-bottom:5px;scroll-snap-type:x mandatory
+  }
+  body.registration-reference .process-step{flex:0 0 30%;scroll-snap-align:start}
+  body.registration-reference .process-step::after{display:none!important}
+  body.registration-reference .student-testimonials__track{grid-auto-columns:78vw!important}
+  body.registration-reference .pro-footer__main{grid-template-columns:1fr;padding:22px 0}
+  body.registration-reference .pro-footer__newsletter{grid-column:auto}
+  body.registration-reference .pro-footer__bottom{display:grid;text-align:center}
+  body.registration-reference .mobile-contact-bar{
+    position:fixed;left:0;right:0;bottom:0;z-index:120;display:grid;grid-template-columns:1fr 1fr;gap:5px;
+    padding:7px 9px;background:rgba(255,255,255,.97);border-top:1px solid #dbe6ef;box-shadow:0 -7px 20px rgba(8,55,99,.10)
+  }
+  body.registration-reference .mobile-contact-bar a{
+    display:flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:9px;color:#fff;font-size:11px;font-weight:900
+  }
+  body.registration-reference .mobile-contact-bar a:first-child{background:linear-gradient(90deg,#0b72d4,#4ec22a)}
+  body.registration-reference .mobile-contact-bar a:last-child{background:#0b87ef}
+}
+@media(max-width:420px){
+  body.registration-reference .license-card{flex-basis:47vw}
+  body.registration-reference .hero-copy{padding-bottom:215px}
+}
+
+@media(max-width:1000px){
+  body.registration-reference .desktop-nav.mobile-open{
+    position:absolute;left:14px;right:14px;top:68px;z-index:130;
+    display:grid!important;gap:2px;padding:10px;border:1px solid #dbe7f1;border-radius:12px;
+    background:#fff;box-shadow:0 16px 38px rgba(8,54,98,.16)
+  }
+  body.registration-reference .desktop-nav.mobile-open a{
+    padding:11px 12px;border-radius:8px;font-size:11px
+  }
+}
+
+body.registration-reference .site-mobile-menu-button,
+body.registration-reference .site-mobile-drawer{display:none!important}
