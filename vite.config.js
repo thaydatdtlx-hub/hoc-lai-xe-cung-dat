@@ -9,7 +9,7 @@ const LEGACY_HOSTS=/https?:\/\/(?:www\.)?(?:daotaolaixetrongoi\.com|hoc-vien-tha
 const LEGACY_HERO=/\/hero-vip-navy-champagne\.webp(?:\?v=\d+)?/giu;
 
 const SEO={
-  "dang-ky-hoc-lai-xe.html":{title:"Học lái xe hạng A1,A,B,C1 cùng Đạt",description:"Đăng ký học lái xe hạng A1, A, B và C1 cùng Đạt. Tư vấn hồ sơ, lịch học linh hoạt, học phí rõ ràng và theo dõi tiến độ tập trung.",path:"/dang-ky-hoc-lai-xe.html",image:"/hero-student-car.webp"},
+  "dang-ky-hoc-lai-xe.html":{title:"Học lái xe hạng A1,A,B,C1 cùng Đạt",description:"Đăng ký học lái xe hạng A1, A, B và C1 cùng Đạt. Tư vấn hồ sơ, lịch học linh hoạt, học phí rõ ràng và theo dõi tiến độ tập trung.",path:"/",image:BRAND_HERO},
   "600-cau-hoi.html":{title:"600 câu hỏi sát hạch lái xe | Học lái xe cùng Đạt",description:"Ôn tập 600 câu hỏi sát hạch lái xe, 60 câu điểm liệt và thi thử A1, A, B, C1 trên hệ thống Học lái xe cùng Đạt.",path:"/600-cau-hoi.html",image:BRAND_HERO},
   "bo-tuc-tay-lai.html":{title:"Bổ túc tay lái & sa hình | Học lái xe cùng Đạt",description:"Đăng ký bổ túc tay lái, sa hình và kỹ năng lái xe thực tế cùng Đạt với lịch học linh hoạt và chi phí rõ ràng.",path:"/bo-tuc-tay-lai.html",image:BRAND_HERO},
   "chinh-sach-bao-mat.html":{title:"Chính sách bảo mật | Học lái xe cùng Đạt",description:"Chính sách thu thập, sử dụng, bảo vệ và xử lý dữ liệu cá nhân trên hệ thống Học lái xe cùng Đạt.",path:"/chinh-sach-bao-mat.html",image:BRAND_HERO}
@@ -22,8 +22,13 @@ function cleanBrandWording(html,file=""){
   return cleaned.replace(/>\s*[·|•–—-]+\s*</g,"><").replace(/\s+[·|•–—-]+\s+(?=<)/g," ");
 }
 function injectBrandHeroOverride(html,file){
-  // The registration page now owns its hero presentation in its dedicated template.
-  return html;
+  if(file!=="dang-ky-hoc-lai-xe.html")return html;
+  const style=`<style id="brand-hero-image-override">
+    .hero{background-image:url('${BRAND_HERO}')!important;background-position:center center!important;background-size:cover!important}
+    .intro-media img,.gallery-grid img{object-fit:cover;object-position:center center}
+    @media(max-width:760px){.hero{background-position:62% center!important}.intro-media img,.gallery-grid img{object-position:55% center}}
+  </style>`;
+  return html.replace("</head>",`  ${style}\n</head>`);
 }
 function injectLegacyPwaMigration(html){
   const migration=`<script id="legacy-pwa-origin-migration">
