@@ -1,6 +1,5 @@
-import "./taplai-inspired.css";
-import "./taplai-inspired.js";
-import "./registration-backgrounds.css";
+import "./student-testimonials.css";
+import "./student-testimonials.js";
 import "./license-training-details.js";
 import "./license-eligibility-section.js";
 import "./registration-procedure-section.js";
