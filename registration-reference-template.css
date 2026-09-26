@@ -261,7 +261,7 @@ body.registration-reference .why-card strong{display:block;font-size:9px;color:#
 body.registration-reference .why-card small{display:block;margin-top:2px;font-size:7.5px;color:#72879a}
 
 /* PROCESS */
-body.registration-reference .process-section{padding:8px 0 14px;background:#fff}
+body.registration-reference .reference-process-section{padding:8px 0 14px;background:#fff}
 body.registration-reference .process-title{text-align:center;margin-bottom:10px;color:#0a3270;font-size:14px;font-weight:950}
 body.registration-reference .process-grid{
   width:min(1160px,94%);margin:auto;display:grid;grid-template-columns:repeat(6,1fr);gap:0
@@ -475,3 +475,6 @@ body.registration-reference .mobile-contact-bar{display:none}
     padding:11px 12px;border-radius:8px;font-size:11px
   }
 }
+
+body.registration-reference .site-mobile-menu-button,
+body.registration-reference .site-mobile-drawer{display:none!important}
