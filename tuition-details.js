@@ -57,7 +57,7 @@ function card(plan,index){
   const finalTuition=Math.max(0,(Number(plan.tuition)||0)-discount);
   const promoHtml=promo?`<div class="tuition-promotion"><b>${plan.promotion_title||"Ưu đãi hiện tại"}</b>${plan.promotion_description?`<span>${plan.promotion_description}</span>`:""}${discount?`<strong>Giảm ${money(discount)}</strong>`:""}${plan.promotion_end?`<small>Áp dụng đến ${dateLabel(plan.promotion_end)}</small>`:""}</div>`:"";
   const priceHtml=discount?`<small>Học phí ưu đãi</small><del>${money(plan.tuition)}</del><strong>${money(finalTuition)}</strong>`:hasQuotedTuition?`<small>Học phí & hồ sơ</small><strong>${money(plan.tuition)}</strong>`:`<small>Học phí khóa học</small><strong>Liên hệ tư vấn</strong>`;
-  return `<article class="tuition-card${plan.license==='B số tự động'?' featured':''}${promo?' has-promotion':''}">
+  return `<article class="tuition-card${promo?' has-promotion':''}" data-tuition-card="${plan.license}">
     <div class="tuition-card__top"><div><span class="tuition-card__badge">${plan.badge}</span><h3>${plan.title}</h3><p>${plan.description}</p></div><div class="tuition-price">${priceHtml}</div></div>
     <div class="tuition-card__body">
       ${promoHtml}
@@ -68,10 +68,26 @@ function card(plan,index){
   </article>`;
 }
 
+function selectTuitionCard(section,license){
+  section.querySelectorAll("[data-tuition-card]").forEach(card=>{
+    card.classList.toggle("is-selected",card.dataset.tuitionCard===license);
+  });
+}
+
 function bindButtons(section){
+  section.querySelectorAll("[data-tuition-card]").forEach(card=>card.addEventListener("click",event=>{
+    if(event.target.closest("[data-tuition-license]"))return;
+    selectTuitionCard(section,card.dataset.tuitionCard);
+  }));
+
   section.querySelectorAll("[data-tuition-license]").forEach(button=>button.addEventListener("click",()=>{
+    selectTuitionCard(section,button.dataset.tuitionLicense);
     document.querySelector(`[data-license-card="${CSS.escape(button.dataset.tuitionLicense)}"]`)?.click();
     document.getElementById("registrationForm")?.scrollIntoView({behavior:"smooth",block:"start"});
+  }));
+
+  document.querySelectorAll("[data-license-card]").forEach(card=>card.addEventListener("click",()=>{
+    selectTuitionCard(section,card.dataset.licenseCard);
   }));
 }
 
