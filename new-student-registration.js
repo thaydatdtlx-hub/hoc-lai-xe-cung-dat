@@ -1,5 +1,23 @@
 import "./student-testimonials.css";
 import "./student-testimonials.js";
+import "./license-training-details.js";
+import "./license-eligibility-section.js";
+import "./registration-procedure-section.js";
+import "./tuition-details.js";
+import "./official-faq-section.js";
+import "./public-site-enhancements.js";
+import "./admin-intake-editor.js";
+import "./training-roadmap-redesign.js";
+
+function removeObsoletePublicSections(){
+  document.querySelector(".gallery-section")?.remove();
+  document.getElementById("minh-chung-hoc-vien")?.remove();
+  document.querySelector(".process-section")?.remove();
+}
+removeObsoletePublicSections();
+const obsoleteSectionObserver=new MutationObserver(removeObsoletePublicSections);
+obsoleteSectionObserver.observe(document.documentElement,{subtree:true,childList:true});
+window.setTimeout(()=>obsoleteSectionObserver.disconnect(),2500);
 
 const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
 const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
@@ -7,7 +25,6 @@ const $=id=>document.getElementById(id);
 const cards=[...document.querySelectorAll("[data-license-card]")];
 const form=$("registrationForm"),submit=$("registrationSubmit"),error=$("registrationError");
 const licenseInput=$("licenseClass");
-const heroLicenseSelect=$("heroLicenseSelect");
 const LICENSES=new Set(cards.map(card=>card.dataset.licenseCard).filter(Boolean));
 let selectedLicense="B số tự động";
 
@@ -25,6 +42,8 @@ function setLicense(value){
   const storedLicense=normalizeLicenseForStorage(nextLicense);
   selectedLicense=nextLicense;
 
+  // Keep both the live value and the HTML default in sync. This prevents
+  // form.reset() or a late page enhancement from silently clearing the class.
   licenseInput.value=storedLicense;
   licenseInput.defaultValue=storedLicense;
   licenseInput.setAttribute("value",storedLicense);
@@ -33,12 +52,12 @@ function setLicense(value){
   $("selectedLicenseSummary").textContent=nextLicense;
   $("selectedLicenseCard").textContent=nextLicense;
   $("formLicenseBadge").textContent=nextLicense;
-  if(heroLicenseSelect&&heroLicenseSelect.value!==nextLicense)heroLicenseSelect.value=nextLicense;
-
   cards.forEach(card=>{
     const active=card.dataset.licenseCard===nextLicense;
     card.classList.toggle("active",active);
     card.setAttribute("aria-pressed",String(active));
+    const state=card.querySelector("i");
+    if(state)state.textContent=active?"Đã chọn":"Chọn hạng";
   });
 }
 
@@ -47,12 +66,6 @@ function selectedLicenseForSubmit(){
   const nextLicense=LICENSES.has(activeCard?.dataset.licenseCard)?activeCard.dataset.licenseCard:selectedLicense;
   setLicense(nextLicense);
   return licenseInput.value;
-}
-
-function captureSource(){
-  const params=new URLSearchParams(location.search);
-  const source=params.get("utm_source")||params.get("source")||document.referrer||"Truy cập trực tiếp";
-  sessionStorage.setItem("new_student_source",String(source).slice(0,180));
 }
 
 async function rpc(fn,body){
@@ -78,27 +91,10 @@ async function notifyTelegram(registration){
   }catch{}
 }
 
-cards.forEach(card=>card.addEventListener("click",()=>{
-  setLicense(card.dataset.licenseCard);
-  if(matchMedia("(max-width:760px)").matches){
-    form.scrollIntoView({behavior:"smooth",block:"start"});
-  }
-}));
+cards.forEach(card=>card.addEventListener("click",()=>setLicense(card.dataset.licenseCard)));
+document.querySelectorAll("[data-scroll-form]").forEach(button=>button.addEventListener("click",()=>$("registrationForm").scrollIntoView({behavior:"smooth",block:"start"})));
+document.querySelectorAll("[data-scroll-license]").forEach(button=>button.addEventListener("click",()=>$("hang-bang").scrollIntoView({behavior:"smooth",block:"start"})));
 
-heroLicenseSelect?.addEventListener("change",()=>setLicense(heroLicenseSelect.value));
-
-document.querySelectorAll("[data-scroll-form]").forEach(button=>button.addEventListener("click",()=>form.scrollIntoView({behavior:"smooth",block:"start"})));
-document.querySelectorAll("[data-scroll-license]").forEach(button=>button.addEventListener("click",()=>$("hang-bang")?.scrollIntoView({behavior:"smooth",block:"start"})));
-
-const navToggle=document.querySelector("[data-mobile-menu-toggle]");
-const nav=document.querySelector(".desktop-nav");
-navToggle?.addEventListener("click",()=>{
-  const open=nav?.classList.toggle("mobile-open");
-  navToggle.setAttribute("aria-expanded",String(Boolean(open)));
-});
-nav?.querySelectorAll("a").forEach(link=>link.addEventListener("click",()=>nav.classList.remove("mobile-open")));
-
-captureSource();
 const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
 $("preferredStartDate").min=localIsoDate(tomorrow);
 setLicense("B số tự động");
@@ -154,7 +150,7 @@ form.addEventListener("submit",async event=>{
       :message||"Chưa thể gửi đăng ký. Vui lòng kiểm tra kết nối và thử lại.";
   }finally{
     submit.disabled=false;
-    submit.querySelector("span").textContent="➤ ĐĂNG KÝ NGAY";
+    submit.querySelector("span").textContent="Gửi đăng ký học lái xe";
   }
 });
 
