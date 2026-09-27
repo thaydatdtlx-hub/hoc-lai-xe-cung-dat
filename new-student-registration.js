@@ -1,26 +1,3 @@
-import "./taplai-inspired.css";
-import "./taplai-inspired.js";
-import "./registration-backgrounds.css";
-import "./license-training-details.js";
-import "./license-eligibility-section.js";
-import "./registration-procedure-section.js";
-import "./official-faq-section.js";
-import "./public-site-enhancements.js";
-import "./admin-intake-editor.js";
-import "./training-roadmap-redesign.js";
-
-function removeObsoletePublicSections(){
-  document.querySelector(".gallery-section")?.remove();
-  document.getElementById("minh-chung-hoc-vien")?.remove();
-  document.querySelector(".process-section")?.remove();
-  document.getElementById("hoc-phi-tu-van")?.remove();
-  document.querySelector(".tuition-section")?.remove();
-  document.querySelector(".site-pricing")?.remove();
-}
-removeObsoletePublicSections();
-const obsoleteSectionObserver=new MutationObserver(removeObsoletePublicSections);
-obsoleteSectionObserver.observe(document.documentElement,{subtree:true,childList:true});
-window.setTimeout(()=>obsoleteSectionObserver.disconnect(),2500);
 
 const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
 const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
@@ -30,6 +7,7 @@ const form=$("registrationForm"),submit=$("registrationSubmit"),error=$("registr
 const licenseInput=$("licenseClass");
 const LICENSES=new Set(cards.map(card=>card.dataset.licenseCard).filter(Boolean));
 let selectedLicense="B số tự động";
+let userSelectedLicense=false;
 
 function localIsoDate(date){
   const offset=date.getTimezoneOffset()*60000;
@@ -56,12 +34,18 @@ function setLicense(value){
   $("selectedLicenseCard").textContent=nextLicense;
   $("formLicenseBadge").textContent=nextLicense;
   cards.forEach(card=>{
-    const active=card.dataset.licenseCard===nextLicense;
+    const active=userSelectedLicense&&card.dataset.licenseCard===nextLicense;
     card.classList.toggle("active",active);
+    card.classList.toggle("is-selected",active);
     card.setAttribute("aria-pressed",String(active));
     const state=card.querySelector("i");
     if(state)state.textContent=active?"Đã chọn":"Chọn hạng";
   });
+  document.querySelectorAll("[data-price-card]").forEach(card=>{
+    card.classList.toggle("is-selected",userSelectedLicense&&card.dataset.priceCard===nextLicense);
+  });
+  const select=document.getElementById("heroLicenseSelect");
+  if(select&&select.value!==nextLicense)select.value=nextLicense;
 }
 
 function selectedLicenseForSubmit(){
@@ -94,13 +78,60 @@ async function notifyTelegram(registration){
   }catch{}
 }
 
-cards.forEach(card=>card.addEventListener("click",()=>setLicense(card.dataset.licenseCard)));
+cards.forEach(card=>card.addEventListener("click",()=>{userSelectedLicense=true;setLicense(card.dataset.licenseCard);}));
+document.getElementById("heroLicenseSelect")?.addEventListener("change",event=>{userSelectedLicense=true;setLicense(event.target.value);});
+document.querySelectorAll("[data-price-card]").forEach(card=>card.addEventListener("click",event=>{userSelectedLicense=true;setLicense(card.dataset.priceCard);if(event.target.closest("[data-price-register]"))document.getElementById("registrationForm")?.scrollIntoView({behavior:"smooth",block:"start"});}));
 document.querySelectorAll("[data-scroll-form]").forEach(button=>button.addEventListener("click",()=>$("registrationForm").scrollIntoView({behavior:"smooth",block:"start"})));
 document.querySelectorAll("[data-scroll-license]").forEach(button=>button.addEventListener("click",()=>$("hang-bang").scrollIntoView({behavior:"smooth",block:"start"})));
 
 const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
 $("preferredStartDate").min=localIsoDate(tomorrow);
 setLicense("B số tự động");
+
+
+function money(value){return new Intl.NumberFormat("vi-VN").format(Number(value)||0)+" VNĐ"}
+function promotionActive(item){
+  if(!(Number(item?.discount_amount)>0||item?.promotion_title||item?.promotion_description))return false;
+  if(!item?.promotion_end)return true;
+  const end=new Date(String(item.promotion_end)+"T23:59:59");
+  return !Number.isNaN(end.valueOf())&&end.valueOf()>=Date.now();
+}
+function normalizedFees(value){
+  if(!Array.isArray(value))return [];
+  return value.map(item=>Array.isArray(item)?[String(item[0]||"Khoản phí"),Number(item[1])||0]:[String(item?.name||"Khoản phí"),Number(item?.value)||0]);
+}
+async function loadTuitionCards(){
+  try{
+    const config=await rpc("app_public_tuition_config",{});
+    const rows=Array.isArray(config)?config.filter(item=>item?.active!==false):[];
+    ["A1","A","B số sàn","B số tự động","C1"].forEach(license=>{
+      const item=rows.find(row=>row?.license_class===license);
+      const card=document.querySelector('[data-price-card="'+CSS.escape(license)+'"]');
+      if(!card)return;
+      const price=card.querySelector("[data-price-value]");
+      const old=card.querySelector("[data-price-old]");
+      const promo=card.querySelector("[data-promo]");
+      const fees=card.querySelector("[data-fees]");
+      const total=card.querySelector("[data-total]");
+      if(!item){price.textContent="Liên hệ tư vấn";total.textContent="Liên hệ tư vấn";old.hidden=true;promo.hidden=true;fees.innerHTML="";return}
+      const tuition=Number(item.tuition)||0;
+      const discount=promotionActive(item)?Math.min(Number(item.discount_amount)||0,tuition):0;
+      const final=Math.max(0,tuition-discount);
+      const feeRows=normalizedFees(item.fees);
+      price.textContent=tuition?money(final):"Liên hệ tư vấn";
+      if(discount){old.textContent=money(tuition);old.hidden=false}else old.hidden=true;
+      if(promotionActive(item)){
+        promo.hidden=false;
+        promo.querySelector("[data-promo-title]").textContent=item.promotion_title||"Ưu đãi hiện tại";
+        promo.querySelector("[data-promo-desc]").textContent=item.promotion_description||"";
+        promo.querySelector("[data-promo-discount]").textContent=discount?"Giảm "+money(discount):"";
+      }else promo.hidden=true;
+      fees.innerHTML=feeRows.map(row=>'<div><span>'+row[0]+'</span><b>'+money(row[1])+'</b></div>').join("");
+      total.textContent=tuition?money(final+feeRows.reduce((sum,row)=>sum+(Number(row[1])||0),0)):"Liên hệ tư vấn";
+    });
+  }catch{}
+}
+loadTuitionCards();
 
 form.addEventListener("submit",async event=>{
   event.preventDefault();
@@ -159,6 +190,7 @@ form.addEventListener("submit",async event=>{
 
 $("newRegistration").addEventListener("click",()=>{
   form.reset();
+  userSelectedLicense=false;
   setLicense("B số tự động");
   $("preferredStartDate").min=localIsoDate(tomorrow);
   $("registrationSuccess").hidden=true;
