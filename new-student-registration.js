@@ -1,3 +1,7 @@
+import "./registration-premium-v6.css";
+
+document.body.classList.add("registration-premium-v6");
+document.querySelectorAll('link[href*="new-student-registration.css"],link[href*="modern-footer.css"],link[href*="pwa-install.css"],link[href*="mobile-viewport-lock.css"]').forEach(node=>node.remove());
 
 const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
 const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
