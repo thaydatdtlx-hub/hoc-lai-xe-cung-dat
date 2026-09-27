@@ -13,6 +13,9 @@ function removeObsoletePublicSections(){
   document.querySelector(".gallery-section")?.remove();
   document.getElementById("minh-chung-hoc-vien")?.remove();
   document.querySelector(".process-section")?.remove();
+  document.getElementById("hoc-phi-tu-van")?.remove();
+  document.querySelector(".tuition-section")?.remove();
+  document.querySelector(".site-pricing")?.remove();
 }
 removeObsoletePublicSections();
 const obsoleteSectionObserver=new MutationObserver(removeObsoletePublicSections);
