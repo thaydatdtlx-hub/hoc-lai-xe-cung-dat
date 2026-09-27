@@ -3,142 +3,243 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="Đăng ký học lái xe hạng A1, A, B số tự động, B số sàn và C1 cùng Học lái xe cùng Đạt.">
+  <meta name="theme-color" content="#075aaa">
+  <meta name="description" content="Đăng ký học lái xe hạng A1, A, B số tự động, B số sàn và C1 cùng Thầy Đạt. Gửi thông tin để được tư vấn hồ sơ và lộ trình phù hợp.">
   <meta name="robots" content="index,follow">
   <meta property="og:locale" content="vi_VN">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Học lái xe cùng Đạt">
-  <meta property="og:description" content="Đăng ký học lái xe và nhận tư vấn lộ trình phù hợp.">
-  <meta property="og:image" content="https://www.hoclaixecungdat.com/hero-student-car.webp">
-  <link rel="canonical" href="https://www.hoclaixecungdat.com/dang-ky-hoc-lai-xe.html">
+  <meta property="og:title" content="Học lái xe hạng A1,A,B,C1 cùng Đạt">
+  <meta property="og:description" content="Chọn hạng bằng, gửi thông tin và nhận tư vấn lộ trình học phù hợp.">
+  <meta property="og:image" content="https://www.hoclaixecungdat.com/hero-vip-navy-champagne.webp?v=2">
+  <link rel="canonical" href="https://www.hoclaixecungdat.com/">
   <link rel="icon" href="/app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180.png">
   <link rel="manifest" href="/site.webmanifest">
-  <title>Học lái xe cùng Đạt | Đăng ký học lái xe</title>
-  <link rel="stylesheet" href="/registration-premium-v7.css?v=20260927-1">
+  <title>Học lái xe hạng A1,A,B,C1 cùng Đạt</title>
+  <link rel="stylesheet" href="/new-student-registration.css?v=3">
+  <link rel="stylesheet" href="/pwa-install.css?v=1">
+  <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
+  <link rel="stylesheet" href="/modern-footer.css?v=1">
 </head>
 <body>
-  <div class="topline"><div class="shell"><span>Đào tạo lái xe rõ ràng · Tư vấn trực tiếp · Hỗ trợ xuyên suốt</span><a href="tel:0984811037">Hotline 0984 811 037</a></div></div>
+  <a class="skip-link" href="#registrationForm">Chuyển đến biểu mẫu đăng ký</a>
 
-  <header class="header">
-    <div class="shell header-inner">
-      <a class="brand" href="/" aria-label="Trang chủ Học lái xe cùng Đạt">
-        <img src="/logo-thay-dat-compact.webp?v=15" alt="Logo Học lái xe cùng Đạt">
-        <span class="brand-copy"><strong>HỌC LÁI XE <span>CÙNG ĐẠT</span></strong><small>Vững tay lái · An toàn tương lai</small></span>
-      </a>
-      <nav id="mainNav" class="nav" aria-label="Điều hướng chính">
-        <a href="/">Trang chủ</a><a href="#gioi-thieu">Giới thiệu</a><a href="#khoa-hoc">Các khóa học</a><a href="#hoc-phi">Học phí</a><a href="#quy-trinh">Quy trình</a><a href="#lien-he">Liên hệ</a>
-      </nav>
-      <a class="header-hotline" href="tel:0984811037"><i>☎</i><span><strong>0984 811 037</strong><small>Tư vấn miễn phí</small></span></a>
-      <button id="menuBtn" class="menu-btn" type="button" aria-label="Mở menu" aria-expanded="false">☰</button>
-    </div>
+  <div class="top-strip">
+    <div><span>📞 Hotline: <a href="tel:0984811037">0984 811 037</a></span><span>💬 Zalo tư vấn trực tiếp</span></div>
+    <a href="#dang-ky">Đăng ký tư vấn miễn phí</a>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Trang chủ Thầy Đạt">
+      <img src="/logo-thay-dat-compact.webp?v=15" alt="Logo Thầy Đạt">
+      <span><strong>TRUNG TÂM ĐÀO TẠO LÁI XE THẦY ĐẠT</strong><small>Đào tạo rõ ràng · Đồng hành tận tâm</small></span>
+    </a>
+    <nav aria-label="Điều hướng chính">
+      <a href="#gioi-thieu">Giới thiệu</a><a href="#hang-bang">Khóa học</a><a href="#thoi-gian">Lịch học</a><a href="#faq">Hỏi đáp</a><a href="#dang-ky">Liên hệ</a>
+    </nav>
   </header>
 
   <main>
-    <section id="gioi-thieu" class="hero">
-      <img class="hero-bg" src="/hero-student-car.webp" alt="" aria-hidden="true" fetchpriority="high">
-      <div class="hero-shade" aria-hidden="true"></div>
-      <div class="shell hero-inner">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-overlay"></div>
+      <div class="hero-inner">
         <div class="hero-copy">
-          <span class="hero-kicker">TRUNG TÂM ĐÀO TẠO LÁI XE UY TÍN</span>
-          <h1>HỌC LÁI XE <span>CÙNG ĐẠT</span></h1>
-          <p class="hero-lead">Đào tạo bài bản · Lịch học linh hoạt · Vững vàng tay lái</p>
-          <ul class="hero-checks">
-            <li><i>✓</i>Giáo viên giàu kinh nghiệm</li>
-            <li><i>✓</i>Xe tập lái đời mới</li>
-            <li><i>✓</i>Lịch học linh hoạt</li>
-            <li><i>✓</i>Hỗ trợ xuyên suốt khóa học</li>
-          </ul>
-          <div class="hero-actions"><button class="btn btn-primary" type="button" data-scroll-form>Đăng ký tư vấn ngay</button><a class="btn btn-secondary" href="tel:0984811037">Gọi tư vấn</a></div>
+          <p class="eyebrow">TRUNG TÂM ĐÀO TẠO LÁI XE THẦY ĐẠT</p>
+          <h1 id="heroTitle">Đăng ký học lái xe<br><span>Vững tay lái · Tự tin cầm vô lăng</span></h1>
+          <p class="hero-text">Tiếp nhận đăng ký hạng A1, A, B số tự động, B số sàn và C1. Lộ trình, lịch học và hồ sơ được tư vấn theo từng hạng.</p>
+          <ul class="hero-benefits"><li>✓ Hỗ trợ hồ sơ đăng ký</li><li>✓ Thời gian học linh hoạt</li><li>✓ Học lý thuyết và thi thử online</li><li>✓ Theo dõi lịch học, DAT, cabin và lịch thi</li></ul>
+          <div class="hero-actions"><a class="btn btn-primary" href="#dang-ky">Đăng ký ngay</a><a class="btn btn-outline" href="tel:0984811037">Gọi 0984 811 037</a></div>
         </div>
-
-        <form id="registrationForm" class="consult-card" novalidate>
-          <div id="registrationFields">
-            <div class="consult-head"><p class="mini">ĐĂNG KÝ NGAY</p><h2>Nhận tư vấn khóa học phù hợp</h2><p>Điền thông tin, chúng tôi sẽ liên hệ hỗ trợ bạn.</p></div>
-            <div class="form-grid">
-              <label class="field"><span class="field-label">Họ và tên *</span><span class="control"><i>♙</i><input id="fullName" name="fullName" autocomplete="name" minlength="2" maxlength="80" placeholder="Họ và tên của bạn" required></span></label>
-              <label class="field"><span class="field-label">Số điện thoại *</span><span class="control"><i>☎</i><input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="9" maxlength="15" placeholder="Số điện thoại" required></span></label>
-              <label class="field"><span class="field-label">Khóa học quan tâm</span><span class="control"><i>◇</i><select id="licenseClass" name="licenseClass"><option value="A1">Hạng A1</option><option value="A">Hạng A</option><option value="B số sàn">Hạng B số sàn</option><option value="B số tự động" selected>Hạng B số tự động</option><option value="C1">Hạng C1</option></select></span></label>
-              <label class="field"><span class="field-label">Khu vực *</span><span class="control"><i>⌖</i><input id="area" name="area" maxlength="160" placeholder="Ví dụ: Quận 7, TP.HCM" required></span></label>
-              <label class="field"><span class="field-label">Ghi chú</span><textarea id="note" name="note" rows="2" maxlength="800" placeholder="Nhu cầu hoặc thời gian học mong muốn..."></textarea></label>
-            </div>
-            <details class="more-fields"><summary>Thông tin bổ sung</summary><div class="more-grid">
-              <label class="field"><span class="field-label">Ngày sinh</span><span class="control"><input id="dateOfBirth" name="dateOfBirth" type="date"></span></label>
-              <label class="field"><span class="field-label">Ngày dự kiến bắt đầu</span><span class="control"><input id="preferredStartDate" name="preferredStartDate" type="date"></span></label>
-              <label class="field"><span class="field-label">Khung giờ dễ liên hệ</span><span class="control"><select id="preferredContactTime" name="preferredContactTime"><option value="Linh hoạt">Linh hoạt</option><option value="Buổi sáng">Buổi sáng</option><option value="Buổi chiều">Buổi chiều</option><option value="Buổi tối">Buổi tối</option><option value="Cuối tuần">Cuối tuần</option></select></span></label>
-              <label class="field"><span class="field-label">Kênh tư vấn</span><span class="control"><select id="consultationChannel" name="consultationChannel"><option value="Zalo">Zalo</option><option value="Gọi điện">Gọi điện</option><option value="Zalo hoặc gọi điện">Zalo hoặc gọi điện</option></select></span></label>
-              <label class="field"><span class="field-label">Đã từng học lái xe chưa?</span><span class="control"><select id="learningHistory" name="learningHistory"><option value="Chưa từng học">Chưa từng học</option><option value="Đã từng học nhưng chưa thi">Đã từng học nhưng chưa thi</option><option value="Đã thi nhưng chưa đạt">Đã thi nhưng chưa đạt</option><option value="Cần tư vấn thêm">Cần tư vấn thêm</option></select></span></label>
-            </div></details>
-            <label class="consent"><input id="consent" type="checkbox" required><span>Tôi đồng ý để Học lái xe cùng Đạt liên hệ tư vấn theo <a href="/chinh-sach-bao-mat.html" target="_blank" rel="noopener noreferrer">chính sách bảo mật</a>.</span></label>
-            <label class="honeypot" aria-hidden="true">Website<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
-            <p id="registrationError" class="form-error" role="alert"></p>
-            <button id="registrationSubmit" class="submit-btn" type="submit"><span>ĐĂNG KÝ TƯ VẤN MIỄN PHÍ</span> →</button>
-            <p class="privacy">🔒 Thông tin của bạn được bảo mật.</p>
-          </div>
-          <section id="registrationSuccess" class="success" hidden aria-live="polite"><span>✓</span><h3>Cảm ơn bạn đã đăng ký!</h3><div>Hạng đào tạo: <strong id="successLicense">B số tự động</strong></div><div>Mã đăng ký: <strong id="successCode">Đang cập nhật</strong></div><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Nhắn Zalo hỗ trợ</a><button id="newRegistration" type="button">Tạo đăng ký khác</button></section>
-        </form>
+        <aside class="hero-form-card"><p>TƯ VẤN MIỄN PHÍ</p><h2>Chọn khóa học phù hợp</h2><span>Điền thông tin, Thầy Đạt sẽ liên hệ tư vấn hồ sơ và lộ trình.</span><button type="button" data-scroll-form>Điền phiếu đăng ký</button><small>🔒 Thông tin chỉ dùng cho mục đích tư vấn.</small></aside>
       </div>
     </section>
 
-    <section class="trust"><div class="shell trust-grid">
-      <article class="trust-item"><span class="trust-icon">◆</span><div><strong>UY TÍN - MINH BẠCH</strong><small>Thông tin rõ ràng, dễ theo dõi</small></div></article>
-      <article class="trust-item"><span class="trust-icon">♟</span><div><strong>GIÁO VIÊN KINH NGHIỆM</strong><small>Tận tâm, nhiệt tình, dễ hiểu</small></div></article>
-      <article class="trust-item"><span class="trust-icon">▦</span><div><strong>LỊCH HỌC LINH HOẠT</strong><small>Sáng, chiều, tối, cuối tuần</small></div></article>
-      <article class="trust-item"><span class="trust-icon">🚗</span><div><strong>XE TẬP LÁI ĐỜI MỚI</strong><small>Trang thiết bị hiện đại, an toàn</small></div></article>
-    </div></section>
+    <section class="quick-features" id="gioi-thieu">
+      <article><span>🏆</span><div><strong>Quy trình rõ ràng</strong><small>Thông tin đào tạo được trình bày minh bạch</small></div></article>
+      <article><span>🚘</span><div><strong>Thực hành linh hoạt</strong><small>Sắp xếp lịch phù hợp với học viên</small></div></article>
+      <article><span>📘</span><div><strong>Hệ thống học online</strong><small>Ôn tập và thi thử bộ câu hỏi lý thuyết</small></div></article>
+      <article><span>💬</span><div><strong>Hỗ trợ trực tiếp</strong><small>Tư vấn qua Zalo và điện thoại</small></div></article>
+    </section>
 
-    <section id="khoa-hoc" class="section courses"><div class="shell">
-      <div class="section-title"><h2>Các hạng bằng đào tạo tại Học lái xe cùng Đạt</h2><p>Đa dạng khóa học phù hợp với nhu cầu, nhiều lựa chọn.</p></div>
-      <div class="course-grid">
-        <button type="button" class="course-card" data-license-card="A1" aria-pressed="false"><span><b class="course-code">A1</b><strong>Bằng lái xe máy A1</strong><small>Dành cho xe máy đến 175cc</small></span><span class="vehicle">🛵</span><span class="course-link">Tìm hiểu chi tiết →</span></button>
-        <button type="button" class="course-card" data-license-card="A" aria-pressed="false"><span><b class="course-code">A</b><strong>Bằng lái xe mô tô A</strong><small>Dành cho xe mô tô trên 175cc</small></span><span class="vehicle">🏍️</span><span class="course-link">Tìm hiểu chi tiết →</span></button>
-        <button type="button" class="course-card" data-license-card="B số sàn" aria-pressed="false"><span><b class="course-code">B</b><strong>B số sàn</strong><small>Phù hợp nhu cầu phổ biến, linh hoạt</small></span><span class="vehicle">🚙</span><span class="course-link">Tìm hiểu chi tiết →</span></button>
-        <button type="button" class="course-card" data-license-card="B số tự động" aria-pressed="false"><span><b class="course-code">B</b><strong>B số tự động</strong><small>Ưu tiên sự tiện lợi, dễ làm quen</small></span><span class="vehicle">🚗</span><span class="course-link">Tìm hiểu chi tiết →</span></button>
-        <button type="button" class="course-card" data-license-card="C1" aria-pressed="false"><span><b class="course-code">C1</b><strong>Bằng lái xe tải C1</strong><small>Dành cho xe tải theo quy định hạng C1</small></span><span class="vehicle">🚚</span><span class="course-link">Tìm hiểu chi tiết →</span></button>
+    <section class="intro-section">
+      <div class="intro-media"><img src="/hero-vip-navy-champagne.webp?v=2" alt="Thầy Đạt hướng dẫn đào tạo lái xe bên xe tập lái" width="1586" height="992" fetchpriority="high" decoding="async"><div><strong>Học chắc kỹ năng</strong><span>Chú trọng sự tự tin và khả năng xử lý thực tế</span></div></div>
+      <div class="intro-copy"><p class="section-kicker">GIỚI THIỆU</p><h2>Đồng hành cùng học viên trong toàn bộ quá trình đào tạo</h2><p>Từ bước chọn hạng bằng, chuẩn bị hồ sơ, học lý thuyết, thực hành, DAT, cabin đến lịch thi, học viên được theo dõi tiến độ tập trung trên hệ thống đào tạo Thầy Đạt.</p><div class="intro-grid"><div><b>01</b><strong>Tận tâm</strong><small>Hướng dẫn cụ thể từng bước.</small></div><div><b>02</b><strong>Linh hoạt</strong><small>Chủ động sắp xếp thời gian học.</small></div><div><b>03</b><strong>Rõ ràng</strong><small>Thông tin được cập nhật tập trung.</small></div><div><b>04</b><strong>Đồng hành</strong><small>Hỗ trợ xuyên suốt khóa học.</small></div></div></div>
+    </section>
+
+    <section id="hang-bang" class="course-section">
+      <div class="section-heading"><p class="section-kicker">CÁC KHÓA ĐÀO TẠO</p><h2>Chọn hạng bằng phù hợp với nhu cầu</h2><span>Chọn một khóa học để chuyển trực tiếp đến phiếu đăng ký.</span></div>
+      <div class="license-grid" role="radiogroup" aria-label="Chọn hạng đào tạo">
+        <button type="button" class="license-card" data-license-card="A1" aria-pressed="false"><span class="course-icon">🛵</span><b>A1</b><strong>Hạng A1</strong><small>Đăng ký đào tạo lái xe mô tô hai bánh hạng A1.</small><i>Chọn khóa</i></button>
+        <button type="button" class="license-card" data-license-card="A" aria-pressed="false"><span class="course-icon">🏍️</span><b>A</b><strong>Hạng A</strong><small>Đăng ký đào tạo lái xe mô tô hai bánh hạng A.</small><i>Chọn khóa</i></button>
+        <button type="button" class="license-card active" data-license-card="B số tự động" aria-pressed="true"><span class="course-icon">🚗</span><b>B AT</b><strong>B số tự động</strong><small>Học ô tô số tự động; thời gian dự kiến 2,5–3 tháng.</small><i>Đã chọn</i></button>
+        <button type="button" class="license-card" data-license-card="B số sàn" aria-pressed="false"><span class="course-icon">🚙</span><b>B MT</b><strong>B số sàn</strong><small>Đào tạo lái xe số sàn với lộ trình đầy đủ.</small><i>Chọn khóa</i></button>
+        <button type="button" class="license-card" data-license-card="C1" aria-pressed="false"><span class="course-icon">🚚</span><b>C1</b><strong>Hạng C1</strong><small>Học lái xe tải hạng C1; thời gian dự kiến 3,5–4 tháng.</small><i>Chọn khóa</i></button>
       </div>
-      <p class="course-note">Chọn một hạng để đồng bộ với biểu mẫu đăng ký và bảng học phí.</p>
-    </div></section>
+      <div class="selected-bar"><span>Hạng đang chọn</span><strong id="selectedLicenseSummary">B số tự động</strong><button type="button" data-scroll-form>Đăng ký khóa này →</button></div>
+    </section>
 
-    <section id="hoc-phi" class="section tuition"><div class="shell">
-      <div class="section-title"><span class="eyebrow">🎓 HỌC PHÍ & CÁC KHOẢN NỘP RIÊNG</span><h2>Bảng học phí theo từng hạng đào tạo</h2><p>Học phí và ưu đãi được cập nhật trực tiếp từ hệ thống quản trị hiện có.</p></div>
-      <div class="notice"><b>!</b><span><strong>Lưu ý:</strong> Lệ phí khám sức khỏe (nếu áp dụng), sát hạch, cấp giấy phép, thi lại và các khoản nộp riêng được thông báo rõ nếu phát sinh.</span></div>
-      <div class="price-grid">
-        <article class="price-card" data-price-card="A1"><div class="price-head"><span class="price-icon">🛵</span><div><strong>HẠNG A1</strong><small>Lái xe mô tô hạng A1</small></div></div><div class="price-box"><small>HỌC PHÍ ĐANG ÁP DỤNG</small><del data-price-old hidden></del><strong data-price-value>Đang tải…</strong></div><div class="promo" data-promo hidden><i>◆</i><div><b data-promo-title></b><span data-promo-desc></span><strong data-promo-discount></strong><span data-promo-end></span></div></div><div class="fee-list" data-fees></div><ul class="included"><li>Lịch học linh hoạt</li><li>Thủ tục nhanh gọn</li><li>Hỗ trợ tận tình</li></ul><div class="price-total"><small>Tổng dự kiến</small><strong data-total>Đang tải…</strong></div><button type="button" data-price-register><span>Đăng ký tư vấn Hạng A1</span><b>→</b></button></article>
-        <article class="price-card" data-price-card="A"><div class="price-head"><span class="price-icon">🏍️</span><div><strong>HẠNG A</strong><small>Lái xe mô tô hạng A</small></div></div><div class="price-box"><small>HỌC PHÍ ĐANG ÁP DỤNG</small><del data-price-old hidden></del><strong data-price-value>Đang tải…</strong></div><div class="promo" data-promo hidden><i>◆</i><div><b data-promo-title></b><span data-promo-desc></span><strong data-promo-discount></strong><span data-promo-end></span></div></div><div class="fee-list" data-fees></div><ul class="included"><li>Lịch học linh hoạt</li><li>Thủ tục nhanh gọn</li><li>Hỗ trợ tận tình</li></ul><div class="price-total"><small>Tổng dự kiến</small><strong data-total>Đang tải…</strong></div><button type="button" data-price-register><span>Đăng ký tư vấn Hạng A</span><b>→</b></button></article>
-        <article class="price-card" data-price-card="B số sàn"><div class="price-head"><span class="price-icon">🚙</span><div><strong>B SỐ SÀN</strong><small>Thời gian đào tạo dự kiến 2,5–3 tháng</small></div></div><div class="price-box"><small>HỌC PHÍ ĐANG ÁP DỤNG</small><del data-price-old hidden></del><strong data-price-value>Đang tải…</strong></div><div class="promo" data-promo hidden><i>◆</i><div><b data-promo-title></b><span data-promo-desc></span><strong data-promo-discount></strong><span data-promo-end></span></div></div><div class="fee-list" data-fees></div><ul class="included"><li>Học phí trọn gói, rõ ràng</li><li>Lịch học theo kế hoạch</li><li>Thực hành, rèn kỹ năng</li><li>Hỗ trợ thủ tục và thi sát hạch</li></ul><div class="price-total"><small>Học phí khóa đào tạo</small><strong data-total>Đang tải…</strong></div><button type="button" data-price-register><span>Đăng ký tư vấn B số sàn</span><b>→</b></button></article>
-        <article class="price-card" data-price-card="B số tự động"><div class="price-head"><span class="price-icon">🚗</span><div><strong>B SỐ TỰ ĐỘNG</strong><small>Thời gian đào tạo dự kiến 2,5–3 tháng</small></div></div><div class="price-box"><small>HỌC PHÍ ĐANG ÁP DỤNG</small><del data-price-old hidden></del><strong data-price-value>Đang tải…</strong></div><div class="promo" data-promo hidden><i>◆</i><div><b data-promo-title></b><span data-promo-desc></span><strong data-promo-discount></strong><span data-promo-end></span></div></div><div class="fee-list" data-fees></div><ul class="included"><li>Học phí trọn gói, rõ ràng</li><li>Lịch học theo kế hoạch</li><li>Thực hành, rèn kỹ năng</li><li>Hỗ trợ thủ tục và thi sát hạch</li></ul><div class="price-total"><small>Học phí khóa đào tạo</small><strong data-total>Đang tải…</strong></div><button type="button" data-price-register><span>Đăng ký tư vấn B số tự động</span><b>→</b></button></article>
-        <article class="price-card" data-price-card="C1"><div class="price-head"><span class="price-icon">🚚</span><div><strong>HẠNG C1</strong><small>Thời gian đào tạo dự kiến 3,5–4 tháng</small></div></div><div class="price-box"><small>HỌC PHÍ ĐANG ÁP DỤNG</small><del data-price-old hidden></del><strong data-price-value>Đang tải…</strong></div><div class="promo" data-promo hidden><i>◆</i><div><b data-promo-title></b><span data-promo-desc></span><strong data-promo-discount></strong><span data-promo-end></span></div></div><div class="fee-list" data-fees></div><ul class="included"><li>Học phí trọn gói, rõ ràng</li><li>Lịch học theo kế hoạch</li><li>Thực hành, rèn kỹ năng</li><li>Hỗ trợ thủ tục và thi sát hạch</li></ul><div class="price-total"><small>Học phí khóa đào tạo</small><strong data-total>Đang tải…</strong></div><button type="button" data-price-register><span>Đăng ký tư vấn Hạng C1</span><b>→</b></button></article>
-      </div>
-    </div></section>
+    
 
-    <section class="why"><div class="shell"><h2 class="why-title">Vì sao nên học lái xe cùng Đạt?</h2><div class="why-grid">
-      <article class="why-card"><i>🎓</i><div><strong>Đào tạo bài bản</strong><small>Lộ trình rõ ràng, bám sát chương trình</small></div></article>
-      <article class="why-card"><i>♟</i><div><strong>Tỷ lệ đậu cao</strong><small>Hướng dẫn tận tình, phương pháp dễ hiểu</small></div></article>
-      <article class="why-card"><i>▦</i><div><strong>Hỗ trợ linh hoạt</strong><small>Sắp xếp lịch học theo thời gian của bạn</small></div></article>
-      <article class="why-card"><i>☎</i><div><strong>Hỗ trợ trọn gói</strong><small>Tư vấn hồ sơ, lịch học và lịch thi</small></div></article>
-    </div></div></section>
+    
 
-    <section id="quy-trinh" class="process"><div class="shell"><h2>Quy trình học lái xe đơn giản - Học nhanh - Thi thuận tiện</h2><div class="process-grid">
-      <article class="step"><b>01</b><strong>Đăng ký tư vấn</strong><small>Điền thông tin hoặc gọi hotline</small></article>
-      <article class="step"><b>02</b><strong>Hoàn thiện hồ sơ</strong><small>Được hướng dẫn chuẩn bị giấy tờ</small></article>
-      <article class="step"><b>03</b><strong>Tham gia khóa học</strong><small>Học lý thuyết và thực hành</small></article>
-      <article class="step"><b>04</b><strong>Thi sát hạch</strong><small>Được hỗ trợ lịch và hướng dẫn</small></article>
-      <article class="step"><b>05</b><strong>Nhận bằng lái xe</strong><small>Hoàn thành lộ trình đào tạo</small></article>
-    </div></div></section>
+    
 
-    <section id="testimonialsSection" class="testimonials" hidden><div class="shell"><div class="section-title"><h2>Cảm nhận từ học viên</h2></div><div id="testimonialGrid" class="testimonial-grid"></div></div></section>
+    <section class="stats-section"><article><strong>5</strong><span>Hạng đào tạo</span></article><article><strong>600</strong><span>Câu hỏi lý thuyết ô tô</span></article><article><strong>24/7</strong><span>Tra cứu tiến độ</span></article><article><strong>1</strong><span>Hệ thống quản lý tập trung</span></article></section>
+
+    <section id="thoi-gian" class="schedule-section">
+      <div class="section-heading"><p class="section-kicker">THỜI GIAN HỌC</p><h2>Lịch học linh hoạt theo từng nội dung</h2><span>Lịch thực tế được xác nhận sau khi tư vấn và sắp xếp với học viên.</span></div>
+      <div class="schedule-grid"><article><span>☀️</span><h3>Buổi sáng</h3><p>Phù hợp với học viên chủ động học trong giờ hành chính.</p><b>Khung giờ linh hoạt</b></article><article><span>🌤️</span><h3>Buổi chiều</h3><p>Sắp xếp theo lịch giáo viên và nội dung đào tạo.</p><b>Khung giờ linh hoạt</b></article><article><span>🌙</span><h3>Buổi tối</h3><p>Tư vấn theo khả năng sắp xếp và từng chương trình học.</p><b>Liên hệ xác nhận</b></article><article><span>📅</span><h3>Cuối tuần</h3><p>Dành cho học viên bận công việc trong tuần.</p><b>Đăng ký trước</b></article></div>
+    </section>
+
+    <section class="training-map-section">
+      <div class="section-heading light"><p class="section-kicker">NỘI DUNG ĐÀO TẠO</p><h2>Các mốc chính trong lộ trình học</h2></div>
+      <div class="training-map"><article><b>01</b><h3>Hoàn thiện hồ sơ</h3><p>Kiểm tra thông tin và hướng dẫn giấy tờ.</p></article><article><b>02</b><h3>Học lý thuyết</h3><p>Ôn tập câu hỏi và thi thử trên hệ thống.</p></article><article><b>03</b><h3>Học thực hành</h3><p>Thực hành làm quen xe và kỹ năng lái.</p></article><article><b>04</b><h3>Cabin và DAT</h3><p>Theo dõi các mốc đào tạo bắt buộc theo hạng.</p></article><article><b>05</b><h3>Thi tốt nghiệp</h3><p>Nhận thông báo lịch và chuẩn bị nội dung thi.</p></article><article><b>06</b><h3>Thi sát hạch</h3><p>Hoàn thành lộ trình và theo dõi kết quả.</p></article></div>
+    </section>
+
+    <section class="gallery-section">
+      <div class="section-heading"><p class="section-kicker">HỆ THỐNG ĐÀO TẠO</p><h2>Học tập và quản lý trên nhiều thiết bị</h2></div>
+      <div class="gallery-grid"><figure><img src="/hero-vip-navy-champagne.webp?v=2" alt="Hướng dẫn học lái xe"><figcaption>Đào tạo thực hành</figcaption></figure><figure><img src="/app-icon-512.png" alt="Ứng dụng học viên"><figcaption>Hệ thống học viên</figcaption></figure><figure><img src="/logo-thay-dat-compact.webp?v=15" alt="Thương hiệu Thầy Đạt"><figcaption>Hỗ trợ xuyên suốt</figcaption></figure></div>
+    </section>
+
+    <section id="quy-trinh" class="process-section">
+      <div class="section-heading"><p class="section-kicker">QUY TRÌNH ĐĂNG KÝ</p><h2>Chỉ 3 bước để bắt đầu khóa học</h2></div>
+      <div class="process-grid"><article><b>01</b><div><strong>Chọn hạng bằng</strong><p>Lựa chọn A1, A, B số tự động, B số sàn hoặc C1.</p></div></article><article><b>02</b><div><strong>Điền thông tin</strong><p>Cung cấp số điện thoại, khu vực và thời gian mong muốn.</p></div></article><article><b>03</b><div><strong>Nhận tư vấn</strong><p>Thầy Đạt liên hệ xác nhận và hướng dẫn hồ sơ.</p></div></article></div>
+    </section>
+
+    <section id="faq" class="faq-section">
+      <div class="section-heading"><p class="section-kicker">CÂU HỎI THƯỜNG GẶP</p><h2>Thông tin học viên thường quan tâm</h2></div>
+      <div class="faq-list"><details open><summary>Đăng ký online có được tư vấn trực tiếp không?</summary><p>Có. Sau khi gửi biểu mẫu, thông tin sẽ được tiếp nhận để liên hệ qua Zalo hoặc điện thoại.</p></details><details><summary>Tôi chưa biết nên chọn B số tự động hay B số sàn?</summary><p>Hãy ghi rõ nhu cầu sử dụng xe và thời gian học. Thầy Đạt sẽ tư vấn lựa chọn phù hợp.</p></details><details><summary>Có thể theo dõi lịch học trên điện thoại không?</summary><p>Có. Học viên có thể đăng nhập hệ thống để xem lịch học và các thông báo đào tạo.</p></details><details><summary>Cần chuẩn bị giấy khám sức khỏe trước không?</summary><p>Thông tin hồ sơ và yêu cầu cụ thể sẽ được hướng dẫn sau khi xác nhận hạng đăng ký.</p></details><details><summary>Sau khi có bằng có thể đăng ký bổ túc không?</summary><p>Có. Hệ thống có trang đăng ký bổ túc tay lái và bổ túc sa hình riêng.</p></details></div>
+    </section>
+
+    <section class="cta-section"><div><p>ĐĂNG KÝ HỌC LÁI XE NGAY HÔM NAY</p><h2>Nhận tư vấn lộ trình phù hợp với nhu cầu của bạn</h2></div><a href="#dang-ky">Điền phiếu đăng ký</a></section>
+
+    <section id="dang-ky" class="registration-section">
+      <div class="registration-copy"><p class="section-kicker">ĐĂNG KÝ TƯ VẤN MIỄN PHÍ</p><h2>Điền thông tin để được tư vấn khóa học phù hợp</h2><p>Thông tin đăng ký được tiếp nhận trực tiếp trên hệ thống. Vui lòng điền chính xác để được hỗ trợ nhanh nhất.</p><div class="selected-plan-card"><small>HẠNG ĐANG CHỌN</small><strong id="selectedLicenseCard">B số tự động</strong><button type="button" data-scroll-license>Đổi hạng</button></div><ul><li>✓ Tư vấn hồ sơ theo hạng đăng ký</li><li>✓ Hướng dẫn lộ trình và thời gian học</li><li>✓ Hỗ trợ qua Zalo hoặc điện thoại</li></ul></div>
+
+      <form id="registrationForm" class="registration-form" novalidate>
+        <div id="registrationFields">
+          <div class="form-heading"><div><p>PHIẾU ĐĂNG KÝ</p><h3>Thông tin học viên</h3></div><span id="formLicenseBadge">B số tự động</span></div>
+          <input id="licenseClass" name="licenseClass" type="hidden" value="B số tự động">
+          <div class="form-grid">
+            <label>Họ và tên <b>*</b><input id="fullName" name="fullName" autocomplete="name" minlength="2" maxlength="80" placeholder="Nguyễn Văn An" required></label>
+            <label>Số điện thoại <b>*</b><input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" minlength="9" maxlength="15" placeholder="09xx xxx xxx" required></label>
+            <label>Ngày sinh<input id="dateOfBirth" name="dateOfBirth" type="date"></label>
+            <label>Khu vực đang sinh sống <b>*</b><input id="area" name="area" maxlength="160" placeholder="Ví dụ: Quận 7, TP.HCM" required></label>
+            <label>Ngày dự kiến bắt đầu<input id="preferredStartDate" name="preferredStartDate" type="date"></label>
+            <label>Khung giờ dễ liên hệ<select id="preferredContactTime" name="preferredContactTime"><option value="Linh hoạt">Linh hoạt</option><option value="Buổi sáng">Buổi sáng</option><option value="Buổi chiều">Buổi chiều</option><option value="Buổi tối">Buổi tối</option><option value="Cuối tuần">Cuối tuần</option></select></label>
+            <label>Kênh tư vấn mong muốn<select id="consultationChannel" name="consultationChannel"><option value="Zalo">Zalo</option><option value="Gọi điện">Gọi điện</option><option value="Zalo hoặc gọi điện">Zalo hoặc gọi điện</option></select></label>
+            <label>Đã từng học lái xe chưa?<select id="learningHistory" name="learningHistory"><option value="Chưa từng học">Chưa từng học</option><option value="Đã từng học nhưng chưa thi">Đã từng học nhưng chưa thi</option><option value="Đã thi nhưng chưa đạt">Đã thi nhưng chưa đạt</option><option value="Cần tư vấn thêm">Cần tư vấn thêm</option></select></label>
+          </div>
+          <label class="wide-field">Nhu cầu hoặc ghi chú thêm<textarea id="note" name="note" rows="4" maxlength="800" placeholder="Ví dụ: cần học ngoài giờ hành chính, muốn được tư vấn hồ sơ và lịch khai giảng gần nhất..."></textarea></label>
+          <label class="consent-field"><input id="consent" type="checkbox" required><span>Tôi đã đọc <a href="/chinh-sach-bao-mat.html" target="_blank" rel="noopener noreferrer">Chính sách dữ liệu cá nhân</a> và đồng ý để Học lái xe cùng Đạt xử lý thông tin đã cung cấp nhằm liên hệ, tư vấn khóa học.</span></label>
+          <label class="honeypot" aria-hidden="true">Website<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
+          <p id="registrationError" class="form-error" role="alert"></p>
+          <button id="registrationSubmit" class="submit-button" type="submit"><span>Gửi đăng ký học lái xe</span><b>→</b></button>
+          <p class="privacy-note">🔒 Có thể rút lại sự đồng ý hoặc yêu cầu chỉnh sửa, xóa dữ liệu qua hotline/Zalo 0984 811 037.</p>
+        </div>
+        <section id="registrationSuccess" class="registration-success" hidden aria-live="polite"><span>✓</span><p>ĐĂNG KÝ THÀNH CÔNG</p><h3>Cảm ơn bạn đã đăng ký!</h3><div>Hạng đào tạo: <strong id="successLicense">B số tự động</strong></div><div>Mã đăng ký: <strong id="successCode">Đang cập nhật</strong></div><small>Thầy Đạt sẽ liên hệ để tư vấn hồ sơ và lộ trình học phù hợp.</small><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Nhắn Zalo hỗ trợ</a><button id="newRegistration" type="button">Tạo đăng ký khác</button></section>
+      </form>
+    </section>
   </main>
 
-  <footer id="lien-he" class="footer"><div class="shell footer-main">
-    <section><div class="footer-brand"><img src="/logo-thay-dat-compact.webp?v=15" alt="Logo Học lái xe cùng Đạt"><div><strong>HỌC LÁI XE CÙNG ĐẠT</strong><small>Vững tay lái · An toàn tương lai</small></div></div><p>Đồng hành cùng bạn trong hành trình chinh phục tay lái.</p></section>
-    <section><h3>Liên hệ với chúng tôi</h3><ul><li><a href="tel:0984811037">0984 811 037</a></li><li><a href="mailto:thaydat.dtlx@gmail.com">thaydat.dtlx@gmail.com</a></li><li>TP. Hồ Chí Minh</li></ul></section>
-    <section><h3>Liên kết nhanh</h3><ul><li><a href="/">Trang chủ</a></li><li><a href="#hoc-phi">Học phí</a></li><li><a href="/600-cau-hoi.html">Học lý thuyết</a></li><li><a href="/?login=1">Hệ thống học viên</a></li></ul></section>
-    <section><h3>Kết nối với chúng tôi</h3><ul><li><a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a></li><li><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Hỗ trợ qua Zalo</a></li></ul><div class="socials"><a href="https://www.facebook.com/profile.php?id=61579863779611" target="_blank" rel="noopener noreferrer">f</a><a href="https://www.tiktok.com/@datdidaydo99" target="_blank" rel="noopener noreferrer">♪</a><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Zalo</a></div></section>
-  </div><div class="shell footer-bottom"><span>© 2026 Học lái xe cùng Đạt. Tất cả quyền được bảo lưu.</span><span>Thiết kế tối ưu cho máy tính và điện thoại</span></div></footer>
+  <footer class="pro-footer" aria-label="Thông tin Học lái xe cùng Đạt">
+    <div class="pro-footer__main">
+      <section class="pro-footer__brand" aria-label="Học lái xe cùng Đạt">
+        <div class="pro-footer__brand-top">
+          <img class="pro-footer__logo" src="/logo-thay-dat-compact.webp?v=15" alt="Logo Học lái xe cùng Đạt">
+          <div class="pro-footer__brand-copy">
+            <strong>HỌC LÁI XE CÙNG ĐẠT</strong>
+            <small>Đồng hành cùng học viên trong toàn bộ lộ trình</small>
+          </div>
+        </div>
+        <div class="pro-footer__badges" aria-label="Cam kết dịch vụ">
+          <span class="pro-footer__badge"><i>✓</i>Uy tín</span>
+          <span class="pro-footer__badge"><i>●</i>Tận tâm</span>
+          <span class="pro-footer__badge"><i>▥</i>Hiệu quả</span>
+        </div>
+        <p class="pro-footer__slogan">Vững tay lái<span>Sáng tương lai</span></p>
+      </section>
 
-  <div class="mobile-cta"><a href="tel:0984811037">☎ Gọi tư vấn</a><button type="button" data-scroll-form>Đăng ký ngay</button></div>
-  <script type="module" src="/registration-premium-v7.js?v=20260927-1"></script>
+      <section class="pro-footer__column pro-footer__contact" aria-label="Liên hệ">
+        <h2 class="pro-footer__heading">Liên hệ</h2>
+        <div class="pro-footer__contact-list">
+          <div class="pro-footer__contact-item">
+            <span class="pro-footer__contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5 9 7.8l-1.6 2.1a14.4 14.4 0 0 0 6.7 6.7l2.1-1.6 4.3 2.5c.5.3.7.9.5 1.4-.6 1.5-2.1 2.6-3.8 2.6C9.1 21.5 2.5 14.9 2.5 6.8c0-1.7 1.1-3.2 2.6-3.8.5-.2 1.1 0 1.4.5Z"/></svg></span>
+            <div class="pro-footer__contact-text"><a href="tel:0984811037">0984 811 037 (Đạt)</a><small>Tư vấn nhanh 24/7</small></div>
+          </div>
+          <div class="pro-footer__contact-item">
+            <span class="pro-footer__contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5.5h18v13H3z"/><path d="m4 7 8 6 8-6"/></svg></span>
+            <div class="pro-footer__contact-text"><a href="mailto:thaydat.dtlx@gmail.com">thaydat.dtlx@gmail.com</a><small>Phản hồi trong 24h</small></div>
+          </div>
+          <div class="pro-footer__contact-item">
+            <span class="pro-footer__contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3Z"/></svg></span>
+            <div class="pro-footer__contact-text"><a href="https://www.hoclaixecungdat.com/">www.hoclaixecungdat.com</a><small>Truy cập website</small></div>
+          </div>
+          <div class="pro-footer__contact-item">
+            <span class="pro-footer__contact-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.3"/></svg></span>
+            <div class="pro-footer__contact-text"><strong>TP. Hồ Chí Minh</strong><small>Việt Nam</small></div>
+          </div>
+        </div>
+      </section>
+
+      <nav class="pro-footer__column" aria-label="Danh mục">
+        <h2 class="pro-footer__heading">Danh mục</h2>
+        <div class="pro-footer__links">
+          <a href="#hang-bang">Các khóa học</a>
+          <a href="/bo-tuc-tay-lai.html">Bổ túc tay lái</a>
+          <a href="/600-cau-hoi.html">Học lý thuyết 600 câu</a>
+          <a href="/?login=1">Hệ thống học viên</a>
+          <a href="#dang-ky">Liên hệ</a>
+        </div>
+      </nav>
+
+      <nav class="pro-footer__column pro-footer__support" aria-label="Hỗ trợ học viên">
+        <h2 class="pro-footer__heading">Hỗ trợ</h2>
+        <div class="pro-footer__links">
+          <a href="#quy-trinh">Hướng dẫn đăng ký</a>
+          <a href="#faq">Câu hỏi thường gặp</a>
+          <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+          <a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Hỗ trợ học viên</a>
+        </div>
+      </nav>
+
+      <section class="pro-footer__column pro-footer__newsletter" aria-label="Đăng ký nhận thông tin">
+        <div class="pro-footer__newsletter-wrap">
+          <div class="pro-footer__newsletter-title">
+            <span class="pro-footer__newsletter-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5.5h18v13H3z"/><path d="m4 7 8 6 8-6"/></svg></span>
+            <div><strong>Đăng ký nhận thông tin</strong><p>Nhận thông báo về khóa học, lịch khai giảng và ưu đãi mới nhất.</p></div>
+          </div>
+          <form class="pro-footer__newsletter-form" action="mailto:thaydat.dtlx@gmail.com" method="post" enctype="text/plain">
+            <input type="email" name="Email" autocomplete="email" placeholder="Nhập email của bạn" aria-label="Nhập email của bạn" required>
+            <button type="submit">Đăng ký</button>
+          </form>
+          <div class="pro-footer__social-block">
+            <span>Kết nối với chúng tôi</span>
+            <div class="pro-footer__socials">
+              <a class="pro-footer__social pro-footer__social--facebook" href="https://www.facebook.com/profile.php?id=61579863779611" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+              <span class="pro-footer__social pro-footer__social--youtube" aria-label="YouTube">▶</span>
+              <a class="pro-footer__social pro-footer__social--tiktok" href="https://www.tiktok.com/@datdidaydo99?is_from_webapp=1&amp;sender_device=pc" target="_blank" rel="noopener noreferrer" aria-label="TikTok">♪</a>
+              <a class="pro-footer__social pro-footer__social--zalo" href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer" aria-label="Zalo">Zalo</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="pro-footer__bottom">
+      <p>© 2026 Học lái xe cùng Đạt. Tất cả quyền được bảo lưu.</p>
+      <nav class="pro-footer__legal" aria-label="Liên kết pháp lý">
+        <a href="/chinh-sach-bao-mat.html">Chính sách bảo mật</a>
+        <a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer">Hỗ trợ học viên</a>
+        <a href="tel:0984811037">Liên hệ</a>
+      </nav>
+      <a class="pro-footer__top-link" href="#" aria-label="Lên đầu trang"><i>↑</i><span>Lên đầu trang</span></a>
+    </div>
+  </footer>
+
+  <div class="floating-contact"><a href="tel:0984811037" aria-label="Gọi điện">☎</a><a href="https://zalo.me/0984811037" target="_blank" rel="noopener noreferrer" aria-label="Zalo">Z</a></div>
+  <div class="mobile-bar"><a href="tel:0984811037">Gọi tư vấn</a><button type="button" data-scroll-form>Đăng ký ngay</button></div>
+  <script type="module" src="/new-student-registration.js?v=1"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
 </body>
 </html>
