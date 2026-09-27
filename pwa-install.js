@@ -10,7 +10,7 @@ function loadSharedEnhancements(){
     professionalUiPromise,
     import("./site-unification.js"),
     import("./site-config-public.js"),
-    import("./professional-public-polish.js"),
+    import("./professional-public-polish.js?v=20260927-1"),
     import("./student-portal-polish.js"),
     import("./student-activity-tracker.js"),
     import("./theory-answer-explanations.js?v=2"),
