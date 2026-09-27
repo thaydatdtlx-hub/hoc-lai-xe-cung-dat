@@ -320,3 +320,192 @@ body.registration-premium-v6 .skip-link:focus{transform:none}
   .v6-license-card{flex-basis:48vw}
   .v6-price-card{flex-basis:84vw}
 }
+
+/* V6 compatibility: restyle the existing semantic DOM, while legacy styles are removed at runtime. */
+body.registration-premium-v6 .top-strip{display:none!important}
+body.registration-premium-v6 .site-header{
+  position:sticky!important;top:0!important;z-index:100!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;gap:24px!important;
+  min-height:72px!important;padding:7px max(4vw,22px)!important;background:rgba(255,255,255,.98)!important;
+  border:0!important;border-bottom:1px solid #e6eef5!important;box-shadow:0 4px 18px rgba(9,52,94,.06)!important;
+  backdrop-filter:blur(14px)!important
+}
+body.registration-premium-v6 .site-header .brand{display:flex!important;align-items:center!important;gap:10px!important;min-width:250px!important}
+body.registration-premium-v6 .site-header .brand img{width:58px!important;height:58px!important;object-fit:contain!important;border:0!important;border-radius:0!important;box-shadow:none!important}
+body.registration-premium-v6 .site-header .brand span{display:grid!important;gap:1px!important}
+body.registration-premium-v6 .site-header .brand strong{color:#07376f!important;font-size:13px!important;font-weight:950!important;line-height:1.15!important}
+body.registration-premium-v6 .site-header .brand small{color:#7890a4!important;font-size:9px!important}
+body.registration-premium-v6 .site-header nav{display:flex!important;align-items:center!important;gap:2px!important}
+body.registration-premium-v6 .site-header nav a{padding:9px!important;border-radius:8px!important;color:#214765!important;font-size:11px!important;font-weight:800!important}
+body.registration-premium-v6 .site-header nav a:hover{background:#eef7ff!important;color:#0a67c7!important}
+
+body.registration-premium-v6 .hero{
+  position:relative!important;overflow:hidden!important;min-height:510px!important;
+  background:url('/hero-student-car.webp') center 56%/cover no-repeat!important;color:#153754!important;border:0!important;border-bottom:1px solid #e1ebf2!important
+}
+body.registration-premium-v6 .hero::before{content:""!important;position:absolute!important;inset:0!important;display:block!important;background:linear-gradient(90deg,rgba(235,248,255,.96) 0%,rgba(235,248,255,.90) 34%,rgba(235,248,255,.46) 55%,rgba(255,255,255,.05) 77%)!important;z-index:0!important}
+body.registration-premium-v6 .hero-overlay{display:none!important}
+body.registration-premium-v6 .hero-inner{
+  position:relative!important;z-index:2!important;width:min(1180px,92%)!important;min-height:510px!important;margin:auto!important;
+  display:grid!important;grid-template-columns:minmax(0,1.12fr) minmax(330px,.58fr)!important;gap:34px!important;align-items:center!important;padding:34px 0!important
+}
+body.registration-premium-v6 .hero-copy{max-width:650px!important;padding:0!important;text-align:left!important}
+body.registration-premium-v6 .hero .eyebrow{display:inline-flex!important;width:auto!important;margin:0 0 12px!important;padding:7px 11px!important;border-radius:999px!important;background:#e7f4ff!important;color:#0b4d90!important;font-size:10px!important;font-weight:950!important;letter-spacing:.02em!important}
+body.registration-premium-v6 .hero h1{margin:0!important;color:#0a3267!important;font-size:clamp(43px,5vw,66px)!important;line-height:.96!important;letter-spacing:-.045em!important;text-shadow:none!important}
+body.registration-premium-v6 .hero h1 span{display:block!important;margin-top:8px!important;color:#35ad35!important;font-size:.72em!important;line-height:1.05!important}
+body.registration-premium-v6 .hero-text{max-width:580px!important;margin:15px 0 0!important;color:#49677d!important;font-size:13px!important;line-height:1.6!important}
+body.registration-premium-v6 .hero-benefits{display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px 18px!important;margin:17px 0 0!important;padding:0!important;list-style:none!important;color:#2e536e!important}
+body.registration-premium-v6 .hero-benefits li{font-size:12px!important;font-weight:750!important}
+body.registration-premium-v6 .hero-actions{display:flex!important;gap:10px!important;flex-wrap:wrap!important;margin-top:20px!important}
+body.registration-premium-v6 .hero .btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;padding:0 16px!important;border-radius:9px!important;font-size:11px!important;font-weight:900!important}
+body.registration-premium-v6 .hero .btn-primary{color:#fff!important;background:linear-gradient(90deg,#0a73d9,#43be2e)!important;border:0!important;box-shadow:0 8px 18px rgba(22,124,123,.17)!important}
+body.registration-premium-v6 .hero .btn-outline{color:#07376f!important;background:#fff!important;border:1px solid #cadbe8!important}
+
+body.registration-premium-v6 .hero-form-card{
+  display:block!important;align-self:center!important;margin:0!important;padding:20px!important;border:1px solid rgba(255,255,255,.95)!important;border-radius:15px!important;
+  background:rgba(255,255,255,.97)!important;color:#153754!important;box-shadow:0 18px 48px rgba(8,53,96,.18)!important;backdrop-filter:blur(8px)!important
+}
+body.registration-premium-v6 .hero-form-card>p,
+body.registration-premium-v6 .hero-form-card>h2,
+body.registration-premium-v6 .hero-form-card>span,
+body.registration-premium-v6 .hero-form-card>button,
+body.registration-premium-v6 .hero-form-card>small{display:none!important}
+
+body.registration-premium-v6 .quick-features{
+  width:min(1180px,92%)!important;margin:0 auto!important;display:grid!important;grid-template-columns:repeat(4,1fr)!important;transform:none!important;
+  border:0!important;border-bottom:1px solid #e7eef4!important;border-radius:0!important;background:#fff!important;box-shadow:none!important
+}
+body.registration-premium-v6 .quick-features article{display:flex!important;align-items:center!important;justify-content:center!important;gap:10px!important;min-height:70px!important;padding:10px!important;border-right:1px solid #edf2f6!important}
+body.registration-premium-v6 .quick-features article:last-child{border-right:0!important}
+body.registration-premium-v6 .quick-features article>span{display:grid!important;width:40px!important;height:40px!important;place-items:center!important;flex:0 0 40px!important;border-radius:50%!important;background:#eaf6ff!important;font-size:18px!important}
+body.registration-premium-v6 .quick-features strong{display:block!important;color:#173d67!important;font-size:10px!important}
+body.registration-premium-v6 .quick-features small{display:block!important;margin-top:2px!important;color:#73879a!important;font-size:8px!important}
+
+body.registration-premium-v6 .intro-section,
+body.registration-premium-v6 .stats-section,
+body.registration-premium-v6 .schedule-section,
+body.registration-premium-v6 .training-map-section,
+body.registration-premium-v6 .gallery-section,
+body.registration-premium-v6 .faq-section,
+body.registration-premium-v6 .cta-section,
+body.registration-premium-v6 .registration-copy{display:none!important}
+body.registration-premium-v6 .registration-section{display:none!important}
+
+body.registration-premium-v6 .course-section{
+  width:min(1180px,92%)!important;margin:0 auto!important;padding:46px 0!important;background:#fff!important
+}
+body.registration-premium-v6 .section-heading{max-width:780px!important;margin:0 auto 28px!important;text-align:center!important}
+body.registration-premium-v6 .section-kicker{margin:0 0 7px!important;color:#38b747!important;font-size:11px!important;font-weight:950!important;letter-spacing:.11em!important}
+body.registration-premium-v6 .section-heading h2{margin:0!important;color:#07376f!important;font-size:clamp(27px,3vw,38px)!important;line-height:1.15!important;letter-spacing:-.03em!important}
+body.registration-premium-v6 .section-heading>span{display:block!important;margin-top:9px!important;color:#708398!important;font-size:13px!important}
+body.registration-premium-v6 .license-grid{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:12px!important}
+body.registration-premium-v6 .license-card{
+  display:grid!important;grid-template-columns:1fr auto!important;grid-template-rows:auto auto!important;gap:8px!important;min-height:124px!important;padding:14px!important;
+  border:1px solid #dce7f1!important;border-radius:12px!important;background:#fff!important;color:#153754!important;text-align:left!important;box-shadow:0 6px 18px rgba(18,62,102,.06)!important;transition:.15s!important
+}
+body.registration-premium-v6 .license-card:hover{transform:translateY(-2px)!important;box-shadow:0 12px 26px rgba(18,62,102,.10)!important}
+body.registration-premium-v6 .license-card.active,
+body.registration-premium-v6 .license-card.is-selected{border:2px solid #38b747!important;background:#f8fff8!important}
+body.registration-premium-v6 .license-card .course-icon{grid-column:2!important;grid-row:1!important;display:grid!important;width:58px!important;height:58px!important;place-items:center!important;border-radius:14px!important;background:#eef7ff!important;font-size:30px!important}
+body.registration-premium-v6 .license-card>b{grid-column:1!important;grid-row:1!important;align-self:start!important;color:#0a67c7!important;font-size:26px!important;font-weight:950!important}
+body.registration-premium-v6 .license-card>strong{grid-column:1/-1!important;margin-top:-4px!important;color:#153b66!important;font-size:11px!important}
+body.registration-premium-v6 .license-card>small{grid-column:1/-1!important;color:#74879a!important;font-size:8px!important;line-height:1.4!important}
+body.registration-premium-v6 .license-card>i{grid-column:1/-1!important;margin-top:auto!important;padding:0!important;background:transparent!important;color:#0a6ccf!important;text-align:right!important;font-size:8px!important;font-style:normal!important}
+body.registration-premium-v6 .selected-bar{display:none!important}
+
+/* Move the real registration form into the hero card; only one form exists. */
+body.registration-premium-v6 .hero-form-card .registration-form{
+  display:block!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important
+}
+body.registration-premium-v6 .hero-form-card .form-heading{display:block!important;padding:0 0 11px!important;border:0!important;text-align:left!important}
+body.registration-premium-v6 .hero-form-card .form-heading p{display:block!important;margin:0!important;color:#38b747!important;font-size:10px!important;font-weight:950!important;letter-spacing:.1em!important}
+body.registration-premium-v6 .hero-form-card .form-heading h3{margin:4px 0 0!important;color:#07376f!important;font-size:22px!important}
+body.registration-premium-v6 .hero-form-card .form-heading>span{display:none!important}
+body.registration-premium-v6 .hero-form-card .form-grid{display:grid!important;grid-template-columns:1fr!important;gap:7px!important}
+body.registration-premium-v6 .hero-form-card .registration-form label{display:grid!important;gap:4px!important;margin:0!important;color:#4a657d!important;font-size:9px!important;font-weight:800!important}
+body.registration-premium-v6 .hero-form-card .registration-form input,
+body.registration-premium-v6 .hero-form-card .registration-form select,
+body.registration-premium-v6 .hero-form-card .registration-form textarea{
+  width:100%!important;min-height:39px!important;padding:9px 10px!important;border:1px solid #d4e2ed!important;border-radius:7px!important;background:#fff!important;color:#2e4c64!important;outline:none!important;font-size:10px!important
+}
+body.registration-premium-v6 .hero-form-card .wide-field{margin-top:7px!important}
+body.registration-premium-v6 .hero-form-card .wide-field textarea{min-height:54px!important}
+body.registration-premium-v6 .hero-form-card .consent-field{display:flex!important;gap:7px!important;align-items:flex-start!important;margin-top:8px!important;color:#687f93!important;font-size:8px!important;line-height:1.45!important}
+body.registration-premium-v6 .hero-form-card .consent-field input{width:14px!important;height:14px!important;min-height:0!important;padding:0!important;accent-color:#38b747!important}
+body.registration-premium-v6 .hero-form-card .honeypot{position:absolute!important;left:-9999px!important}
+body.registration-premium-v6 .hero-form-card .form-error{min-height:15px!important;margin:4px 0 0!important;color:#bd3732!important;font-size:9px!important}
+body.registration-premium-v6 .hero-form-card .submit-button{
+  display:flex!important;width:100%!important;min-height:43px!important;align-items:center!important;justify-content:space-between!important;margin-top:3px!important;padding:0 12px!important;border:0!important;border-radius:7px!important;
+  color:#fff!important;background:linear-gradient(90deg,#0873dc,#54c21f)!important;font-size:10px!important;font-weight:950!important;box-shadow:0 8px 18px rgba(15,114,143,.17)!important
+}
+body.registration-premium-v6 .hero-form-card .privacy-note{margin:7px 0 0!important;text-align:center!important;color:#76899a!important;font-size:7.5px!important}
+body.registration-premium-v6 .hero-form-card .registration-success{min-height:330px!important;text-align:center!important}
+
+/* Existing process section restyled after JS changes it to 5 steps. */
+body.registration-premium-v6 .process-section{
+  display:block!important;width:min(1180px,92%)!important;margin:0 auto!important;padding:20px 0 34px!important;background:#fff!important
+}
+body.registration-premium-v6 .process-section .section-heading{margin-bottom:16px!important}
+body.registration-premium-v6 .process-grid{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:0!important}
+body.registration-premium-v6 .process-grid article{position:relative!important;padding:0 12px!important;border:0!important;background:transparent!important;box-shadow:none!important;text-align:center!important}
+body.registration-premium-v6 .process-grid article:not(:last-child)::after{content:"›"!important;position:absolute!important;right:-2px!important;top:10px!important;color:#1784df!important;font-size:24px!important}
+body.registration-premium-v6 .process-grid article>b{display:grid!important;width:38px!important;height:38px!important;margin:0 auto 6px!important;place-items:center!important;border-radius:50%!important;background:linear-gradient(135deg,#0a74db,#1d97ef)!important;color:#fff!important;font-size:9px!important}
+body.registration-premium-v6 .process-grid article strong{display:block!important;color:#163e68!important;font-size:8.5px!important}
+body.registration-premium-v6 .process-grid article p{margin:3px 0 0!important;color:#73889a!important;font-size:7px!important;line-height:1.4!important}
+
+/* Existing footer becomes the single V6 footer. */
+body.registration-premium-v6 .pro-footer{margin-top:0!important;background:#052e5d!important;color:#fff!important;border-top:4px solid #0c75da!important}
+body.registration-premium-v6 .pro-footer__main{width:min(1180px,92%)!important;margin:auto!important;display:grid!important;grid-template-columns:1.4fr 1fr .85fr .85fr 1.15fr!important;gap:22px!important;padding:28px 0 22px!important}
+body.registration-premium-v6 .pro-footer__logo{width:54px!important;height:54px!important;object-fit:contain!important}
+body.registration-premium-v6 .pro-footer__brand-top{display:flex!important;align-items:center!important;gap:10px!important}
+body.registration-premium-v6 .pro-footer__brand-copy strong{font-size:12px!important}
+body.registration-premium-v6 .pro-footer__brand-copy small,
+body.registration-premium-v6 .pro-footer__links a,
+body.registration-premium-v6 .pro-footer__contact-text a,
+body.registration-premium-v6 .pro-footer__contact-text strong,
+body.registration-premium-v6 .pro-footer__contact-text small{font-size:8px!important;color:#c6d7e5!important}
+body.registration-premium-v6 .pro-footer__heading{font-size:10px!important}
+body.registration-premium-v6 .pro-footer__bottom{width:min(1180px,92%)!important;margin:auto!important;padding:10px 0!important;border-top:1px solid rgba(255,255,255,.1)!important;color:#9eb5c9!important;font-size:7px!important}
+body.registration-premium-v6 .floating-contact{display:none!important}
+body.registration-premium-v6 .mobile-bar{display:none!important}
+
+/* Dynamic V6 pricing inserted by the isolated controller. */
+body.registration-premium-v6 .v6-tuition{padding:50px 0!important}
+body.registration-premium-v6 .v6-price-grid{position:relative!important;z-index:1!important}
+body.registration-premium-v6 .v6-price-card{cursor:pointer!important}
+
+@media(max-width:1080px){
+  body.registration-premium-v6 .site-header nav{display:none!important}
+  body.registration-premium-v6 .hero-inner{grid-template-columns:1fr minmax(310px,.58fr)!important}
+  body.registration-premium-v6 .license-grid{grid-template-columns:repeat(3,1fr)!important}
+  body.registration-premium-v6 .pro-footer__main{grid-template-columns:1.4fr 1fr 1fr!important}
+}
+@media(max-width:820px){
+  body.registration-premium-v6{padding-bottom:66px!important}
+  body.registration-premium-v6 .site-header{min-height:68px!important;padding:7px 14px!important}
+  body.registration-premium-v6 .site-header .brand{min-width:0!important}
+  body.registration-premium-v6 .site-header .brand img{width:54px!important;height:54px!important}
+  body.registration-premium-v6 .site-header .brand span{display:none!important}
+  body.registration-premium-v6 .hero{min-height:auto!important;background-position:center top!important}
+  body.registration-premium-v6 .hero::before{background:linear-gradient(180deg,rgba(233,248,255,.94) 0%,rgba(233,248,255,.80) 38%,rgba(255,255,255,.12) 68%,rgba(255,255,255,.03) 100%)!important}
+  body.registration-premium-v6 .hero-inner{display:block!important;min-height:auto!important;padding:20px 0 0!important}
+  body.registration-premium-v6 .hero-copy{text-align:center!important;padding-bottom:225px!important}
+  body.registration-premium-v6 .hero h1{font-size:37px!important}
+  body.registration-premium-v6 .hero-text{display:none!important}
+  body.registration-premium-v6 .hero-benefits{grid-template-columns:1fr!important;width:min(330px,94%)!important;margin:12px auto 0!important;text-align:left!important;gap:6px!important}
+  body.registration-premium-v6 .hero-actions{justify-content:center!important}
+  body.registration-premium-v6 .hero-form-card{margin:0 -1px!important;border-radius:14px 14px 0 0!important}
+  body.registration-premium-v6 .quick-features{width:100%!important;grid-template-columns:repeat(4,1fr)!important}
+  body.registration-premium-v6 .quick-features article{display:grid!important;justify-items:center!important;text-align:center!important;gap:5px!important;min-height:86px!important;padding:10px 4px!important}
+  body.registration-premium-v6 .quick-features small{display:none!important}
+  body.registration-premium-v6 .course-section{width:100%!important;padding:42px 14px!important}
+  body.registration-premium-v6 .license-grid{display:flex!important;gap:10px!important;overflow-x:auto!important;padding:2px 2px 10px!important;scroll-snap-type:x mandatory!important;scrollbar-width:none!important}
+  body.registration-premium-v6 .license-grid::-webkit-scrollbar{display:none!important}
+  body.registration-premium-v6 .license-card{flex:0 0 48vw!important;scroll-snap-align:start!important}
+  body.registration-premium-v6 .process-section{width:100%!important;padding:20px 14px 34px!important}
+  body.registration-premium-v6 .process-grid{display:flex!important;overflow-x:auto!important;gap:6px!important;scroll-snap-type:x mandatory!important}
+  body.registration-premium-v6 .process-grid article{flex:0 0 31%!important;scroll-snap-align:start!important}
+  body.registration-premium-v6 .process-grid article::after{display:none!important}
+  body.registration-premium-v6 .pro-footer__main{grid-template-columns:1fr!important}
+  body.registration-premium-v6 .pro-footer__bottom{display:grid!important;text-align:center!important}
+}
