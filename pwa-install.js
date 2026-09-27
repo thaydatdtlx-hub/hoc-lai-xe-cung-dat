@@ -33,6 +33,7 @@ function studentFunctionsReady(){
 
 function afterStudentPaint(callback){requestAnimationFrame(()=>requestAnimationFrame(callback))}
 function loadEnhancementsWhenSafe(){
+  if(isPublicLanding())return;
   if(!isStudentPortal()){void loadSharedEnhancements();return}
   if(studentFunctionsReady()){afterStudentPaint(()=>void loadSharedEnhancements());return}
   window.addEventListener("student-functions-ready",()=>afterStudentPaint(()=>void loadSharedEnhancements()),{once:true});
