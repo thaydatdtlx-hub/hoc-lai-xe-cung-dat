@@ -1,13 +1,23 @@
 import "./overlay-safety.css";
 
 const isStudentPortal=()=>location.pathname==="/hoc-vien.html";
-const professionalUiPromise=import("./platform-professional.js?v=20260825-1").catch(error=>console.warn("[professional-ui] Không thể tải giao diện dùng chung.",error));
+const isRegistrationLanding=()=>location.pathname==="/dang-ky-hoc-lai-xe.html"||(location.pathname==="/"&&Boolean(document.getElementById("registrationForm")));
+let professionalUiPromise=null;
 let sharedEnhancementsPromise=null;
+
+function loadProfessionalUi(){
+  if(professionalUiPromise)return professionalUiPromise;
+  professionalUiPromise=import("./platform-professional.js?v=20260825-1").catch(error=>{
+    console.warn("[professional-ui] Không thể tải giao diện dùng chung.",error);
+    professionalUiPromise=null;
+  });
+  return professionalUiPromise;
+}
 
 function loadSharedEnhancements(){
   if(sharedEnhancementsPromise)return sharedEnhancementsPromise;
   sharedEnhancementsPromise=Promise.all([
-    professionalUiPromise,
+    loadProfessionalUi(),
     import("./site-unification.js"),
     import("./site-config-public.js"),
     import("./professional-public-polish.js"),
@@ -33,6 +43,7 @@ function studentFunctionsReady(){
 
 function afterStudentPaint(callback){requestAnimationFrame(()=>requestAnimationFrame(callback))}
 function loadEnhancementsWhenSafe(){
+  if(isRegistrationLanding())return;
   if(!isStudentPortal()){void loadSharedEnhancements();return}
   if(studentFunctionsReady()){afterStudentPaint(()=>void loadSharedEnhancements());return}
   window.addEventListener("student-functions-ready",()=>afterStudentPaint(()=>void loadSharedEnhancements()),{once:true});
