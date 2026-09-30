@@ -26,9 +26,27 @@ function pricingCard(plan,index){
 }
 async function repairPricing(){
   if(!isRegistrationPage())return;
+
+  // The registration page already owns pricing through tuition-details.js.
+  // Never race that module with this legacy fallback, otherwise two tuition
+  // sections can be inserted with the same id.
+  const primaryState=()=>document.documentElement.dataset.tuitionDetails;
+  if(primaryState()==="loading"||primaryState()==="ready")return;
+
   const config=await rpc("app_public_tuition_config");if(!Array.isArray(config)||!config.length)return;
+
+  // Re-check after the network request because tuition-details.js may have
+  // finished while the RPC was in flight.
+  if(primaryState()==="loading"||primaryState()==="ready"){
+    syncFaq(config);
+    return;
+  }
+
   const existing=document.getElementById("hoc-phi-tu-van");
-  if(existing&&!/Nhận báo giá/.test(existing.textContent||""))return;
+  if(existing&&!/Nhận báo giá/.test(existing.textContent||"")){
+    syncFaq(config);
+    return;
+  }
   existing?.remove();
   const anchor=document.querySelector(".training-detail-section")||document.querySelector(".license-info-section");if(!anchor)return;
   const section=document.createElement("section");section.id="hoc-phi-tu-van";section.className="site-upgrade-section site-pricing tuition-section";
