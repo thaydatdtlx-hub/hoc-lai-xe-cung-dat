@@ -33,7 +33,7 @@ function mountPricing(){
 }
 
 function mountLocation(){
-  if($("dia-diem-lien-he"))return;const anchor=document.querySelector(".registration-procedure-section")||document.querySelector(".condition-section");if(!anchor)return;
+  if($("dia-diem-lien-he")||$("dia-chi-dang-ky"))return;const anchor=document.querySelector(".registration-procedure-section")||document.querySelector(".condition-section");if(!anchor)return;
   const node=section("site-location","dia-diem-lien-he",`<div class="site-location-grid"><div class="site-location-info"><p>ĐỊA ĐIỂM & GIỜ LÀM VIỆC</p><h2>Liên hệ trước để được hướng dẫn đúng địa điểm</h2><span>Địa chỉ tiếp nhận hồ sơ, sân tập và lớp học có thể khác nhau theo khóa. Học viên nên xác nhận trước khi di chuyển.</span><div class="site-location-list"><div><b>📍</b><span><strong>Văn phòng tiếp nhận hồ sơ</strong><small>Liên hệ Zalo hoặc hotline để nhận địa chỉ đang áp dụng.</small></span></div><div><b>🚘</b><span><strong>Sân tập và địa điểm thực hành</strong><small>Được bố trí theo hạng bằng, nội dung và lịch học.</small></span></div><div><b>🕘</b><span><strong>Giờ hỗ trợ</strong><small>Tiếp nhận tư vấn qua điện thoại và Zalo; lịch làm việc trực tiếp cần xác nhận trước.</small></span></div></div><a href="${ZALO_URL}" target="_blank" rel="noopener noreferrer">Nhận địa chỉ qua Zalo</a></div><div class="site-location-map"><div><span>🗺️</span><h3>Chỉ đường chính xác trước buổi hẹn</h3><p>Do website chưa có địa chỉ chính thức được xác nhận, hệ thống không tự gắn một vị trí bản đồ có thể gây nhầm lẫn. Sau khi liên hệ, học viên sẽ nhận địa chỉ và hướng dẫn di chuyển phù hợp.</p><a href="tel:${PHONE}">Gọi xác nhận địa điểm</a></div></div>`);
   anchor.insertAdjacentElement("afterend",node);
 }
@@ -70,5 +70,5 @@ function enhanceSuccess(){
 }
 function toast(text){let el=document.querySelector(".site-upgrade-toast");if(!el){el=document.createElement("div");el.className="site-upgrade-toast";document.body.append(el)}el.innerHTML=`<strong>${text}</strong><small>Thầy Đạt · Hệ thống tuyển sinh</small>`;el.classList.add("show");clearTimeout(el.timer);el.timer=setTimeout(()=>el.classList.remove("show"),2600)}
 
-function boot(){mountMobileMenu();mountPricing();mountLocation();mountProof();mountIntakes();enhancePrivacy();captureSource();mountLookup();enhanceSuccess()}
+function boot(){mountMobileMenu();mountLocation();mountProof();mountIntakes();enhancePrivacy();captureSource();mountLookup();enhanceSuccess()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
