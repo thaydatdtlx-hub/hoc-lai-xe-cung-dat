@@ -1,6 +1,6 @@
 import "./tuition-details.css";
 
-const tuitionAnchor=document.querySelector(".training-detail-section")||document.querySelector(".license-info-section");
+const tuitionAnchor=document.querySelector(".course-section")||document.querySelector(".training-detail-section")||document.querySelector(".license-info-section");
 const SUPABASE_URL="https://pkzxkvcncipfszeukpwu.supabase.co";
 const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
 const money=value=>new Intl.NumberFormat("vi-VN").format(Number(value)||0)+" VNĐ";
@@ -129,6 +129,8 @@ async function mountTuition(){
   </div>`;
   tuitionAnchor.insertAdjacentElement("afterend",section);
   bindButtons(section);
+  const activeLicense=document.querySelector("[data-license-card].active")?.dataset.licenseCard;
+  if(activeLicense)selectTuitionCard(section,activeLicense);
   document.documentElement.dataset.tuitionDetails="ready";
 }
 
