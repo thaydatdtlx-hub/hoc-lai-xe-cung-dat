@@ -3,6 +3,7 @@ import "@fontsource/be-vietnam-pro/500.css";
 import "@fontsource/be-vietnam-pro/600.css";
 import "@fontsource/be-vietnam-pro/700.css";
 import "@fontsource/be-vietnam-pro/800.css";
+import "./preview-typography.css";
 import "./taplai-inspired.css";
 import "./taplai-inspired.js";
 import "./registration-backgrounds.css";
