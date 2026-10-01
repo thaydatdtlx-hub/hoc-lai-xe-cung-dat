@@ -674,7 +674,10 @@ function syncStudentLicenseFields(){
   const motorcycle=isMotorcycleLicense($("licenseClass")?.value);
   for(const id of MOTORCYCLE_HIDDEN_STUDENT_FIELDS){
     const label=$(id)?.closest("label");
-    if(label)label.hidden=motorcycle;
+    if(!label)continue;
+    label.hidden=motorcycle;
+    if(motorcycle)label.style.setProperty("display","none","important");
+    else label.style.removeProperty("display");
   }
 }
 function showPhoto(value=""){currentPhoto=value||"";$("photoPreview").src=currentPhoto;$("photoPreview").classList.toggle("hidden",!currentPhoto);$("photoPlaceholder").classList.toggle("hidden",Boolean(currentPhoto))}
