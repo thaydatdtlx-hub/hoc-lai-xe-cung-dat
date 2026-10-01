@@ -44,6 +44,11 @@ function esc(value){
 function errorText(error){return error?.message||"Không thể cập nhật lịch đào tạo theo khóa học."}
 function isManualB(student){return normalize(student?.license_class).includes("b so co khi")}
 function isAutomaticB(student){return normalize(student?.license_class).includes("b so tu dong")}
+function isA1OrA(student){
+  const value=normalize(student?.license_class).replace(/[^a-z0-9]+/g," ").trim();
+  return /(^| )(a1|a)( |$)/.test(value);
+}
+function isA1OrACourse(members){return members.length>0&&members.every(isA1OrA)}
 function courseMembers(key){return students.filter(student=>courseKey(student.course)===key&&student.deleted_at==null)}
 function courseRow(key){return courseRows.find(item=>String(item.course_key)===String(key))||null}
 function clone(value){return value?JSON.parse(JSON.stringify(value)):null}
@@ -102,6 +107,7 @@ async function refreshData(force=false){
 }
 
 function fieldsForMembers(members){
+  if(isA1OrACourse(members))return SCHEDULE_FIELDS.filter(field=>field.key==="exam");
   const keys=new Set(BASE_KEYS);
   if(members.some(student=>isAutomaticB(student)||isManualB(student))){
     for(const key of AUTO_DAT_KEYS)keys.add(key);
@@ -142,10 +148,13 @@ function scheduleDraft(row,preferredStudentId=""){
 function renderFields(row,preferredStudentId=""){
   const host=$("scheduleFields");
   const members=courseMembers(row.course_key);
+  const aCourse=isA1OrACourse(members);
   const fields=fieldsForMembers(members);
   const schedule=scheduleDraft(row,preferredStudentId);
   const dates=schedule.dates&&typeof schedule.dates==="object"?schedule.dates:{};
   const locations=schedule.locations&&typeof schedule.locations==="object"?schedule.locations:{};
+  if(aCourse&&!dates.exam)draftSourceName="";
+  host.style.gridTemplateColumns=aCourse?"1fr":"";
 
   host.innerHTML=fields.map(field=>`
     <section class="schedule-field tone-${esc(field.tone)}">
@@ -154,16 +163,18 @@ function renderFields(row,preferredStudentId=""){
       <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}"></label>
     </section>`).join("");
 
+  const onlineRangeNote=aCourse?"":`
+    <div class="dat-range-note">
+      <strong>Thời gian lý thuyết online</strong>
+      <span>Nhập đủ ngày bắt đầu và ngày kết thúc của khóa học online.</span>
+    </div>`;
   host.insertAdjacentHTML("afterbegin",`
     <div class="course-schedule-scope">
       <strong>Áp dụng đồng bộ cho toàn khóa</strong>
       <span>Mọi thay đổi bên dưới sẽ cập nhật cùng lúc cho ${members.length} học viên. Các ca học riêng và buổi thực hành cá nhân vẫn được giữ nguyên.</span>
     </div>
     ${draftSourceName&&!row.has_schedule?`<div class="dat-range-note course-draft-note"><strong>Đã lấy mốc cũ để tham khảo</strong><span>Các ô đang được điền từ lịch của ${esc(draftSourceName)}. Khi bấm lưu, lịch này mới trở thành lịch chung của toàn khóa.</span></div>`:""}
-    <div class="dat-range-note">
-      <strong>Thời gian lý thuyết online</strong>
-      <span>Nhập đủ ngày bắt đầu và ngày kết thúc của khóa học online.</span>
-    </div>`);
+    ${onlineRangeNote}`);
 
   if(members.some(isAutomaticB)||members.some(isManualB)){
     host.insertAdjacentHTML("beforeend",`
@@ -173,8 +184,11 @@ function renderFields(row,preferredStudentId=""){
       </div>`);
   }
 
-  $("scheduleNote").value=schedule.note||"";
-  $("scheduleNote").maxLength=1000;
+  const noteField=$("scheduleNote");
+  const noteLabel=noteField?.closest("label");
+  if(noteLabel)noteLabel.hidden=aCourse;
+  noteField.value=schedule.note||"";
+  noteField.maxLength=1000;
 }
 
 function setRepresentative(members){
