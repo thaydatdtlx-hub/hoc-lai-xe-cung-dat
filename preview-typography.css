@@ -1,0 +1,61 @@
+/* Preview typography · Be Vietnam Pro */
+body,button,input,select,textarea{
+  font-family:"Be Vietnam Pro","Segoe UI",Arial,sans-serif;
+}
+body{
+  font-weight:400;
+  letter-spacing:-.005em;
+}
+.hero h1{
+  font-weight:800;
+  letter-spacing:-.045em;
+}
+.intro-copy h2,
+.section-heading h2,
+.condition-copy h2,
+.registration-copy h2{
+  font-weight:800;
+  letter-spacing:-.035em;
+}
+.hero-form-card h2,
+.form-heading h3,
+.selected-plan-card strong,
+.selected-bar strong{
+  font-weight:700;
+}
+.brand strong,
+.site-header nav a,
+.btn,
+.license-card i,
+.selected-bar button,
+.submit-button,
+.tuition-card button{
+  font-weight:700;
+}
+.hero-text,
+.intro-copy>p:last-of-type,
+.condition-copy>p,
+.registration-copy>p,
+.section-heading>span,
+.tuition-heading>span{
+  font-weight:400;
+  letter-spacing:0;
+}
+.license-card small,
+.schedule-grid p,
+.faq-list p,
+.registration-form label,
+.registration-form input,
+.registration-form select,
+.registration-form textarea,
+.tuition-card__header p,
+.tuition-included{
+  font-weight:400;
+}
+.eyebrow,
+.section-kicker,
+.form-heading p,
+.tuition-heading p{
+  font-weight:800;
+  letter-spacing:.12em;
+}
