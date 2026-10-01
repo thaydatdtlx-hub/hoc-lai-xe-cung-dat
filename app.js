@@ -667,6 +667,16 @@ function selectStat(card){statFilter=card.dataset.statFilter;$("search").value="
 document.querySelectorAll("[data-stat-filter]").forEach(card=>{card.onclick=()=>selectStat(card);card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectStat(card)}}});
 
 function setSelect(id,value){const el=$(id),v=value??"";if(v&&![...el.options].some(o=>o.value===v))el.add(new Option(v,v));el.value=v||el.options[0]?.value||""}
+const MOTORCYCLE_LICENSES=new Set(["A1","A"]);
+const MOTORCYCLE_HIDDEN_STUDENT_FIELDS=["onlineStatus","onlineStart","onlineEnd","cabinStatus","datStatus","graduationStatus"];
+function isMotorcycleLicense(value){return MOTORCYCLE_LICENSES.has(String(value||"").trim().toUpperCase())}
+function syncStudentLicenseFields(){
+  const motorcycle=isMotorcycleLicense($("licenseClass")?.value);
+  for(const id of MOTORCYCLE_HIDDEN_STUDENT_FIELDS){
+    const label=$(id)?.closest("label");
+    if(label)label.hidden=motorcycle;
+  }
+}
 function showPhoto(value=""){currentPhoto=value||"";$("photoPreview").src=currentPhoto;$("photoPreview").classList.toggle("hidden",!currentPhoto);$("photoPlaceholder").classList.toggle("hidden",Boolean(currentPhoto))}
 async function compressPhoto(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const ratio=img.width/img.height;if(Math.abs(ratio-.75)>.045){URL.revokeObjectURL(url);return reject(new Error("Ảnh không đúng tỷ lệ 3×4. Vui lòng chọn ảnh dọc 3×4 nền trắng."))}const check=document.createElement("canvas"),cw=180,ch=240;check.width=cw;check.height=ch;const cx=check.getContext("2d",{willReadFrequently:true});cx.drawImage(img,0,0,cw,ch);const p=cx.getImageData(0,0,cw,ch).data;let white=0,total=0;for(let y=0;y<ch*.72;y+=3)for(let x=0;x<cw;x+=3)if(y<ch*.18||x<cw*.1||x>cw*.9){const i=(y*cw+x)*4,totalPixel=p[i]+p[i+1]+p[i+2];total++;if(totalPixel>690&&Math.max(p[i],p[i+1],p[i+2])-Math.min(p[i],p[i+1],p[i+2])<32)white++}if(!total||white/total<.58){URL.revokeObjectURL(url);return reject(new Error("Ảnh chưa đạt yêu cầu nền trắng. Vui lòng chọn ảnh thẻ 3×4 có nền trắng rõ ràng."))}const canvas=document.createElement("canvas");canvas.width=450;canvas.height=600;canvas.getContext("2d").drawImage(img,0,0,450,600);URL.revokeObjectURL(url);resolve(canvas.toDataURL("image/jpeg",.82))};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Không đọc được file ảnh"))};img.src=url})}
 function openStudent(s=null){
@@ -674,11 +684,12 @@ function openStudent(s=null){
   $("studentForm").reset();$("studentError").textContent="";$("studentId").value=s?.id||"";$("studentTitle").textContent=s?"Sửa thông tin học viên":"Thêm học viên";
   $("name").value=s?.name||"";$("dob").value=s?.date_of_birth||"";$("cccd").value=s?.cccd||"";$("phone").value=s?.phone||"";$("course").value=s?.course||"";$("tuitionTotal").value=s?.tuition_total||"";$("paid").value=s?.paid||"";$("address").value=s?.address||"";$("notes").value=stripScheduleFromNotes(s?.notes||"");$("onlineStart").value=String(schedule.dates?.online_start||"").slice(0,10);$("onlineEnd").value=String(schedule.dates?.online_end||"").slice(0,10);$("photoFile").value="";showPhoto(s?.photo_data||"");
   $("paid").readOnly=paymentsReady;$("paidFieldHint").textContent=paymentsReady?"Được tính tự động từ Sổ thu & Phiếu thu.":"Nhập tổng số tiền đã thu.";
-  setSelect("licenseClass",s?.license_class||"B số tự động");setSelect("profileStatus",s?.profile_status||"Đã ghi nhận");setSelect("onlineStatus",s?.online_status||"Chưa hoàn thành");setSelect("cabinStatus",s?.cabin_status||"Chưa hoàn thành");setSelect("datStatus",s?.dat_status||"Chưa thực hiện");setSelect("graduationStatus",s?.graduation_status||"Chưa hoàn thành");setSelect("examStatus",s?.exam_status||"Chưa thi sát hạch");
+  setSelect("licenseClass",s?.license_class||"B số tự động");setSelect("profileStatus",s?.profile_status||"Đã ghi nhận");setSelect("onlineStatus",s?.online_status||"Chưa hoàn thành");setSelect("cabinStatus",s?.cabin_status||"Chưa hoàn thành");setSelect("datStatus",s?.dat_status||"Chưa thực hiện");setSelect("graduationStatus",s?.graduation_status||"Chưa hoàn thành");setSelect("examStatus",s?.exam_status||"Chưa thi sát hạch");syncStudentLicenseFields();
   if(me.role==="admin"){$("studentOwner").value=s?.owner_id||$("ownerFilter").value||me.id;$("studentOwner").disabled=Boolean(s)}
   $("studentDialog").showModal();setTimeout(()=>$("name").focus(),50);
 }
 $("addStudentBtn").onclick=()=>openStudent();
+$("licenseClass").addEventListener("change",syncStudentLicenseFields);
 $("photoFile").onchange=async e=>{const file=e.target.files[0];if(!file)return;const ext=file.name.toLowerCase().split(".").pop(),validType=["image/jpeg","image/png"].includes(file.type)&&["jpg","jpeg","png"].includes(ext);if(!validType){e.target.value="";return $("studentError").textContent="Chỉ chấp nhận file ảnh JPG, JPEG hoặc PNG."}if(file.size>10*1024*1024){e.target.value="";return $("studentError").textContent="Ảnh gốc không được lớn hơn 10 MB."}try{$("studentError").textContent="Đang kiểm tra ảnh 3×4 nền trắng…";showPhoto(await compressPhoto(file));$("studentError").textContent=""}catch(err){e.target.value="";$("studentError").textContent=errText(err)}};
 $("removePhotoBtn").onclick=()=>{$("photoFile").value="";showPhoto("")};
 $("studentRows").onclick=async e=>{
@@ -699,9 +710,10 @@ $("studentForm").onsubmit=async e=>{
   if(!$("name").value.trim())return $("studentError").textContent="Vui lòng nhập họ và tên.";
   if($("paid").value&&Number($("paid").value)>Number($("tuitionTotal").value||0))return $("studentError").textContent="Số tiền đã thu không được lớn hơn tổng học phí.";
   const current=students.find(s=>s.id===$("studentId").value),schedule=parseScheduleFromNotes(current?.notes||"")||{version:1,dates:{},locations:{},note:""};
-  const onlineStart=$("onlineStart").value,onlineEnd=$("onlineEnd").value;
-  if(Boolean(onlineStart)!==Boolean(onlineEnd))return $("studentError").textContent="Vui lòng nhập đủ ngày bắt đầu và kết thúc lý thuyết online.";
-  if(onlineStart&&onlineEnd<onlineStart)return $("studentError").textContent="Ngày kết thúc lý thuyết online không được trước ngày bắt đầu.";
+  const motorcycle=isMotorcycleLicense($("licenseClass").value);
+  const onlineStart=motorcycle?"":$("onlineStart").value,onlineEnd=motorcycle?"":$("onlineEnd").value;
+  if(!motorcycle&&Boolean(onlineStart)!==Boolean(onlineEnd))return $("studentError").textContent="Vui lòng nhập đủ ngày bắt đầu và kết thúc lý thuyết online.";
+  if(!motorcycle&&onlineStart&&onlineEnd<onlineStart)return $("studentError").textContent="Ngày kết thúc lý thuyết online không được trước ngày bắt đầu.";
   schedule.dates=schedule.dates||{};schedule.locations=schedule.locations||{};
   if(onlineStart){schedule.dates.online_start=onlineStart;schedule.dates.online_end=onlineEnd}
   else{delete schedule.dates.online_start;delete schedule.dates.online_end;delete schedule.locations.online_start;delete schedule.locations.online_end}
