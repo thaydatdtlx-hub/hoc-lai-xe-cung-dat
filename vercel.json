@@ -6,6 +6,16 @@
   "regions": ["sin1"],
   "redirects": [
     {
+      "source": "/mo-phong-120.html",
+      "destination": "/600-cau-hoi.html",
+      "permanent": false
+    },
+    {
+      "source": "/mo-phong-120",
+      "destination": "/600-cau-hoi.html",
+      "permanent": false
+    },
+    {
       "source": "/:path*",
       "has": [
         {"type": "host", "value": "hoclaixecungdat.vercel.app"}

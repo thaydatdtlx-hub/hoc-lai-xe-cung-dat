@@ -22,19 +22,25 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
-      - name: Verify simulation module
+      - name: Verify preserved simulation source
         run: |
           node --check public/mo-phong/core.mjs
           node --check public/mo-phong/app.mjs
           node scripts/test-simulation-media.mjs
       - name: Build production bundle
         run: npm run build
-      - name: Verify static simulation page is shipped
+      - name: Verify simulation retirement and shared exam styles
         run: |
           test -f dist/mo-phong-120.html
-          test -f dist/mo-phong/app.mjs
-          test -f dist/mo-phong/core.mjs
-          test -f dist/data/mo-phong-120-media.json
+          test -f dist/mo-phong/style.css
+          test ! -f dist/mo-phong/app.mjs
+          test ! -f dist/mo-phong/core.mjs
+          test ! -f dist/data/mo-phong-120-media.json
+          test ! -f dist/data/mo-phong-120-timing-source.json
+          grep -F 'url=/600-cau-hoi.html' dist/mo-phong-120.html
+          if grep -E '/mo-phong-120|/mo-phong/app\.mjs' dist/600-cau-hoi.html dist/kiem-tra-het-mon.html; then
+            exit 1
+          fi
       - name: Verify emergency login recovery is present
         run: |
           grep -F '/rpc-preflight.js?v=20260902-1' dist/index.html

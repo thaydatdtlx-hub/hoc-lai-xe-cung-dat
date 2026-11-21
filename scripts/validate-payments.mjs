@@ -117,11 +117,11 @@ if(navigationCss.includes("#studentPortal #studentPayment{display:none!important
 if(!navigationCss.includes("#studentFinanceHub #studentPayment.student-finance-panel.active{display:block!important}"))throw new Error("Tab thanh toán trong hub chưa được bảo đảm hiển thị.");
 
 const pwaSource=readFileSync(new URL("../pwa-install.js",import.meta.url),"utf8");
-for(const required of ["hoclaixecungdat_sw_refresh_v50","registration.update()","SKIP_WAITING","controllerchange"]){
+for(const required of ["hoclaixecungdat_sw_refresh_v52","registration.update()","SKIP_WAITING","controllerchange"]){
   if(!pwaSource.includes(required))throw new Error(`PWA chưa buộc nhận bản sửa thanh toán mới: ${required}`);
 }
 const serviceWorkerSource=readFileSync(new URL("../public/sw.js",import.meta.url),"utf8");
-for(const required of ["hoclaixecungdat-pwa-v51",'/student-payment-modal.js','/student-payment-navigation.js','/student-payment-navigation.css','/api/tuition-qr',"SKIP_WAITING"]){
+for(const required of ["hoclaixecungdat-pwa-v52",'/student-payment-modal.js','/student-payment-navigation.js','/student-payment-navigation.css','/api/tuition-qr',"SKIP_WAITING"]){
   if(!serviceWorkerSource.includes(required))throw new Error(`Service worker chưa làm mới trang thanh toán: ${required}`);
 }
 
