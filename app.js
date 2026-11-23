@@ -822,10 +822,10 @@ $("studentForm").onsubmit=async e=>{
 async function loadUsers(){
   const old=$("ownerFilter").value;
   users=await rpc("app_list_users",{p_token:token})||[];
-  const options=users.map(u=>`<option value="${u.id}">${esc(u.username)}${u.role==="admin"?" (Admin)":""}</option>`).join("");
+  const options=users.map(u=>`<option value="${u.id}">${esc(u.username)}${u.deleted_at?" (Đã xóa)":u.role==="admin"?" (Admin)":""}</option>`).join("");
   $("ownerFilter").innerHTML='<option value="">Tất cả tài khoản</option>'+options;$("studentOwner").innerHTML=options;
   if([...$("ownerFilter").options].some(o=>o.value===old))$("ownerFilter").value=old;
-  $("userList").innerHTML=users.map(u=>`<div class="user-item manager-account-row"><div class="manager-account-name"><strong>${esc(u.username)}</strong><span class="manager-account-meta">${u.role==="admin"?"Quản trị viên":"Nhân viên"} · ${u.active?"Đang hoạt động":"Đã khóa"}</span></div><div class="manager-account-actions"><button type="button" class="manager-edit-button" data-manager-edit="${u.id}">Chỉnh sửa</button>${u.role==="admin"?"":`<button type="button" data-reset="${u.id}">Đặt lại mật khẩu</button><button type="button" data-toggle="${u.id}" data-active="${u.active}">${u.active?"Khóa":"Mở khóa"}</button>`}</div></div>`).join("");
+  $("userList").innerHTML=users.filter(u=>!u.deleted_at).map(u=>`<div class="user-item manager-account-row"><div class="manager-account-name"><strong>${esc(u.username)}</strong><span class="manager-account-meta">${u.role==="admin"?"Quản trị viên":"Nhân viên"} · ${u.active?"Đang hoạt động":"Đã khóa"}</span></div><div class="manager-account-actions"><button type="button" class="manager-edit-button" data-manager-edit="${u.id}">Chỉnh sửa</button>${u.role==="admin"?"":`<button type="button" data-reset="${u.id}">Đặt lại mật khẩu</button><button type="button" data-toggle="${u.id}" data-active="${u.active}">${u.active?"Khóa":"Mở khóa"}</button>`}<button type="button" class="manager-delete-button" data-manager-delete="${u.id}" ${String(u.id)===String(me?.id)?"disabled title=\"Không thể xóa tài khoản đang dùng\"":""}>Xóa</button></div></div>`).join("");
 }
 async function loadStudentAccounts(){
   try{
@@ -1007,8 +1007,13 @@ $("toggleStudentAccountBtn").onclick=async()=>{
 $("usersBtn").onclick=()=>{$("userError").textContent="";$("usersDialog").showModal()};
 $("userForm").onsubmit=async event=>{
   event.preventDefault();$("userError").textContent="";$("createUserBtn").disabled=true;
-  const username=$("newUsername").value.trim();
-  try{const created=await rpc("app_create_user",{p_token:token,p_username:username,p_password:$("newPassword").value});await recordAudit("manager_created","manager",created?.id||"",username);event.target.reset();toast("Đã tạo tài khoản quản lý");await loadUsers()}
+  const username=$("newUsername").value.trim().toLowerCase(),role=$("newUserRole").value;
+  try{
+    const created=await rpc("app_admin_create_manager",{p_token:token,p_username:username,p_password:$("newPassword").value,p_role:role});
+    event.target.reset();
+    toast("Đã tạo "+(created.role==="admin"?"quản trị viên":"nhân viên"));
+    await loadUsers();
+  }
   catch(error){$("userError").textContent=errText(error)}finally{$("createUserBtn").disabled=false}
 };
 function openManagerEdit(userId){
@@ -1060,6 +1065,22 @@ $("userList").onclick=async event=>{
   const button=event.target.closest("button");if(!button)return;
   try{
     if(button.dataset.managerEdit){openManagerEdit(button.dataset.managerEdit);return}
+    if(button.dataset.managerDelete){
+      const user=users.find(item=>String(item.id)===String(button.dataset.managerDelete));
+      if(!user||user.deleted_at)return;
+      if(String(user.id)===String(me?.id))throw new Error("Không thể xóa tài khoản đang đăng nhập.");
+      const confirmText=prompt(`XÓA ${user.role==="admin"?"QUẢN TRỊ VIÊN":"NHÂN VIÊN"}: ${user.username}\n\nTài khoản này sẽ bị ngừng truy cập ngay. Dữ liệu học viên và lịch sử sẽ được giữ nguyên.\n\nNhập chính xác tên đăng nhập để xác nhận xóa:`);
+      if(confirmText===null)return;
+      if(confirmText.trim().toLowerCase()!==user.username)throw new Error("Tên đăng nhập xác nhận không đúng. Chưa xóa tài khoản.");
+      if(!confirm(`Xác nhận xóa tài khoản "${user.username}"? Thao tác sẽ thu hồi quyền truy cập ngay.`))return;
+      button.disabled=true;
+      try{
+        await rpc("app_admin_delete_manager",{p_token:token,p_user_id:user.id,p_confirm_username:user.username});
+        await loadUsers();
+        toast("Đã xóa quyền truy cập tài khoản "+user.username);
+      }finally{button.disabled=false}
+      return;
+    }
     if(button.dataset.toggle){const active=button.dataset.active!=="true",user=users.find(item=>String(item.id)===String(button.dataset.toggle));await rpc("app_set_user_active",{p_token:token,p_user_id:button.dataset.toggle,p_active:active});await recordAudit("manager_status_changed","manager",button.dataset.toggle,user?.username||"",{active});await loadUsers();toast("Đã cập nhật tài khoản")}
     if(button.dataset.reset){const password=prompt("Nhập mật khẩu tạm mới (ít nhất 8 ký tự):");if(password){const user=users.find(item=>String(item.id)===String(button.dataset.reset));await rpc("app_admin_reset_password",{p_token:token,p_user_id:button.dataset.reset,p_password:password});await recordAudit("manager_password_reset","manager",button.dataset.reset,user?.username||"");toast("Đã đặt lại mật khẩu")}}
   }catch(error){$("userError").textContent=errText(error)}
