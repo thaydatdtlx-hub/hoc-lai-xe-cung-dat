@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="styles.css?v=4"><link rel="stylesheet" href="theme.css?v=15"><link rel="stylesheet" href="/contact-footer.css?v=1"><link rel="stylesheet" href="/professional.css?v=15"><link rel="stylesheet" href="/pwa-install.css?v=1"><link rel="stylesheet" href="/mobile-app.css?v=1"><link rel="stylesheet" href="/driving-refresh.css?v=1">
   <link rel="stylesheet" href="/admin-toolbar-unified.css?v=2">
   <link rel="stylesheet" href="/student-quick-search.css?v=20261123">
+  <link rel="stylesheet" href="/manager-account-editor.css?v=20261123">
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
   <link rel="preload" as="image" href="/login-cars-approved-v24.webp?v=24">
   <link rel="preload" as="image" href="/logo-thay-dat-compact.webp?v=15">
@@ -372,9 +373,30 @@
   </dialog>
 
   <dialog id="usersDialog">
-    <div class="dialog-head"><h2>Tài khoản quản lý</h2><button type="button" class="close">×</button></div>
-    <form id="userForm" class="inline-form"><input id="newUsername" placeholder="Tên đăng nhập" required><input id="newPassword" type="password" placeholder="Mật khẩu tạm (từ 8 ký tự)" minlength="8" required><button id="createUserBtn" class="primary">Tạo tài khoản</button></form>
+    <div class="dialog-head"><h2>Tài khoản quản lý</h2><button type="button" class="close" aria-label="Đóng">×</button></div>
+    <p class="manager-account-description">Tạo, chỉnh sửa tên đăng nhập, đổi mật khẩu hoặc phân quyền nhân viên. Dữ liệu và mã định danh của tài khoản được giữ nguyên.</p>
+    <form id="userForm" class="inline-form"><input id="newUsername" placeholder="Tên đăng nhập" minlength="4" maxlength="40" pattern="[a-z0-9._-]{4,40}" autocomplete="off" required><input id="newPassword" type="password" autocomplete="new-password" placeholder="Mật khẩu tạm (từ 8 ký tự)" minlength="8" required><button id="createUserBtn" class="primary">Tạo tài khoản</button></form>
     <p id="userError" class="error" role="alert"></p><div id="userList" class="user-list"></div>
+  </dialog>
+  <dialog id="editManagerDialog" aria-labelledby="editManagerTitle">
+    <div class="dialog-head"><h2 id="editManagerTitle">Chỉnh sửa tài khoản</h2><button type="button" class="close" aria-label="Đóng">×</button></div>
+    <form id="editManagerForm">
+      <input id="editManagerId" type="hidden">
+      <div class="manager-edit-fields">
+        <label>Tên đăng nhập
+          <input id="editManagerUsername" required minlength="4" maxlength="40" pattern="[a-z0-9._-]{4,40}" autocomplete="off" spellcheck="false">
+        </label>
+        <label>Phân quyền
+          <select id="editManagerRole" required><option value="user">Nhân viên</option><option value="admin">Quản trị viên</option></select>
+        </label>
+        <label>Mật khẩu tạm mới (không bắt buộc)
+          <input id="editManagerPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Để trống nếu không đổi">
+        </label>
+        <p id="editManagerHelp" class="manager-edit-help">Tài khoản sẽ đăng nhập lại khi quyền hoặc mật khẩu thay đổi.</p>
+      </div>
+      <p id="editManagerError" class="error" role="alert"></p>
+      <div class="manager-edit-actions"><button type="button" class="close">Hủy</button><button id="saveManagerEditBtn" type="submit" class="primary">Lưu thay đổi</button></div>
+    </form>
   </dialog>
 
   <dialog id="publicTheoryAccountsDialog" class="public-theory-accounts-dialog">
@@ -623,7 +645,7 @@
   </dialog>
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div><div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/app.js?v=3"></script>
+  <script type="module" src="/app.js?v=manager-editor-20261123"></script>
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>
