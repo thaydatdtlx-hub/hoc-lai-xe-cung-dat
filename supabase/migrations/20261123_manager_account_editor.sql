@@ -26,15 +26,15 @@ begin
   perform pg_catalog.pg_advisory_xact_lock(2100261123);
   select * into v_target
   from public.app_users
-  where id::text = pg_catalog.btrim(pg_catalog.coalesce(p_user_id, ''))
+  where id::text = pg_catalog.btrim(coalesce(p_user_id, ''))
   for update;
   if not found then
     raise exception 'Không tìm thấy tài khoản quản lý.';
   end if;
 
-  v_username := pg_catalog.lower(pg_catalog.btrim(pg_catalog.coalesce(p_username, '')));
-  v_role := pg_catalog.lower(pg_catalog.btrim(pg_catalog.coalesce(p_role, '')));
-  v_password := pg_catalog.nullif(pg_catalog.coalesce(p_password, ''), '');
+  v_username := pg_catalog.lower(pg_catalog.btrim(coalesce(p_username, '')));
+  v_role := pg_catalog.lower(pg_catalog.btrim(coalesce(p_role, '')));
+  v_password := nullif(coalesce(p_password, ''), '');
 
   if v_username !~ '^[a-z0-9._-]{4,40}$' then
     raise exception 'Tên đăng nhập gồm 4–40 ký tự: chữ thường không dấu, số, dấu chấm, gạch dưới hoặc gạch ngang.';
