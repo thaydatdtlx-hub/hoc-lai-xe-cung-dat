@@ -196,7 +196,7 @@
 }
 
 #earlyWarningPreview::before{
-  content:"5 CÔNG VIỆC ƯU TIÊN NHẤT";
+  content:"3 CÔNG VIỆC ƯU TIÊN NHẤT";
   display:block;
   margin:1px 0 0;
   color:#4e708e;
@@ -239,8 +239,8 @@
   background:linear-gradient(90deg,#fffbf5,#fff 22%)!important;
 }
 
-/* Dashboard chỉ hiện 5 việc; danh sách đầy đủ vẫn mở bằng nút bên trên. */
-#earlyWarningPreview .early-warning-item:nth-of-type(n+6){display:none!important}
+/* Dashboard chỉ hiện 3 việc ưu tiên. Không xóa dữ liệu cảnh báo còn lại. */
+#earlyWarningPreview .early-warning-item:nth-of-type(n+4){display:none!important}
 
 #earlyWarningPreview .warning-type-icon{
   position:relative;
@@ -493,4 +493,17 @@
 @media(prefers-reduced-motion:reduce){
   #warningViewAll,
   #earlyWarningPreview .early-warning-item{transition:none!important}
+}
+
+
+/* Chế độ tối giản: chỉ còn tiêu đề và ba việc quan trọng nhất. */
+#earlyWarningDashboard .early-warning-head>div>span,
+#earlyWarningDashboard #warningViewAll,
+#earlyWarningDashboard .early-warning-metrics,
+#earlyWarningPreview .warning-person small{
+  display:none!important;
+}
+#earlyWarningDashboard .early-warning-head{
+  margin-bottom:12px!important;
+  padding-bottom:12px!important;
 }
