@@ -36,7 +36,7 @@ begin
       )
   ), '[]'::jsonb);
 end;
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.app_save_student(p_token text, p_student_id text, p_data jsonb, p_owner_id text)
@@ -217,7 +217,7 @@ begin
 
   return v_id::text;
 end;
-$function$
+$function$;
 
 
 CREATE OR REPLACE FUNCTION public.app_delete_student(p_token text, p_student_id text)
@@ -278,7 +278,7 @@ begin
 
   return true;
 end;
-$function$
+$function$;
 
 
 create or replace function public.app_staff_save_student(p_token text,p_student_id text,p_data jsonb)
