@@ -109,3 +109,9 @@
   .manager-account-row .manager-account-actions button { flex: 1 1 auto; }
   #editManagerDialog .manager-edit-actions button { flex: 1 1 140px; }
 }
+
+#usersDialog .manager-create-form select {min-width:135px;min-height:42px;padding:9px 11px;border:1px solid #cfdae9;border-radius:10px;background:#fff;color:#172f56;font:inherit}
+#usersDialog .manager-delete-button {background:#fff6f6;color:#a52727;border:1px solid #f5c7c7}
+#usersDialog .manager-delete-button:hover {background:#ffe5e5}
+#usersDialog .manager-delete-button:disabled {opacity:.4;cursor:not-allowed}
+@media (max-width:600px){#usersDialog .manager-create-form select {width:100%}}
