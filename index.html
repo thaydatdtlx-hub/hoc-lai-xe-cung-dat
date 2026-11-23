@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/admin-toolbar-unified.css?v=2">
   <link rel="stylesheet" href="/student-quick-search.css?v=20261123">
   <link rel="stylesheet" href="/manager-account-editor.css?v=20261123-2">
+  <link rel="stylesheet" href="/student-owner-handover.css?v=20261123">
 <style id="staff-scope-layout">
   body.staff-only-view .staff-restricted-field{display:none!important}
   body.staff-only-view .staff-only-banner{display:block}
@@ -382,6 +383,10 @@
     <p class="manager-account-description">Tạo tài khoản Quản trị viên / Nhân viên, chỉnh sửa phân quyền hoặc xóa quyền truy cập. Hồ sơ học viên và lịch sử hoạt động được giữ nguyên.</p>
     <form id="userForm" class="inline-form manager-create-form"><input id="newUsername" placeholder="Tên đăng nhập" minlength="4" maxlength="40" pattern="[a-z0-9._-]{4,40}" autocomplete="off" aria-label="Tên đăng nhập mới" required><input id="newPassword" type="password" autocomplete="new-password" placeholder="Mật khẩu tạm (từ 8 ký tự)" minlength="8" aria-label="Mật khẩu tạm" required><select id="newUserRole" aria-label="Vai trò tài khoản" required><option value="user">Nhân viên</option><option value="admin">Quản trị viên</option></select><button id="createUserBtn" class="primary">Thêm tài khoản</button></form>
     <p id="userError" class="error" role="alert"></p><div id="userList" class="user-list"></div>
+    <div class="manager-handover-entry">
+      <div><strong>Bàn giao học viên</strong><span>Chuyển hồ sơ giữa các tài khoản mà không mất học phí, lịch học hay lịch sử.</span></div>
+      <button type="button" id="openHandoverBtn" class="primary">Bàn giao hồ sơ</button>
+    </div>
   </dialog>
   <dialog id="editManagerDialog" aria-labelledby="editManagerTitle">
     <div class="dialog-head"><h2 id="editManagerTitle">Chỉnh sửa tài khoản</h2><button type="button" class="close" aria-label="Đóng">×</button></div>
@@ -402,6 +407,55 @@
       <p id="editManagerError" class="error" role="alert"></p>
       <div class="manager-edit-actions"><button type="button" class="close">Hủy</button><button id="saveManagerEditBtn" type="submit" class="primary">Lưu thay đổi</button></div>
     </form>
+  </dialog>
+
+  <dialog id="handoverDialog" aria-labelledby="handoverTitle">
+    <div class="dialog-head">
+      <div><h2 id="handoverTitle">Bàn giao hồ sơ học viên</h2><p class="manager-handover-subtitle">Chỉ Quản trị viên được phép chuyển người phụ trách.</p></div>
+      <button type="button" class="close" aria-label="Đóng">×</button>
+    </div>
+    <form id="handoverForm">
+      <div class="handover-grid">
+        <label>Tài khoản đang phụ trách
+          <select id="handoverFrom" required aria-label="Tài khoản bàn giao"></select>
+        </label>
+        <label>Tài khoản tiếp nhận
+          <select id="handoverTo" required aria-label="Tài khoản tiếp nhận"></select>
+        </label>
+      </div>
+      <p id="handoverScopeHint" class="handover-scope-hint" aria-live="polite"></p>
+      <fieldset class="handover-mode-fieldset">
+        <legend>Phạm vi bàn giao</legend>
+        <label><input type="radio" name="handoverMode" value="all" checked> Toàn bộ hồ sơ (bao gồm hồ sơ trong Thùng rác)</label>
+        <label><input type="radio" name="handoverMode" value="selected"> Chỉ những học viên được chọn (đang hoạt động)</label>
+      </fieldset>
+      <section id="handoverStudentsWrap" class="handover-students-wrap" hidden>
+        <div class="handover-filterbar">
+          <input id="handoverSearch" type="search" placeholder="Tìm tên hoặc mã học viên" aria-label="Tìm học viên để bàn giao">
+          <label class="handover-select-all"><input id="handoverSelectAll" type="checkbox"> Chọn tất cả đang hiển thị</label>
+        </div>
+        <div id="handoverStudents" class="handover-student-list" aria-live="polite"></div>
+        <p id="handoverSelectedCount" class="handover-selected-count">Chưa chọn học viên</p>
+      </section>
+      <label class="handover-label">Ghi chú bàn giao (không bắt buộc)
+        <textarea id="handoverNote" maxlength="500" rows="2" placeholder="Ví dụ: Nhân viên nghỉ việc, chuyển người phụ trách mới"></textarea>
+      </label>
+      <label class="handover-label">Nhập chính xác tên đăng nhập đang bàn giao để xác nhận
+        <input id="handoverConfirm" required autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Tên đăng nhập của tài khoản bàn giao">
+      </label>
+      <p id="handoverError" class="error" role="alert"></p>
+      <div class="manager-edit-actions">
+        <button class="close" type="button">Hủy</button>
+        <button class="primary" type="submit" id="handoverSubmit">Xác nhận bàn giao</button>
+      </div>
+    </form>
+    <section class="handover-history" aria-labelledby="handoverHistoryTitle">
+      <div class="handover-history-heading">
+        <h3 id="handoverHistoryTitle">Lịch sử bàn giao gần đây</h3>
+        <button type="button" id="handoverReloadHistory">Làm mới</button>
+      </div>
+      <div id="handoverHistoryList" class="handover-history-list"><p>Chưa có dữ liệu.</p></div>
+    </section>
   </dialog>
 
   <dialog id="publicTheoryAccountsDialog" class="public-theory-accounts-dialog">
@@ -650,7 +704,7 @@
   </dialog>
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div><div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/app.js?v=staff-scope-20261123-v2"></script>
+  <script type="module" src="/app.js?v=owner-handover-20261123"></script>
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>
