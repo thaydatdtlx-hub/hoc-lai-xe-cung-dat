@@ -150,7 +150,18 @@ export function buildReceiptHtml(payment){
     .signature-row{display:grid;grid-template-columns:1fr 1fr;gap:34mm;margin-top:6mm;padding:0 14mm;text-align:center}.signature strong{display:block;color:#173f6c;font-size:15px;font-weight:900}.signature small{display:block;margin-top:1mm;color:#617d99;font-style:italic;font-size:11px}.signature-space{height:75mm}.signature-line{width:52mm;margin:0 auto;border-top:.4mm solid #4d7eaa}.signature-name{display:block;margin-top:2mm;color:#153c69;font-size:14px;font-weight:900}
     .footer{margin-top:5mm;display:flex;align-items:center;justify-content:center;gap:3mm;color:#2f6fa7;font-size:9px;font-weight:900;letter-spacing:.16em;text-align:center}.footer:before,.footer:after{content:"";width:25mm;border-top:.35mm solid #66a3d4}
     @media(max-width:880px){body{background:#fff}.toolbar{position:static;justify-content:center;flex-wrap:wrap}.toolbar button{flex:1;min-width:120px}.paper{width:100%;min-height:0;margin:0;padding:24px 18px;box-shadow:none;overflow:visible}.brand-row{grid-template-columns:1fr}.contact{grid-template-columns:1fr;gap:7px}.brand-copy strong{font-size:24px}.title-block h1{font-size:31px}.student-grid{grid-template-columns:1fr}.student-col+.student-col{border-left:0;border-top:1px solid #cce0f1;padding-left:0;padding-top:12px}.detail-grid{grid-template-columns:1fr}.signature-row{gap:28px;padding:0}.total-strip b{font-size:23px}}
-    @media print{@page{size:A4 portrait;margin:0}html,body{width:210mm;min-height:297mm;background:#fff}.toolbar{display:none!important}.paper{width:210mm;min-height:297mm;margin:0;padding:11mm 12mm 10mm;box-shadow:none;overflow:hidden}.brand-row,.section,.detail-grid,.total-strip,.signature-row,.footer{break-inside:avoid}}
+
+    .receipt-preview[hidden],.receipt-preview button[hidden]{display:none!important}
+    .receipt-preview{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));background:#17334ff2;color:#fff}
+    .receipt-preview-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;max-width:900px;width:100%;margin:0 auto}
+    .receipt-preview-toolbar strong{flex:1 0 100%;text-align:center;font-size:17px}
+    .receipt-preview-toolbar button{flex:1;min-width:110px;min-height:44px;padding:8px 12px;border:1px solid #ffffff40;border-radius:10px;background:#1970bd;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+    .receipt-preview-toolbar .receipt-share{background:#13915b}.receipt-preview-toolbar .receipt-close{background:#eef4fa;color:#23445f}
+    .receipt-preview-tip{max-width:900px;width:100%;margin:0 auto;text-align:center;font-size:13px;line-height:1.45;color:#f1f7ff}
+    .receipt-preview-image-wrap{flex:1;min-height:0;overflow:auto;text-align:center;-webkit-overflow-scrolling:touch}
+    .receipt-preview-image-wrap img{display:block;width:100%;max-width:794px;height:auto;margin:0 auto 20px;background:#fff;box-shadow:0 4px 20px #0004;-webkit-touch-callout:default;user-select:auto;-webkit-user-select:auto}
+    body.receipt-preview-open{overflow:hidden}
+    @media print{@page{size:A4 portrait;margin:0}html,body{width:210mm;min-height:297mm;background:#fff}.toolbar,.receipt-preview{display:none!important}.paper{width:210mm;min-height:297mm;margin:0;padding:11mm 12mm 10mm;box-shadow:none;overflow:hidden}.brand-row,.section,.detail-grid,.total-strip,.signature-row,.footer{break-inside:avoid}}
   </style>
 </head>
 <body>
@@ -170,13 +181,127 @@ export function buildReceiptHtml(payment){
     <div class="signature-row"><div class="signature"><strong>Người nộp tiền</strong><small>(Ký và ghi rõ họ tên)</small><span class="signature-space"></span><div class="signature-line"></div><span class="signature-name">${escapeHtml(payment.student_name||"—")}</span></div><div class="signature"><strong>Người thu tiền</strong><small>(Ký và ghi rõ họ tên)</small><span class="signature-space"></span><div class="signature-line"></div><span class="signature-name">Trần Quốc Đạt</span></div></div>
     <footer class="footer">HỌC LÁI XE CÙNG ĐẠT · AN TOÀN HÔM NAY · VỮNG TAY TƯƠNG LAI</footer>
   </main>
+  <div class="receipt-preview" id="receiptPreview" role="dialog" aria-modal="true" aria-labelledby="receiptPreviewTitle" hidden>
+    <div class="receipt-preview-toolbar">
+      <strong id="receiptPreviewTitle">Ảnh biên lai học phí (PNG)</strong>
+      <button class="receipt-share" id="shareReceiptImage" type="button" hidden>Chia sẻ / Lưu vào Ảnh</button>
+      <button id="downloadReceiptImage" type="button">Tải PNG</button>
+      <button class="receipt-close" id="closeReceiptPreview" type="button">Đóng</button>
+    </div>
+    <p class="receipt-preview-tip" id="receiptPreviewTip">Nhấn giữ vào ảnh biên lai bên dưới để lưu ảnh trên điện thoại.</p>
+    <div class="receipt-preview-image-wrap"><img id="receiptPreviewImage" alt="Ảnh PNG toàn bộ biên lai học phí"></div>
+  </div>
   <script>
     const receiptNo=${JSON.stringify(String(receiptNo))};
     const closeButton=document.getElementById("closeReceipt"),saveButton=document.getElementById("saveReceiptPng"),printButton=document.getElementById("printReceipt");
     closeButton.addEventListener("click",()=>window.close());printButton.addEventListener("click",()=>window.print());
     function safeFileName(value){return String(value||"bien-lai-hoc-phi").normalize("NFC").replace(/[^a-zA-Z0-9_-]+/g,"-").replace(/^-+|-+$/g,"")||"bien-lai-hoc-phi"}
-    function loadHtml2Canvas(){if(window.html2canvas)return Promise.resolve(window.html2canvas);return new Promise((resolve,reject)=>{const script=document.createElement("script");script.src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js";script.onload=()=>resolve(window.html2canvas);script.onerror=()=>reject(new Error("Không tải được trình xuất PNG"));document.head.appendChild(script)})}
-    saveButton.addEventListener("click",async()=>{const original=saveButton.textContent;saveButton.disabled=true;saveButton.textContent="Đang lưu PNG…";try{const html2canvas=await loadHtml2Canvas();await Promise.all([...document.images].filter(image=>!image.complete).map(image=>new Promise(resolve=>{image.onload=image.onerror=resolve})));const canvas=await html2canvas(document.getElementById("receiptPaper"),{scale:2,backgroundColor:"#ffffff",useCORS:true,logging:false});const link=document.createElement("a");link.download=safeFileName("bien-lai-"+receiptNo)+".png";link.href=canvas.toDataURL("image/png");link.click()}catch(error){alert("Chưa thể lưu PNG. Bạn vẫn có thể dùng nút In / Lưu PDF A4.")}finally{saveButton.disabled=false;saveButton.textContent=original}});
+    const preview=document.getElementById("receiptPreview");
+    const previewImage=document.getElementById("receiptPreviewImage");
+    const previewTip=document.getElementById("receiptPreviewTip");
+    const shareButton=document.getElementById("shareReceiptImage");
+    const downloadButton=document.getElementById("downloadReceiptImage");
+    let previewObjectUrl=null,previewFile=null,previewFileName="";
+    let html2CanvasPromise=null;
+    function loadHtml2Canvas(){
+      if(window.html2canvas)return Promise.resolve(window.html2canvas);
+      if(html2CanvasPromise)return html2CanvasPromise;
+      const sources=[
+        "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+      ];
+      html2CanvasPromise=new Promise((resolve,reject)=>{
+        function loadAt(index){
+          if(index>=sources.length){reject(new Error("Không tải được thư viện xuất ảnh PNG"));return}
+          const script=document.createElement("script");
+          script.async=true;
+          script.src=sources[index];
+          script.onload=()=>window.html2canvas?resolve(window.html2canvas):loadAt(index+1);
+          script.onerror=()=>{script.remove();loadAt(index+1)};
+          document.head.appendChild(script);
+        }
+        loadAt(0);
+      }).catch(error=>{html2CanvasPromise=null;throw error});
+      return html2CanvasPromise;
+    }
+    function downloadPng(url,name){
+      const link=document.createElement("a");
+      link.href=url;
+      link.download=name;
+      link.style.display="none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+    function closePreview(){
+      preview.hidden=true;
+      document.body.classList.remove("receipt-preview-open");
+      saveButton.focus();
+    }
+    function showPreview(blob,name){
+      if(previewObjectUrl)URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl=URL.createObjectURL(blob);
+      previewFileName=name;
+      previewFile=typeof File==="function"?new File([blob],name,{type:"image/png"}):null;
+      previewImage.src=previewObjectUrl;
+      let canShare=false;
+      try{canShare=Boolean(previewFile&&navigator.share&&navigator.canShare&&navigator.canShare({files:[previewFile]}))}catch{}
+      shareButton.hidden=!canShare;
+      previewTip.textContent=canShare
+        ?"Chọn Chia sẻ / Lưu vào Ảnh, sau đó chọn Lưu hình ảnh. Nếu không thấy tùy chọn này, hãy nhấn giữ vào ảnh bên dưới."
+        :"Nhấn giữ vào ảnh bên dưới để chọn Lưu vào Ảnh, hoặc bấm Tải PNG để lưu trong Tệp.";
+      preview.hidden=false;
+      document.body.classList.add("receipt-preview-open");
+      (canShare?shareButton:downloadButton).focus();
+    }
+    document.getElementById("closeReceiptPreview").addEventListener("click",closePreview);
+    document.addEventListener("keydown",event=>{if(event.key==="Escape"&&!preview.hidden)closePreview()});
+    downloadButton.addEventListener("click",()=>{
+      if(!previewObjectUrl)return;
+      downloadPng(previewObjectUrl,previewFileName);
+      previewTip.textContent="Nếu trình duyệt không tải xuống, hãy nhấn giữ vào ảnh bên dưới để chọn Lưu hình ảnh.";
+    });
+    shareButton.addEventListener("click",()=>{
+      if(!previewFile||!navigator.share)return;
+      // Chia sẻ phải chạy trực tiếp từ thao tác chạm của người dùng trên iOS.
+      navigator.share({files:[previewFile],title:"Biên lai học phí"}).catch(error=>{
+        if(error&&error.name!=="AbortError")previewTip.textContent="Không mở được bảng chia sẻ. Nhấn giữ vào ảnh bên dưới để lưu vào Ảnh.";
+      });
+    });
+    window.addEventListener("pagehide",()=>{if(previewObjectUrl)URL.revokeObjectURL(previewObjectUrl)});
+    saveButton.addEventListener("click",async()=>{
+      const original=saveButton.textContent;
+      saveButton.disabled=true;
+      saveButton.textContent="Đang tạo ảnh PNG…";
+      try{
+        const html2canvas=await loadHtml2Canvas();
+        const paper=document.getElementById("receiptPaper");
+        await Promise.all(Array.from(paper.querySelectorAll("img")).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{
+          img.addEventListener("load",resolve,{once:true});
+          img.addEventListener("error",resolve,{once:true});
+        })));
+        const canvas=await html2canvas(paper,{scale:Math.min(2,window.devicePixelRatio||2),backgroundColor:"#ffffff",useCORS:true,logging:false});
+        const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error("Không tạo được tệp PNG")),"image/png"));
+        canvas.width=0;canvas.height=0;
+        const filename=safeFileName("bien-lai-"+receiptNo)+".png";
+        const ua=navigator.userAgent||"";
+        const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(ua)||(navigator.maxTouchPoints>1&&/Macintosh/i.test(ua));
+        const isSafari=/Safari/i.test(ua)&&!/Chrome|CriOS|FxiOS|Edg|OPR|SamsungBrowser/i.test(ua);
+        if(isMobile||isSafari){
+          showPreview(blob,filename);
+        }else{
+          const url=URL.createObjectURL(blob);
+          downloadPng(url,filename);
+          setTimeout(()=>URL.revokeObjectURL(url),120000);
+        }
+      }catch(error){
+        console.error("[payment-receipt] Không thể xuất ảnh PNG:",error);
+        alert("Chưa thể tạo ảnh PNG. Vui lòng thử lại hoặc chọn In / Lưu PDF A4.");
+      }finally{
+        saveButton.disabled=false;
+        saveButton.textContent=original;
+      }
+    });
   </script>
 </body>
 </html>`;
