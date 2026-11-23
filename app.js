@@ -403,7 +403,7 @@ function renderEarlyWarnings(){
   earlyWarnings=buildEarlyWarnings({students,attendanceRecords,theoryProgress});
   const summary=earlyWarningSummary(earlyWarnings);
   $("warningTotal").textContent=summary.total;$("warningCritical").textContent=summary.critical;$("warningHigh").textContent=summary.high;$("warningStudents").textContent=summary.students;
-  $("earlyWarningPreview").innerHTML=earlyWarnings.slice(0,6).map(warningCard).join("");
+  $("earlyWarningPreview").innerHTML=earlyWarnings.slice(0,3).map(warningCard).join("");
   $("earlyWarningEmpty").classList.toggle("hidden",earlyWarnings.length>0);$("warningViewAll").classList.toggle("hidden",earlyWarnings.length===0);
   $("warningDataNotice").classList.toggle("hidden",attendanceReady&&theoryProgressReady);
 }
