@@ -1,0 +1,64 @@
+/* Admin-only ownership handover, mobile-first and isolated from public pages. */
+#usersDialog .manager-handover-entry {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 12px; padding: 14px 2px 2px; border-top: 1px solid #dfe7f0; margin-top: 14px;
+}
+#usersDialog .manager-handover-entry > div { display: grid; gap: 4px; flex: 1 1 220px; }
+#usersDialog .manager-handover-entry strong { color: #183456; font-size: 14px; }
+#usersDialog .manager-handover-entry span { color: #63758b; font-size: 12px; }
+#usersDialog .manager-transfer-button { border-color: #c5d9f2; background: #eef5ff; color: #1453a1; }
+#usersDialog .manager-transfer-button:hover { background: #e0eeff; }
+
+#handoverDialog {
+  width: min(760px, calc(100vw - 24px)); max-width: 760px; max-height: min(94dvh, 920px);
+  overflow-x: hidden; overflow-y: auto;
+}
+#handoverDialog .manager-handover-subtitle { color: #677e98; font-size: 12px; margin: 5px 0 0; }
+#handoverDialog .handover-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin-top: 14px; }
+#handoverDialog .handover-grid label,
+#handoverDialog .handover-label { display: grid; gap: 6px; color: #1d385a; font-size: 13px; font-weight: 600; margin-top: 12px; }
+#handoverDialog input:not([type="radio"]):not([type="checkbox"]),
+#handoverDialog select, #handoverDialog textarea {
+  width: 100%; min-width: 0; min-height: 42px; box-sizing: border-box; border: 1px solid #ccd8e7;
+  background: #fff; color: #193456; border-radius: 9px; padding: 9px 11px; font: inherit; font-size: 14px;
+}
+#handoverDialog :is(input, select, textarea):focus-visible { outline: 2px solid #80aef6; outline-offset: 1px; }
+#handoverDialog .handover-scope-hint { color: #526b88; font-size: 12px; line-height: 1.5; margin: 10px 0; }
+#handoverDialog .handover-mode-fieldset {
+  display: grid; gap: 9px; border: 1px solid #dbe5f1; border-radius: 10px;
+  margin: 12px 0 0; padding: 12px 13px; min-width: 0;
+}
+#handoverDialog .handover-mode-fieldset legend { font-weight: 700; font-size: 13px; color: #234364; padding: 0 4px; }
+#handoverDialog .handover-mode-fieldset label { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: #294664; font-weight: 500; }
+#handoverDialog input[type="checkbox"], #handoverDialog input[type="radio"] { width: 17px; height: 17px; flex: 0 0 auto; accent-color: #2367c9; }
+#handoverDialog .handover-students-wrap { margin-top: 12px; border: 1px solid #dbe5f1; border-radius: 12px; padding: 10px; }
+#handoverDialog .handover-students-wrap[hidden] { display: none !important; }
+#handoverDialog .handover-filterbar { display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+#handoverDialog .handover-filterbar input[type="search"] { flex: 1 1 175px; }
+#handoverDialog .handover-select-all { display: flex; gap: 6px; align-items: center; font-size: 12px; color: #365a84; }
+#handoverDialog .handover-student-list {
+  display: grid; gap: 5px; max-height: 210px; overflow-y: auto; padding: 8px 0 2px;
+}
+#handoverDialog .handover-student-list label {
+  display: flex; gap: 9px; align-items: center; border: 1px solid #ecf0f6; border-radius: 8px;
+  padding: 8px 10px; color: #1b395c; cursor: pointer;
+}
+#handoverDialog .handover-student-list label:hover { background: #f2f7ff; }
+#handoverDialog .handover-student-list label span { display: grid; gap: 3px; min-width: 0; }
+#handoverDialog .handover-student-list label strong { font-size: 13px; overflow-wrap: anywhere; }
+#handoverDialog .handover-student-list label small { color: #607992; }
+#handoverDialog .handover-selected-count { font-size: 12px; color: #607992; margin: 8px 0 0; }
+#handoverDialog .manager-edit-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+#handoverDialog .handover-history { margin-top: 22px; border-top: 1px solid #dce6f1; padding-top: 12px; }
+#handoverDialog .handover-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+#handoverDialog .handover-history-heading h3 { font-size: 14px; color: #1c3d64; margin: 0; }
+#handoverDialog .handover-history-heading button { min-height: 34px; }
+#handoverDialog .handover-history-list { display: grid; gap: 9px; margin-top: 10px; max-height: 240px; overflow-y: auto; }
+#handoverDialog .handover-history-item { display: grid; gap: 4px; background: #f6f9fc; border: 1px solid #e6edf5; border-radius: 9px; padding: 10px; }
+#handoverDialog .handover-history-item strong { color: #17365e; font-size: 13px; }
+#handoverDialog .handover-history-item small { color: #60758d; }
+@media (max-width: 620px) {
+  #handoverDialog .handover-grid { grid-template-columns: 1fr; gap: 4px; }
+  #handoverDialog .manager-edit-actions button { flex: 1 1 145px; }
+  #usersDialog .manager-handover-entry button { flex: 1 1 180px; }
+}

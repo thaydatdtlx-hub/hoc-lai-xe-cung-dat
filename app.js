@@ -837,9 +837,19 @@ async function loadUsers(){
   const old=$("ownerFilter").value;
   users=await rpc("app_list_users",{p_token:token})||[];
   const options=users.map(u=>`<option value="${u.id}">${esc(u.username)}${u.deleted_at?" (Đã xóa)":u.role==="admin"?" (Admin)":""}</option>`).join("");
-  $("ownerFilter").innerHTML='<option value="">Tất cả tài khoản</option>'+options;$("studentOwner").innerHTML=options;
+  const assignable=users.filter(u=>u.active&&!u.deleted_at).map(u=>'<option value="'+u.id+'">'+esc(u.username)+(u.role==="admin"?" (Admin)":"")+'</option>').join("");
+  $("ownerFilter").innerHTML='<option value="">Tất cả tài khoản</option>'+options;$("studentOwner").innerHTML=assignable;
   if([...$("ownerFilter").options].some(o=>o.value===old))$("ownerFilter").value=old;
-  $("userList").innerHTML=users.filter(u=>!u.deleted_at).map(u=>`<div class="user-item manager-account-row"><div class="manager-account-name"><strong>${esc(u.username)}</strong><span class="manager-account-meta">${u.role==="admin"?"Quản trị viên":"Nhân viên"} · ${u.active?"Đang hoạt động":"Đã khóa"}</span></div><div class="manager-account-actions"><button type="button" class="manager-edit-button" data-manager-edit="${u.id}">Chỉnh sửa</button>${u.role==="admin"?"":`<button type="button" data-reset="${u.id}">Đặt lại mật khẩu</button><button type="button" data-toggle="${u.id}" data-active="${u.active}">${u.active?"Khóa":"Mở khóa"}</button>`}<button type="button" class="manager-delete-button" data-manager-delete="${u.id}" ${String(u.id)===String(me?.id)?"disabled title=\"Không thể xóa tài khoản đang dùng\"":""}>Xóa</button></div></div>`).join("");
+  $("userList").innerHTML=users.filter(u=>!u.deleted_at).map(u=>{
+    const count=Number(u.student_count)||0;
+    const archived=Math.max(0,count-(Number(u.active_student_count)||0));
+    const details='<div class="manager-account-name"><strong>'+esc(u.username)+'</strong><span class="manager-account-meta">'+(u.role==="admin"?"Quản trị viên":"Nhân viên")+' · '+(u.active?"Đang hoạt động":"Đã khóa")+'</span><span class="manager-account-meta">'+count+' hồ sơ phụ trách'+(archived?' · '+archived+' trong Thùng rác':'')+'</span></div>';
+    const edit='<button type="button" class="manager-edit-button" data-manager-edit="'+u.id+'">Chỉnh sửa</button>';
+    const transfer=count?'<button type="button" class="manager-transfer-button" data-manager-transfer="'+u.id+'">Bàn giao</button>':'';
+    const staff=u.role==="admin"?'':'<button type="button" data-reset="'+u.id+'">Đặt lại mật khẩu</button><button type="button" data-toggle="'+u.id+'" data-active="'+u.active+'">'+(u.active?"Khóa":"Mở khóa")+'</button>';
+    const deleteBtn='<button type="button" class="manager-delete-button" data-manager-delete="'+u.id+'" '+(String(u.id)===String(me?.id)?'disabled title="Không thể xóa tài khoản đang dùng"':'')+'>Xóa</button>';
+    return '<div class="user-item manager-account-row">'+details+'<div class="manager-account-actions">'+edit+transfer+staff+deleteBtn+'</div></div>';
+  }).join("");
 }
 async function loadStudentAccounts(){
   try{
@@ -1018,6 +1028,164 @@ $("toggleStudentAccountBtn").onclick=async()=>{
     await loadStudentAccounts();renderStudents();$("studentAccountDialog").close();toast(account.active?"Đã khóa tài khoản học viên":"Đã mở khóa tài khoản học viên");
   }catch(error){$("studentAccountError").textContent=errText(error)}
 };
+// Admin-controlled handover: server checks rights, ownership and the exact moved count.
+let handoverSourceStudents=[];
+let handoverPickedIds=new Set();
+let handoverFetchSeq=0;
+function handoverSource(){
+  return users.find(item=>String(item.id)===String($("handoverFrom").value));
+}
+function handoverMode(){
+  return $("handoverForm").querySelector('input[name="handoverMode"]:checked')?.value||"all";
+}
+function handoverStats(){
+  const source=handoverSource();
+  const total=Number(source?.student_count)||0;
+  const active=Number(source?.active_student_count)||0;
+  const archived=Math.max(0,total-active);
+  $("handoverScopeHint").textContent=source
+    ?(total+" hồ sơ do "+source.username+" phụ trách: "+active+" đang hoạt động, "+archived+" trong Thùng rác.")
+    :"Không có tài khoản nào đang phụ trách học viên.";
+}
+function handoverFillReceivers(){
+  const sourceId=$("handoverFrom").value,previous=$("handoverTo").value;
+  const recipients=users.filter(u=>u.active&&!u.deleted_at&&String(u.id)!==String(sourceId));
+  $("handoverTo").innerHTML=recipients.map(u=>'<option value="'+u.id+'">'+esc(u.username)+' · '+(u.role==="admin"?"Quản trị viên":"Nhân viên")+'</option>').join("");
+  if(recipients.some(u=>String(u.id)===String(previous)))$("handoverTo").value=previous;
+  else if(recipients.some(u=>String(u.id)===String(me?.id)))$("handoverTo").value=me.id;
+  $("handoverSubmit").disabled=!handoverSource()||!recipients.length;
+}
+function handoverVisibleStudents(){
+  const query=normalize($("handoverSearch").value||"");
+  return handoverSourceStudents.filter(s=>!query||normalize([s.name,s.student_code,s.phone].join(" ")).includes(query));
+}
+function handoverRenderStudents(){
+  const filtered=handoverVisibleStudents();
+  $("handoverStudents").innerHTML=filtered.length?filtered.map(s=>{
+    const isSelected=handoverPickedIds.has(String(s.id));
+    return '<label><input type="checkbox" data-handover-student="'+s.id+'" '+(isSelected?'checked':'')+'><span><strong>'+esc(s.name||"Học viên")+'</strong><small>'+esc(s.student_code||"")+' · '+esc(s.license_class||"")+' · '+esc(s.course||"Chưa có khóa")+'</small></span></label>';
+  }).join(""):"<p>Không tìm thấy hồ sơ đang hoạt động phù hợp.</p>";
+  $("handoverSelectAll").checked=filtered.length>0&&filtered.every(s=>handoverPickedIds.has(String(s.id)));
+  $("handoverSelectAll").indeterminate=filtered.some(s=>handoverPickedIds.has(String(s.id)))&&!$("handoverSelectAll").checked;
+  $("handoverSelectedCount").textContent=handoverPickedIds.size+" học viên được chọn (tối đa 500 mỗi lần)";
+}
+async function handoverLoadSourceStudents(){
+  const seq=++handoverFetchSeq,sourceId=$("handoverFrom").value;
+  handoverSourceStudents=[];
+  $("handoverStudents").innerHTML="<p>Đang tải danh sách hồ sơ…</p>";
+  if(!sourceId)return handoverRenderStudents();
+  try{
+    const data=await rpc("app_list_students",{p_token:token,p_owner_id:sourceId});
+    if(seq!==handoverFetchSeq)return;
+    handoverSourceStudents=Array.isArray(data)?data.filter(s=>!s.deleted_at):[];
+    handoverRenderStudents();
+  }catch(error){
+    if(seq!==handoverFetchSeq)return;
+    $("handoverStudents").textContent="Không tải được danh sách học viên: "+errText(error);
+    $("handoverError").textContent=errText(error);
+  }
+}
+function handoverSwitchMode(){
+  $("handoverStudentsWrap").hidden=handoverMode()!=="selected";
+  $("handoverError").textContent="";
+  if(handoverMode()==="selected")handoverRenderStudents();
+}
+function handoverRenderHistory(history){
+  $("handoverHistoryList").innerHTML=history.length?history.map(item=>{
+    const d=item.details||{};
+    const when=item.created_at?new Date(item.created_at).toLocaleString("vi-VN"):"";
+    const oldName=d.from_username||"Tài khoản trước";
+    const newName=d.to_username||"Tài khoản mới";
+    const detail=d.note?' · Ghi chú: '+esc(d.note):"";
+    return '<article class="handover-history-item"><strong>'+esc(item.student_name||d.student_code||"Học viên")+' · '+esc(d.student_code||"")+'</strong><span>'+esc(oldName)+' → '+esc(newName)+'</span><small>'+esc(when)+' · Thực hiện: '+esc(item.actor_username||"Quản trị viên")+(d.was_deleted?" · Hồ sơ lưu trữ":"")+detail+'</small></article>';
+  }).join(""):"<p>Chưa có lịch sử bàn giao.</p>";
+}
+async function handoverLoadHistory(){
+  $("handoverHistoryList").textContent="Đang tải lịch sử…";
+  try{
+    const history=await rpc("app_admin_list_student_transfers",{p_token:token,p_limit:60});
+    handoverRenderHistory(Array.isArray(history)?history:[]);
+  }catch(error){$("handoverHistoryList").textContent="Chưa tải được lịch sử: "+errText(error)}
+}
+async function openHandoverDialog(preferredFrom="",preferredStudent=""){
+  if(me?.role!=="admin")return;
+  $("handoverError").textContent="";
+  $("handoverConfirm").value="";
+  $("handoverNote").value="";
+  $("handoverSearch").value="";
+  handoverPickedIds=new Set(preferredStudent?[String(preferredStudent)]:[]);
+  for(const input of $("handoverForm").querySelectorAll('input[name="handoverMode"]')){
+    input.checked=input.value===(preferredStudent?"selected":"all");
+  }
+  try{await loadUsers()}
+  catch(error){$("userError").textContent=errText(error);return}
+  const withStudents=users.filter(u=>(Number(u.student_count)||0)>0);
+  $("handoverFrom").innerHTML=withStudents.map(u=>'<option value="'+u.id+'">'+esc(u.username)+(u.deleted_at?" (Đã xóa)":"")+' · '+(Number(u.student_count)||0)+' hồ sơ</option>').join("");
+  if(withStudents.some(u=>String(u.id)===String(preferredFrom)))$("handoverFrom").value=preferredFrom;
+  if(!$("handoverFrom").value){
+    $("userError").textContent="Hiện không có hồ sơ nào cần bàn giao.";
+    return;
+  }
+  handoverStats();
+  handoverFillReceivers();
+  handoverSwitchMode();
+  $("handoverDialog").showModal();
+  await Promise.allSettled([handoverLoadSourceStudents(),handoverLoadHistory()]);
+}
+$("openHandoverBtn").onclick=()=>void openHandoverDialog();
+$("handoverFrom").onchange=()=>{
+  handoverPickedIds=new Set();
+  $("handoverSearch").value="";
+  $("handoverConfirm").value="";
+  handoverStats();
+  handoverFillReceivers();
+  void handoverLoadSourceStudents();
+};
+$("handoverSearch").oninput=handoverRenderStudents;
+for(const radio of $("handoverForm").querySelectorAll('input[name="handoverMode"]'))radio.onchange=handoverSwitchMode;
+$("handoverStudents").onchange=event=>{
+  const id=event.target.dataset.handoverStudent;
+  if(!id)return;
+  if(event.target.checked)handoverPickedIds.add(String(id));
+  else handoverPickedIds.delete(String(id));
+  handoverRenderStudents();
+};
+$("handoverSelectAll").onchange=event=>{
+  for(const student of handoverVisibleStudents()){
+    if(event.target.checked)handoverPickedIds.add(String(student.id));
+    else handoverPickedIds.delete(String(student.id));
+  }
+  handoverRenderStudents();
+};
+$("handoverReloadHistory").onclick=()=>void handoverLoadHistory();
+$("handoverForm").onsubmit=async event=>{
+  event.preventDefault();
+  $("handoverError").textContent="";
+  const source=handoverSource(),to=users.find(u=>String(u.id)===String($("handoverTo").value));
+  if(!source||!to||!to.active||to.deleted_at)return $("handoverError").textContent="Vui lòng chọn tài khoản bàn giao và người tiếp nhận còn hoạt động.";
+  if(String(source.id)===String(to.id))return $("handoverError").textContent="Người bàn giao và người tiếp nhận không được trùng nhau.";
+  if($("handoverConfirm").value.trim().toLowerCase()!==source.username.toLowerCase())
+    return $("handoverError").textContent="Tên đăng nhập xác nhận chưa đúng.";
+  const selected=handoverMode()==="selected"?[...handoverPickedIds]:null;
+  if(selected&&(!selected.length||selected.length>500))return $("handoverError").textContent="Hãy chọn từ 1 đến 500 học viên đang hoạt động.";
+  const amount=selected?selected.length:Number(source.student_count)||0;
+  if(!amount)return $("handoverError").textContent="Tài khoản này không có hồ sơ để chuyển.";
+  const archived=selected?0:Math.max(0,amount-(Number(source.active_student_count)||0));
+  const message="BÀN GIAO "+amount+" HỒ SƠ\n\nTừ: "+source.username+"\nĐến: "+to.username+"\n"+(archived?"Bao gồm "+archived+" hồ sơ trong Thùng rác.\n":"")+"\nChỉ chuyển quyền phụ trách. Học phí, mã học viên, lịch và lịch sử giữ nguyên.\n\nBạn xác nhận thực hiện?";
+  if(!confirm(message))return;
+  $("handoverSubmit").disabled=true;
+  try{
+    const result=await rpc("app_admin_transfer_students",{
+      p_token:token,p_from_user_id:source.id,p_to_user_id:to.id,
+      p_student_ids:selected,p_note:$("handoverNote").value.trim()
+    });
+    await Promise.all([loadUsers(),loadStudents()]);
+    $("handoverDialog").close();
+    toast("Đã bàn giao "+(result?.moved||amount)+" hồ sơ từ "+source.username+" sang "+to.username+".");
+  }catch(error){$("handoverError").textContent=errText(error)}
+  finally{$("handoverSubmit").disabled=false}
+};
+
 $("usersBtn").onclick=()=>{$("userError").textContent="";$("usersDialog").showModal()};
 $("userForm").onsubmit=async event=>{
   event.preventDefault();$("userError").textContent="";$("createUserBtn").disabled=true;
@@ -1079,10 +1247,16 @@ $("userList").onclick=async event=>{
   const button=event.target.closest("button");if(!button)return;
   try{
     if(button.dataset.managerEdit){openManagerEdit(button.dataset.managerEdit);return}
+    if(button.dataset.managerTransfer){await openHandoverDialog(button.dataset.managerTransfer);return}
     if(button.dataset.managerDelete){
       const user=users.find(item=>String(item.id)===String(button.dataset.managerDelete));
       if(!user||user.deleted_at)return;
       if(String(user.id)===String(me?.id))throw new Error("Không thể xóa tài khoản đang đăng nhập.");
+      if((Number(user.student_count)||0)>0){
+        await openHandoverDialog(user.id);
+        $("handoverError").textContent="Tài khoản này vẫn còn "+Number(user.student_count)+" hồ sơ. Hãy bàn giao tất cả (kể cả Thùng rác) trước khi xóa tài khoản.";
+        return;
+      }
       const confirmText=prompt(`XÓA ${user.role==="admin"?"QUẢN TRỊ VIÊN":"NHÂN VIÊN"}: ${user.username}\n\nTài khoản này sẽ bị ngừng truy cập ngay. Dữ liệu học viên và lịch sử sẽ được giữ nguyên.\n\nNhập chính xác tên đăng nhập để xác nhận xóa:`);
       if(confirmText===null)return;
       if(confirmText.trim().toLowerCase()!==user.username)throw new Error("Tên đăng nhập xác nhận không đúng. Chưa xóa tài khoản.");
