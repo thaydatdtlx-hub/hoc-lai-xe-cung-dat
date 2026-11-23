@@ -182,9 +182,9 @@
           <div class="mobile-module-track">
             <button class="mobile-module-card tone-gold" type="button" data-mobile-click="addStudentBtn"><span><b><i data-mobile-icon="userPlus"></i></b></span><strong>Thêm học viên</strong><small>Tạo hồ sơ mới</small></button>
             <a class="mobile-module-card tone-blue" href="/lich-dao-tao.html"><span><b><i data-mobile-icon="calendar"></i></b></span><strong>Lịch đào tạo</strong><small>Xếp lịch và ca học</small></a>
-            <a class="mobile-module-card tone-violet" href="/600-cau-hoi.html"><span><b>600</b></span><strong>Lý thuyết</strong><small>Theo dõi tiến độ</small></a>
-            <button class="mobile-module-card tone-green" type="button" data-mobile-click="attendanceBtn"><span><b><i data-mobile-icon="clipboard"></i></b></span><strong>Điểm danh</strong><small>Giờ học thực tế</small></button>
-            <button class="mobile-module-card tone-cyan" type="button" data-mobile-click="adminReportBtn"><span><b><i data-mobile-icon="chart"></i></b></span><strong>Báo cáo Admin</strong><small>Tổng hợp đào tạo</small></button>
+            <a class="mobile-module-card tone-violet admin-only hidden" href="/600-cau-hoi.html"><span><b>600</b></span><strong>Lý thuyết</strong><small>Theo dõi tiến độ</small></a>
+            <button class="mobile-module-card tone-green admin-only hidden" type="button" data-mobile-click="attendanceBtn"><span><b><i data-mobile-icon="clipboard"></i></b></span><strong>Điểm danh</strong><small>Giờ học thực tế</small></button>
+            <button class="mobile-module-card tone-cyan admin-only hidden" type="button" data-mobile-click="adminReportBtn"><span><b><i data-mobile-icon="chart"></i></b></span><strong>Báo cáo Admin</strong><small>Tổng hợp đào tạo</small></button>
             <button class="mobile-module-card tone-orange admin-only hidden" type="button" data-mobile-click="drivingRefreshAdminBtn"><span><b><i data-mobile-icon="car"></i></b></span><strong>Đăng ký bổ túc</strong><small>Tiếp nhận khách mới</small></button>
           </div>
         </section>
@@ -194,8 +194,8 @@
         <select id="ownerFilter" class="hidden" aria-label="Lọc tài khoản"></select>
         <button id="addStudentBtn" class="primary">＋ Thêm học viên</button>
         <a class="schedule-link" href="/lich-dao-tao.html"><span aria-hidden="true">▣</span><strong>LỊCH ĐÀO TẠO</strong></a>
-        <a class="schedule-link question-bank-link" href="/600-cau-hoi.html"><span aria-hidden="true">600</span><strong>HỌC LÝ THUYẾT</strong></a>
-        <a class="schedule-link refresh-public-link" href="/bo-tuc-tay-lai.html" target="_blank" rel="noopener"><span aria-hidden="true">🚘</span><strong>TRANG ĐĂNG KÝ BỔ TÚC</strong></a>
+        <a class="schedule-link question-bank-link admin-only hidden" href="/600-cau-hoi.html"><span aria-hidden="true">600</span><strong>HỌC LÝ THUYẾT</strong></a>
+        <a class="schedule-link refresh-public-link admin-only hidden" href="/bo-tuc-tay-lai.html" target="_blank" rel="noopener"><span aria-hidden="true">🚘</span><strong>TRANG ĐĂNG KÝ BỔ TÚC</strong></a>
         <button id="importBtn" class="data-action data-import admin-only hidden" type="button" title="Chỉ nhận file Excel .xlsx">
           <span class="data-action-icon" aria-hidden="true">↑</span>
           <span><strong>NHẬP FILE</strong><small>Chọn file .xlsx</small></span>
@@ -297,7 +297,7 @@
       </section>
 
       <section class="panel">
-        <div class="panel-title"><div><h2 id="studentListTitle">Danh sách học viên</h2><p id="studentListNote">Tra cứu và cập nhật tiến độ đào tạo</p></div><span id="resultCount">0 học viên</span></div>
+        <div class="panel-title"><div><h2 id="studentListTitle">Danh sách học viên</h2><p id="studentListNote">Tra cứu và cập nhật hồ sơ</p></div><span id="resultCount">0 học viên</span></div>
         <div class="table-wrap">
           <table><thead><tr><th>Học viên</th><th>Hạng / Khóa</th><th>Điện thoại</th><th class="admin-only hidden">Tiến độ đào tạo</th><th class="admin-only hidden">Học 600 câu</th><th class="admin-only hidden">Học phí</th><th>Thao tác</th></tr></thead><tbody id="studentRows"></tbody></table>
         </div>
@@ -650,7 +650,7 @@
   </dialog>
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div><div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/app.js?v=staff-scope-20261123"></script>
+  <script type="module" src="/app.js?v=staff-scope-20261123-v2"></script>
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>
