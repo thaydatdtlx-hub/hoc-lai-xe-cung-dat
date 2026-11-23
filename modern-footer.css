@@ -382,3 +382,86 @@
   .pro-footer__legal a{padding:0 8px}
   .pro-footer__top-link{justify-self:center}
 }
+
+
+/* Preview hotline 24/7 nổi bật */
+.pro-footer__hotline247{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  padding:12px 14px;
+  border:1px solid rgba(255,112,112,.42);
+  border-radius:14px;
+  background:linear-gradient(135deg,rgba(197,31,31,.96),rgba(141,20,20,.96));
+  box-shadow:0 10px 24px rgba(110,0,0,.24),inset 0 1px 0 rgba(255,255,255,.08);
+  transition:transform .18s ease,filter .18s ease,box-shadow .18s ease
+}
+.pro-footer__hotline247:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.04);
+  box-shadow:0 13px 28px rgba(110,0,0,.28),inset 0 1px 0 rgba(255,255,255,.1)
+}
+.pro-footer__hotline247-icon{
+  display:grid;
+  width:44px;
+  height:44px;
+  place-items:center;
+  border-radius:50%;
+  background:#fff;
+  color:#c62828;
+  box-shadow:0 6px 16px rgba(0,0,0,.16)
+}
+.pro-footer__hotline247-icon svg{
+  width:21px;
+  height:21px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round
+}
+.pro-footer__hotline247-copy{
+  min-width:0;
+  display:grid;
+  gap:2px
+}
+.pro-footer__hotline247-badge{
+  width:max-content;
+  max-width:100%;
+  padding:3px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.16);
+  color:#fff4f4;
+  font-size:9.5px;
+  font-weight:900;
+  letter-spacing:.08em
+}
+.pro-footer__hotline247 strong{
+  color:#fff;
+  font-size:18px;
+  line-height:1.2;
+  font-weight:850;
+  white-space:nowrap
+}
+.pro-footer__hotline247 small{
+  color:#ffd9d9;
+  font-size:10.5px;
+  line-height:1.35
+}
+@media(max-width:620px){
+  .pro-footer__hotline247{
+    grid-template-columns:46px minmax(0,1fr);
+    padding:13px 14px;
+  }
+  .pro-footer__hotline247-icon{
+    width:46px;
+    height:46px
+  }
+  .pro-footer__hotline247-badge{font-size:9px}
+  .pro-footer__hotline247 strong{
+    font-size:19px;
+    white-space:nowrap
+  }
+  .pro-footer__hotline247 small{font-size:11px}
+}
