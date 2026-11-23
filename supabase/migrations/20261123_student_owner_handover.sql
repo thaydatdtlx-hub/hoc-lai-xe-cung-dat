@@ -158,7 +158,7 @@ begin
       where action='student_owner_transferred'
         and entity_type='student'
       order by created_at desc,id desc
-      limit pg_catalog.greatest(1,pg_catalog.least(coalesce(p_limit,60),200))
+      limit greatest(1,least(coalesce(p_limit,60),200))
     ) audit
   ), '[]'::jsonb);
 end;
