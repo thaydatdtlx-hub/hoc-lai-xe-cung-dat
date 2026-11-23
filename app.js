@@ -825,7 +825,7 @@ async function loadUsers(){
   const options=users.map(u=>`<option value="${u.id}">${esc(u.username)}${u.role==="admin"?" (Admin)":""}</option>`).join("");
   $("ownerFilter").innerHTML='<option value="">Tất cả tài khoản</option>'+options;$("studentOwner").innerHTML=options;
   if([...$("ownerFilter").options].some(o=>o.value===old))$("ownerFilter").value=old;
-  $("userList").innerHTML=users.filter(u=>u.role!=="admin").map(u=>`<div class="user-item"><div><strong>${esc(u.username)}</strong><span class="sub">${u.active?"Đang hoạt động":"Đã khóa"}</span></div><div><button data-reset="${u.id}">Đặt lại mật khẩu</button><button data-toggle="${u.id}" data-active="${u.active}">${u.active?"Khóa":"Mở khóa"}</button></div></div>`).join("");
+  $("userList").innerHTML=users.map(u=>`<div class="user-item manager-account-row"><div class="manager-account-name"><strong>${esc(u.username)}</strong><span class="manager-account-meta">${u.role==="admin"?"Quản trị viên":"Nhân viên"} · ${u.active?"Đang hoạt động":"Đã khóa"}</span></div><div class="manager-account-actions"><button type="button" class="manager-edit-button" data-manager-edit="${u.id}">Chỉnh sửa</button>${u.role==="admin"?"":`<button type="button" data-reset="${u.id}">Đặt lại mật khẩu</button><button type="button" data-toggle="${u.id}" data-active="${u.active}">${u.active?"Khóa":"Mở khóa"}</button>`}</div></div>`).join("");
 }
 async function loadStudentAccounts(){
   try{
@@ -1011,9 +1011,55 @@ $("userForm").onsubmit=async event=>{
   try{const created=await rpc("app_create_user",{p_token:token,p_username:username,p_password:$("newPassword").value});await recordAudit("manager_created","manager",created?.id||"",username);event.target.reset();toast("Đã tạo tài khoản quản lý");await loadUsers()}
   catch(error){$("userError").textContent=errText(error)}finally{$("createUserBtn").disabled=false}
 };
+function openManagerEdit(userId){
+  const user=users.find(item=>String(item.id)===String(userId));
+  if(!user)return;
+  $("editManagerError").textContent="";
+  $("editManagerId").value=user.id;
+  $("editManagerUsername").value=user.username;
+  $("editManagerRole").value=user.role;
+  $("editManagerRole").disabled=String(user.id)===String(me?.id);
+  $("editManagerPassword").value="";
+  $("editManagerPassword").disabled=user.role==="admin";
+  $("editManagerHelp").textContent=user.role==="admin"
+    ?"Mật khẩu quản trị viên được đổi tại mục Đổi mật khẩu của chính tài khoản. Để tránh mất quyền truy cập, bạn không thể tự hạ quyền quản trị."
+    :"Để trống mật khẩu nếu không đổi. Khi thay đổi quyền hoặc mật khẩu, tài khoản này sẽ phải đăng nhập lại.";
+  $("editManagerDialog").showModal();
+}
+$("editManagerForm").onsubmit=async event=>{
+  event.preventDefault();
+  $("editManagerError").textContent="";
+  const id=$("editManagerId").value;
+  const user=users.find(item=>String(item.id)===String(id));
+  if(!user)return $("editManagerError").textContent="Không tìm thấy tài khoản.";
+  const username=$("editManagerUsername").value.trim().toLowerCase();
+  const role=$("editManagerRole").value;
+  const password=$("editManagerPassword").value;
+  if(!/^[a-z0-9._-]{4,40}$/.test(username))return $("editManagerError").textContent="Tên đăng nhập gồm 4–40 ký tự không dấu, chữ thường, số, dấu chấm, gạch dưới hoặc gạch ngang.";
+  if(password&&password.length<8)return $("editManagerError").textContent="Mật khẩu mới phải có ít nhất 8 ký tự.";
+  if(username===user.username&&role===user.role&&!password)return $("editManagerDialog").close();
+  const updatingSelf=String(id)===String(me?.id);
+  if(updatingSelf&&role!==user.role)return $("editManagerError").textContent="Không thể tự thay đổi quyền đang đăng nhập.";
+  $("saveManagerEditBtn").disabled=true;
+  try{
+    const saved=await rpc("app_admin_update_manager",{
+      p_token:token,p_user_id:id,p_username:username,p_role:role,p_password:password||null
+    });
+    if(updatingSelf){
+      me.username=saved.username;
+      $("accountName").textContent=me.username+" · Admin";
+      if(localStorage.getItem("hv_saved_user")===user.username)localStorage.setItem("hv_saved_user",saved.username);
+    }
+    $("editManagerDialog").close();
+    await loadUsers();
+    toast("Đã cập nhật tài khoản quản lý");
+  }catch(error){$("editManagerError").textContent=errText(error)}
+  finally{$("saveManagerEditBtn").disabled=false}
+};
 $("userList").onclick=async event=>{
   const button=event.target.closest("button");if(!button)return;
   try{
+    if(button.dataset.managerEdit){openManagerEdit(button.dataset.managerEdit);return}
     if(button.dataset.toggle){const active=button.dataset.active!=="true",user=users.find(item=>String(item.id)===String(button.dataset.toggle));await rpc("app_set_user_active",{p_token:token,p_user_id:button.dataset.toggle,p_active:active});await recordAudit("manager_status_changed","manager",button.dataset.toggle,user?.username||"",{active});await loadUsers();toast("Đã cập nhật tài khoản")}
     if(button.dataset.reset){const password=prompt("Nhập mật khẩu tạm mới (ít nhất 8 ký tự):");if(password){const user=users.find(item=>String(item.id)===String(button.dataset.reset));await rpc("app_admin_reset_password",{p_token:token,p_user_id:button.dataset.reset,p_password:password});await recordAudit("manager_password_reset","manager",button.dataset.reset,user?.username||"");toast("Đã đặt lại mật khẩu")}}
   }catch(error){$("userError").textContent=errText(error)}
