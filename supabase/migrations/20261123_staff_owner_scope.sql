@@ -55,7 +55,9 @@ declare
   v_code text;
 begin
   v_me := public.app_me(p_token);
-  if coalesce(v_me->>'role','') <> 'admin' then raise exception 'Nhân viên nhập hồ sơ qua chức năng dành riêng cho nhân viên.'; end if;
+  if coalesce(v_me->>'role','') <> 'admin' then
+    return public.app_staff_save_student(p_token,p_student_id,p_data);
+  end if;
   p_data := coalesce(p_data, '{}'::jsonb);
 
   if btrim(coalesce(p_data->>'name', '')) = '' then
