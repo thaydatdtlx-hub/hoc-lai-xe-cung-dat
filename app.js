@@ -369,10 +369,81 @@ function safeRender(name,fn){
   try{return fn()}
   catch(error){console.error(`[${name}]`,error);return null}
 }
-function renderStudents(){
-  const q=normalize($("search").value);
+
+function studentSearchText(student){
+  return normalize([student.name,student.cccd,student.phone,student.student_code,student.course].join(" ")).replace(/\s+/g," ");
+}
+function studentSearchScore(student,query){
+  const name=normalize(student.name).replace(/\s+/g," ");
+  return name===query?0:name.startsWith(query)?1:name.includes(query)?2:3;
+}
+function renderStudentQuickSearch(query){
+  const panel=$("studentQuickSearch");
+  if(!panel)return;
+  if(!query||!me){panel.hidden=true;panel.replaceChildren();return}
+  const matches=students.filter(s=>studentSearchText(s).includes(query)).sort((a,b)=>
+    studentSearchScore(a,query)-studentSearchScore(b,query)||String(a.name||"").localeCompare(String(b.name||""),"vi")
+  );
+  const top=matches.slice(0,5);
+  const cards=top.map(s=>{
+    const id=esc(String(s.id));
+    const words=String(s.name||"").trim().split(/\s+/).filter(Boolean);
+    const initials=words.slice(-2).map(word=>word.charAt(0).toLocaleUpperCase("vi")).join("")||"HV";
+    const total=Math.max(0,Number(s.tuition_total)||0),paid=Math.max(0,Number(s.paid)||0);
+    const debt=Math.max(0,total-paid);
+    const actions=[
+      '<button type="button" class="primary-quick" data-quick-student-action="edit" data-student-id="'+id+'">Xem / Sửa hồ sơ</button>',
+      me.role==="admin"?'<button type="button" data-quick-student-action="finance" data-student-id="'+id+'">Học phí / Phiếu thu</button>':"",
+      me.role==="admin"?'<button type="button" data-quick-student-action="theory" data-student-id="'+id+'">Lý thuyết</button>':"",
+      me.role==="admin"?'<button type="button" data-quick-student-action="attendance" data-student-id="'+id+'">Điểm danh</button>':""
+    ].join("");
+    return `<article class="quick-student-card">
+      <div class="quick-student-top">
+        <span class="quick-student-avatar" aria-hidden="true">${esc(initials)}</span>
+        <div class="quick-student-name">
+          <h3>${esc(s.name||"Chưa có tên")}</h3>
+          <p>${esc(s.student_code||"Chưa có mã")} · ${esc(s.license_class||"Chưa có hạng")} · ${esc(s.course||"Chưa có khóa")}</p>
+        </div>
+        <span class="quick-student-status">${esc(s.profile_status||"Đã ghi nhận")}</span>
+      </div>
+      <dl class="quick-student-details">
+        <div><dt>Ngày sinh</dt><dd>${esc(dateOnly(s.date_of_birth)||"—")}</dd></div>
+        <div><dt>Điện thoại</dt><dd>${esc(s.phone||"—")}</dd></div>
+        <div><dt>CCCD</dt><dd>${esc(s.cccd||"—")}</dd></div>
+        <div><dt>Thi sát hạch</dt><dd>${esc(s.exam_status||"Chưa cập nhật")}</dd></div>
+        <div class="quick-address"><dt>Địa chỉ</dt><dd>${esc(s.address||"—")}</dd></div>
+      </dl>
+      <div class="quick-student-fees" aria-label="Thông tin học phí">
+        <div><small>Tổng học phí</small><strong>${money(total)}</strong></div>
+        <div><small>Đã thu</small><strong>${money(paid)}</strong></div>
+        <div class="quick-debt"><small>Còn lại</small><strong>${money(debt)}</strong></div>
+      </div>
+      <div class="quick-student-actions">${actions}</div>
+    </article>`;
+  }).join("");
+  panel.innerHTML=`<div class="quick-search-head">
+    <div><h2>Thông tin học viên</h2><p role="status">Tìm thấy ${matches.length} học viên phù hợp</p></div>
+    <button type="button" class="quick-search-clear" data-quick-student-action="clear">Xóa tìm kiếm ×</button>
+  </div>
+  ${cards||'<div class="quick-search-empty">Không tìm thấy học viên phù hợp. Kiểm tra lại họ tên, mã hoặc số điện thoại.</div>'}
+  ${matches.length>top.length?'<p class="quick-search-more">Đang hiển thị 5 kết quả gần nhất. Nhập cụ thể hơn để thu hẹp danh sách.</p>':""}`;
+  if(cards){
+    const div=panel.querySelector(".quick-student-card");
+    if(div){
+      const grid=document.createElement("div");
+      grid.className="quick-search-grid";
+      while(panel.querySelector(".quick-student-card"))grid.appendChild(panel.querySelector(".quick-student-card"));
+      panel.querySelector(".quick-search-head").after(grid);
+    }
+  }
+  panel.hidden=false;
+}
+
+function renderStudents({searchOnly=false}={}){
+  const q=normalize($("search").value).replace(/\s+/g," ");
+  renderStudentQuickSearch(q);
   const inStat=s=>statFilter==="all"||(statFilter==="learning"&&!isExamPassed(s.exam_status))||(statFilter==="debt"&&(Number(s.tuition_total)||0)>(Number(s.paid)||0));
-  const rows=students.filter(s=>inStat(s)&&normalize([s.name,s.cccd,s.phone,s.student_code,s.course].join(" ")).includes(q));
+  const rows=students.filter(s=>inStat(s)&&studentSearchText(s).includes(q));
   $("studentRows").innerHTML=rows.map(s=>{
     const account=studentAccounts.find(item=>item.student_id===String(s.id));
     const accountButton=me.role==="admin"&&studentAccountsReady?`<button class="student-account-btn ${account?.active?"is-active":""}" data-student-account="${s.id}">${account?`Tài khoản: ${esc(account.username)}`:"＋ Tạo tài khoản"}</button>`:"";
@@ -382,15 +453,17 @@ function renderStudents(){
   $("totalStudents").textContent=students.length;
   $("learningStudents").textContent=students.filter(s=>!isExamPassed(s.exam_status)).length;
   $("debtStudents").textContent=students.filter(s=>(s.tuition_total||0)>(s.paid||0)).length;
+  if(!searchOnly){
   safeRender("renderTheoryDashboard",renderTheoryDashboard);
   safeRender("renderFinanceDashboard",renderFinanceDashboard);
   safeRender("renderAttendanceDashboard",renderAttendanceDashboard);
   safeRender("renderEarlyWarnings",renderEarlyWarnings);
+  }
   const labels={all:["Danh sách tất cả học viên","Toàn bộ hồ sơ đang quản lý"],learning:["Học viên đang học","Các học viên chưa đậu kỳ thi sát hạch"],debt:["Học viên còn nợ học phí","Các hồ sơ có số tiền đã thu thấp hơn tổng học phí"]};
   $("studentListTitle").textContent=labels[statFilter][0];$("studentListNote").textContent=labels[statFilter][1];
   document.querySelectorAll("[data-stat-filter]").forEach(card=>{const active=card.dataset.statFilter===statFilter;card.classList.toggle("active",active);card.setAttribute("aria-pressed",String(active))});
-  safeRender("renderAccountNotifications",renderAccountNotifications);
-  if(!matchMedia("(pointer: coarse)").matches){
+  if(!searchOnly)safeRender("renderAccountNotifications",renderAccountNotifications);
+  if(!searchOnly&&!matchMedia("(pointer: coarse)").matches){
     setTimeout(()=>safeRender("publishAdminAssistantContext",publishAdminAssistantContext),0);
   }
 }
@@ -661,7 +734,25 @@ $("exportReportBtn").onclick=async()=>{
   const rows=filteredAdminReport();if(!rows.length)return toast("Không có dữ liệu để xuất báo cáo.");$("exportReportBtn").disabled=true;
   try{const ExcelJS=await getExcelJS(),wb=new ExcelJS.Workbook(),ws=wb.addWorksheet("BÁO CÁO ADMIN",{views:[{state:"frozen",ySplit:1}]});ws.addRow(["Mã học viên","Họ và tên","Khóa","Hạng","Tổng buổi","Có mặt","Vắng","Vắng có phép","Giờ thực học","Tỷ lệ chuyên cần","Đã học 600 câu","Bài thi thử","Tổng học phí","Đã thu","Còn nợ"]);for(const item of rows){const theory=reportTheory(item);ws.addRow([item.student_code,item.name,item.course,item.license_class,Number(item.session_count)||0,Number(item.present_count)||0,Number(item.absent_count)||0,Number(item.excused_count)||0,Math.round((Number(item.actual_minutes)||0)/60*100)/100,Number(item.attendance_rate)||0,Number(theory.answered_count)||0,Number(theory.exam_count)||0,Number(item.tuition_total)||0,Number(item.paid)||0,Number(item.debt)||0])}ws.columns=[14,24,16,12,12,10,10,14,14,16,16,12,16,16,16].map(width=>({width}));const header=ws.getRow(1);header.font={bold:true,color:{argb:"FFFFFFFF"}};header.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF155FAF"}};for(let row=2;row<=ws.rowCount;row++){ws.getCell(`I${row}`).numFmt='0.00 "giờ"';ws.getCell(`J${row}`).numFmt='0.0"%"';for(const col of ["M","N","O"])ws.getCell(`${col}${row}`).numFmt='#,##0 [$₫-vi-VN]'}const file=await buildExcelFile(wb,`Bao-cao-Admin-${$("reportFrom").value}-${$("reportTo").value}.xlsx`);renderExcelPreview({title:"Báo cáo Admin đã sẵn sàng",file,headers:["Học viên","Buổi","Giờ","Chuyên cần","Còn nợ"],rows:rows.slice(0,20).map(item=>[item.name,item.session_count,formatAttendanceDuration(item.actual_minutes),`${Math.round(Number(item.attendance_rate)||0)}%`,money(item.debt)]),note:`Báo cáo gồm ${rows.length} học viên trong khoảng thời gian đã chọn.`,mode:"export"});await recordAudit("admin_report_export","attendance_report","","Báo cáo tổng hợp",{student_count:rows.length,from:$("reportFrom").value,to:$("reportTo").value})}catch(error){$("adminReportError").textContent=errText(error)}finally{$("exportReportBtn").disabled=false}
 };
-$("search").oninput=renderStudents;
+$("search").oninput=()=>renderStudents({searchOnly:true});
+$("studentQuickSearch").addEventListener("click",event=>{
+  const button=event.target.closest("[data-quick-student-action]");
+  if(!button)return;
+  const action=button.dataset.quickStudentAction;
+  if(action==="clear"){
+    $("search").value="";
+    renderStudents({searchOnly:true});
+    $("search").focus();
+    return;
+  }
+  const student=students.find(s=>String(s.id)===String(button.dataset.studentId));
+  if(!student)return;
+  if(action==="edit")return openStudent(student);
+  if(me?.role!=="admin")return;
+  if(action==="finance")return openPaymentLedger(student);
+  if(action==="theory")return openTheoryDetail(student);
+  if(action==="attendance")return openAttendance(student);
+});
 $("ownerFilter").onchange=loadStudents;
 function selectStat(card){statFilter=card.dataset.statFilter;$("search").value="";renderStudents();document.querySelector(".panel").scrollIntoView({behavior:"smooth",block:"start"})}
 document.querySelectorAll("[data-stat-filter]").forEach(card=>{card.onclick=()=>selectStat(card);card.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();selectStat(card)}}});

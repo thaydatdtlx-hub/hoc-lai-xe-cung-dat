@@ -1,0 +1,101 @@
+/* Ket qua tim hoc vien ngay duoi thanh tim kiem; chi hien khi da nhap tu khoa. */
+#app #studentQuickSearch[hidden]{display:none!important}
+#app #studentQuickSearch{
+  margin:12px 0 23px;
+  padding:20px;
+  border:1px solid #d7e6f4;
+  border-radius:22px;
+  background:linear-gradient(135deg,#f8fbff,#fff 60%,#f4faff);
+  box-shadow:0 14px 35px rgba(26,73,121,.09);
+  color:#143b62;
+}
+#app #studentQuickSearch .quick-search-head{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:12px;margin-bottom:14px;
+}
+#app #studentQuickSearch .quick-search-head h2{margin:0;color:#0d3766;font-size:19px;font-weight:900}
+#app #studentQuickSearch .quick-search-head p{margin:3px 0 0;font-size:12px;color:#63819f}
+#app #studentQuickSearch .quick-search-clear{
+  min-height:38px;padding:8px 13px;border:1px solid #bfd7ed;border-radius:10px;
+  background:#fff;color:#2168ad;font-size:12px;font-weight:800;cursor:pointer;
+}
+#app #studentQuickSearch .quick-search-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,490px),1fr));gap:13px;
+}
+#app #studentQuickSearch .quick-student-card{
+  display:grid;gap:14px;min-width:0;padding:17px;border:1px solid #d4e3f2;border-radius:17px;
+  background:#fff;box-shadow:0 6px 18px rgba(20,69,115,.06);
+}
+#app #studentQuickSearch .quick-student-top{
+  display:flex;align-items:center;gap:12px;min-width:0;
+}
+#app #studentQuickSearch .quick-student-avatar{
+  display:grid;place-items:center;flex:0 0 47px;width:47px;height:47px;border-radius:14px;
+  background:linear-gradient(135deg,#e7f2ff,#d2e7ff);color:#125ca4;font-size:16px;font-weight:900;
+}
+#app #studentQuickSearch .quick-student-name{min-width:0;flex:1}
+#app #studentQuickSearch .quick-student-name h3{
+  margin:0 0 3px;color:#0c386b;font-size:17px;line-height:1.3;overflow-wrap:anywhere;
+}
+#app #studentQuickSearch .quick-student-name p{margin:0;color:#6684a0;font-size:12px;line-height:1.45}
+#app #studentQuickSearch .quick-student-status{
+  max-width:140px;align-self:flex-start;padding:6px 9px;border-radius:999px;
+  background:#e9f6ef;color:#147951;font-size:11px;font-weight:800;text-align:center;overflow-wrap:anywhere;
+}
+#app #studentQuickSearch .quick-student-details{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 15px;margin:0;
+  padding:13px 0;border-top:1px solid #ebf1f7;border-bottom:1px solid #ebf1f7;
+}
+#app #studentQuickSearch .quick-student-details>div{min-width:0}
+#app #studentQuickSearch .quick-student-details dt{margin-bottom:3px;color:#7189a1;font-size:11px;font-weight:700}
+#app #studentQuickSearch .quick-student-details dd{
+  margin:0;color:#244d74;font-size:13px;font-weight:750;line-height:1.4;overflow-wrap:anywhere;
+}
+#app #studentQuickSearch .quick-student-details .quick-address{grid-column:span 2}
+#app #studentQuickSearch .quick-student-fees{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;
+  padding:11px;border:1px solid #dceaf7;border-radius:12px;background:#f5faff;
+}
+#app #studentQuickSearch .quick-student-fees>div{display:grid;gap:4px;min-width:0}
+#app #studentQuickSearch .quick-student-fees small{color:#6c849e;font-size:11px;font-weight:700}
+#app #studentQuickSearch .quick-student-fees strong{color:#174e87;font-size:13px;overflow-wrap:anywhere}
+#app #studentQuickSearch .quick-student-fees .quick-debt strong{color:#b66b16}
+#app #studentQuickSearch .quick-student-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px}
+#app #studentQuickSearch .quick-student-actions button{
+  display:inline-flex;align-items:center;justify-content:center;min-height:39px;
+  padding:9px 14px;border:1px solid #c7daec;border-radius:10px;
+  background:#f5faff;color:#1868b6;font-size:12px;font-weight:850;cursor:pointer;
+  transition:border-color .15s ease,background .15s ease;
+}
+#app #studentQuickSearch .quick-student-actions button.primary-quick{
+  border-color:#116cd4;background:#146fda;color:#fff;
+}
+#app #studentQuickSearch .quick-student-actions button:hover{
+  border-color:#6aabe6;background:#e7f3ff;
+}
+#app #studentQuickSearch .quick-student-actions button.primary-quick:hover{background:#075dc3;color:#fff}
+#app #studentQuickSearch .quick-search-empty{
+  padding:23px 12px;border:1px dashed #c9daed;border-radius:13px;background:#fff;
+  color:#587998;text-align:center;font-size:13px;
+}
+#app #studentQuickSearch .quick-search-more{margin:12px 0 0;color:#71869d;font-size:12px}
+@media(max-width:800px){
+  #app #studentQuickSearch{padding:15px;border-radius:17px}
+  #app #studentQuickSearch .quick-student-details{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #app #studentQuickSearch .quick-student-details .quick-address{grid-column:1/-1}
+  #app #studentQuickSearch .quick-student-status{max-width:100px}
+}
+@media(max-width:440px){
+  #app #studentQuickSearch .quick-student-top{align-items:flex-start}
+  #app #studentQuickSearch .quick-student-avatar{flex-basis:40px;width:40px;height:40px}
+  #app #studentQuickSearch .quick-student-name h3{font-size:15px}
+  #app #studentQuickSearch .quick-student-status{font-size:10px;padding:5px}
+  #app #studentQuickSearch .quick-student-fees{gap:5px;padding:9px}
+  #app #studentQuickSearch .quick-student-fees strong{font-size:11px}
+  #app #studentQuickSearch .quick-student-actions{display:grid;grid-template-columns:1fr 1fr}
+  #app #studentQuickSearch .quick-student-actions button{padding:9px 7px;font-size:11px}
+  #app #studentQuickSearch .quick-student-actions button.primary-quick{grid-column:1/-1}
+}
+@media(prefers-reduced-motion:reduce){
+  #app #studentQuickSearch .quick-student-actions button{transition:none}
+}
