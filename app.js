@@ -143,7 +143,6 @@ function showApp(){
     const field=$(id)?.closest("label");
     if(field)field.classList.toggle("staff-restricted-field",me.role!=="admin");
   }
-  for(const node of document.querySelectorAll(".admin-only"))node.classList.toggle("hidden",me.role!=="admin");
   document.querySelectorAll(".admin-only").forEach(x=>x.classList.toggle("hidden",me.role!=="admin"));
   $("ownerFilter").classList.toggle("hidden",me.role!=="admin");
   $("studentOwnerWrap").classList.toggle("hidden",me.role!=="admin");
@@ -417,14 +416,14 @@ function renderStudentQuickSearch(query){
         <div><dt>Ngày sinh</dt><dd>${esc(dateOnly(s.date_of_birth)||"—")}</dd></div>
         <div><dt>Điện thoại</dt><dd>${esc(s.phone||"—")}</dd></div>
         <div><dt>CCCD</dt><dd>${esc(s.cccd||"—")}</dd></div>
-        <div><dt>Thi sát hạch</dt><dd>${esc(s.exam_status||"Chưa cập nhật")}</dd></div>
+        ${me.role==="admin"?`<div><dt>Thi sát hạch</dt><dd>${esc(s.exam_status||"Chưa cập nhật")}</dd></div>`:""}
         <div class="quick-address"><dt>Địa chỉ</dt><dd>${esc(s.address||"—")}</dd></div>
       </dl>
-      <div class="quick-student-fees" aria-label="Thông tin học phí">
+      ${me.role==="admin"?`<div class="quick-student-fees" aria-label="Thông tin học phí">
         <div><small>Tổng học phí</small><strong>${money(total)}</strong></div>
         <div><small>Đã thu</small><strong>${money(paid)}</strong></div>
         <div class="quick-debt"><small>Còn lại</small><strong>${money(debt)}</strong></div>
-      </div>
+      </div>`:""}
       <div class="quick-student-actions">${actions}</div>
     </article>`;
   }).join("");
