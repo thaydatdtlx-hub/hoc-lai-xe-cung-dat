@@ -137,6 +137,13 @@ function showApp(){
   login.classList.add("hidden");login.hidden=true;login.setAttribute("aria-hidden","true");login.style.setProperty("display","none","important");
   app.hidden=false;app.classList.remove("hidden");app.removeAttribute("aria-hidden");app.style.removeProperty("display");releaseAuthFirstPaint();
   $("accountName").textContent=me.role==="admin"?`${me.username} · Admin`:me.username;
+  document.body.classList.toggle("staff-only-view",me.role!=="admin");
+  const staffFields=["onlineStatus","onlineStart","onlineEnd","cabinStatus","datStatus","graduationStatus","examStatus","tuitionTotal","paid"];
+  for(const id of staffFields){
+    const field=$(id)?.closest("label");
+    if(field)field.classList.toggle("staff-restricted-field",me.role!=="admin");
+  }
+  for(const node of document.querySelectorAll(".admin-only"))node.classList.toggle("hidden",me.role!=="admin");
   document.querySelectorAll(".admin-only").forEach(x=>x.classList.toggle("hidden",me.role!=="admin"));
   $("ownerFilter").classList.toggle("hidden",me.role!=="admin");
   $("studentOwnerWrap").classList.toggle("hidden",me.role!=="admin");
@@ -212,7 +219,7 @@ async function loadStudents(){
     if(me.role==="admin")await loadTheoryProgress();
     await loadServerNotifications();
     safeRender("renderStudents-final",renderStudents);
-    if(students.length&&!Object.prototype.hasOwnProperty.call(students[0],"online_status")&&!sessionStorage.getItem("progress_sql_warning")){sessionStorage.setItem("progress_sql_warning","1");alert("Cơ sở dữ liệu chưa có đủ các mục tiến độ. Admin cần chạy file CAP-NHAT-TIEN-DO.sql trong Supabase SQL Editor.")}
+    if(me.role==="admin"&&students.length&&!Object.prototype.hasOwnProperty.call(students[0],"online_status")&&!sessionStorage.getItem("progress_sql_warning")){sessionStorage.setItem("progress_sql_warning","1");alert("Cơ sở dữ liệu chưa có đủ các mục tiến độ. Admin cần chạy file CAP-NHAT-TIEN-DO.sql trong Supabase SQL Editor.")}
   }
   catch(err){toast(errText(err))}
 }
@@ -447,7 +454,7 @@ function renderStudents({searchOnly=false}={}){
   $("studentRows").innerHTML=rows.map(s=>{
     const account=studentAccounts.find(item=>item.student_id===String(s.id));
     const accountButton=me.role==="admin"&&studentAccountsReady?`<button class="student-account-btn ${account?.active?"is-active":""}" data-student-account="${s.id}">${account?`Tài khoản: ${esc(account.username)}`:"＋ Tạo tài khoản"}</button>`:"";
-    return `<tr><td><div class="student-cell">${s.photo_data?`<img class="student-photo" src="${s.photo_data}" alt="Ảnh ${esc(s.name)}">`:`<span class="student-photo empty-photo">Ảnh<br>3×4</span>`}<div><span class="student-name">${esc(s.name)}</span><span class="sub">${esc(s.student_code)}${s.owner_username?` · ${esc(s.owner_username)}`:""}</span>${account?`<span class="student-login-state ${account.active?"active":"locked"}">${account.active?"Có tài khoản học viên":"Tài khoản đang khóa"}</span>`:""}</div></div></td><td>${esc(s.license_class||"—")}<span class="sub">${esc(s.course||"Chưa có khóa")}</span></td><td>${esc(s.phone||"—")}</td><td>${progressHtml(s)}</td>${me.role==="admin"?`<td>${theoryProgressHtml(s)}</td>`:""}<td>${money(s.tuition_total)}<span class="sub">Đã thu ${money(s.paid)} · Còn ${money(Math.max(0,(s.tuition_total||0)-(s.paid||0)))}</span></td><td><div class="row-actions">${accountButton}${me.role==="admin"?`<button class="attendance-row-btn" data-attendance-student="${s.id}">Điểm danh</button><button class="payment-row-btn" data-payment-student="${s.id}">Học phí / Phiếu thu</button>`:""}<button data-edit="${s.id}">Sửa</button>${me.role==="admin"&&s.photo_data?`<button data-download-photo="${s.id}">Tải ảnh</button>`:""}${me.role==="admin"?`<button class="danger" data-delete="${s.id}">Xóa</button>`:""}</div></td></tr>`;
+    return `<tr><td><div class="student-cell">${s.photo_data?`<img class="student-photo" src="${s.photo_data}" alt="Ảnh ${esc(s.name)}">`:`<span class="student-photo empty-photo">Ảnh<br>3×4</span>`}<div><span class="student-name">${esc(s.name)}</span><span class="sub">${esc(s.student_code)}${s.owner_username?` · ${esc(s.owner_username)}`:""}</span>${account?`<span class="student-login-state ${account.active?"active":"locked"}">${account.active?"Có tài khoản học viên":"Tài khoản đang khóa"}</span>`:""}</div></div></td><td>${esc(s.license_class||"—")}<span class="sub">${esc(s.course||"Chưa có khóa")}</span></td><td>${esc(s.phone||"—")}</td>${me.role==="admin"?`<td>${progressHtml(s)}</td><td>${theoryProgressHtml(s)}</td><td>${money(s.tuition_total)}<span class="sub">Đã thu ${money(s.paid)} · Còn ${money(Math.max(0,(s.tuition_total||0)-(s.paid||0)))}</span></td>`:""}<td><div class="row-actions">${accountButton}${me.role==="admin"?`<button class="attendance-row-btn" data-attendance-student="${s.id}">Điểm danh</button><button class="payment-row-btn" data-payment-student="${s.id}">Học phí / Phiếu thu</button>`:""}<button data-edit="${s.id}">Sửa</button>${me.role==="admin"&&s.photo_data?`<button data-download-photo="${s.id}">Tải ảnh</button>`:""}${me.role==="admin"?`<button class="danger" data-delete="${s.id}">Xóa</button>`:""}</div></td></tr>`;
   }).join("");
   $("empty").classList.toggle("hidden",rows.length>0);$("resultCount").textContent=`${rows.length} học viên`;
   $("totalStudents").textContent=students.length;
@@ -802,7 +809,7 @@ $("studentRows").onclick=async e=>{
 $("studentForm").onsubmit=async e=>{
   e.preventDefault();$("studentError").textContent="";
   if(!$("name").value.trim())return $("studentError").textContent="Vui lòng nhập họ và tên.";
-  if($("paid").value&&Number($("paid").value)>Number($("tuitionTotal").value||0))return $("studentError").textContent="Số tiền đã thu không được lớn hơn tổng học phí.";
+  if(me.role==="admin"&&$("paid").value&&Number($("paid").value)>Number($("tuitionTotal").value||0))return $("studentError").textContent="Số tiền đã thu không được lớn hơn tổng học phí.";
   const current=students.find(s=>s.id===$("studentId").value),schedule=parseScheduleFromNotes(current?.notes||"")||{version:1,dates:{},locations:{},note:""};
   const motorcycle=isMotorcycleLicense($("licenseClass").value);
   const onlineStart=motorcycle?"":$("onlineStart").value,onlineEnd=motorcycle?"":$("onlineEnd").value;
@@ -815,7 +822,15 @@ $("studentForm").onsubmit=async e=>{
   const hasSchedule=Object.keys(schedule.dates).length||Object.keys(schedule.locations).length||schedule.note;
   const data={name:$("name").value.trim(),date_of_birth:$("dob").value||null,cccd:$("cccd").value.trim(),phone:$("phone").value.trim(),license_class:$("licenseClass").value,course:$("course").value.trim(),profile_status:$("profileStatus").value,online_status:$("onlineStatus").value,cabin_status:$("cabinStatus").value,dat_status:$("datStatus").value,graduation_status:$("graduationStatus").value,exam_status:$("examStatus").value,tuition_total:Number($("tuitionTotal").value||0),paid:Number($("paid").value||0),address:$("address").value.trim(),notes:embedScheduleInNotes($("notes").value.trim(),hasSchedule?schedule:null),photo_data:currentPhoto};
   $("saveStudentBtn").disabled=true;
-  try{const editingId=$("studentId").value||null,savedId=await rpc("app_save_student",{p_token:token,p_student_id:editingId,p_data:data,p_owner_id:me.role==="admin"?$("studentOwner").value:null});await recordAudit(editingId?"student_updated":"student_created","student",savedId,data.name,{student_code:current?.student_code||"",tuition_total:data.tuition_total,paid:data.paid});$("studentDialog").close();await loadStudents();const saved=students.find(s=>s.id===savedId);if(currentPhoto&&(!saved||!saved.photo_data)){alert("Thông tin đã lưu nhưng ảnh chưa được cơ sở dữ liệu ghi nhận. Hãy chạy file CAP-NHAT-ANH-3X4.sql trong Supabase rồi tải ảnh lại.")}else toast("Đã lưu thông tin học viên")}
+  const isAdmin=me.role==="admin";
+  const staffData={name:data.name,date_of_birth:data.date_of_birth,cccd:data.cccd,phone:data.phone,
+    license_class:data.license_class,course:data.course,profile_status:data.profile_status,
+    address:data.address,notes:embedScheduleInNotes($("notes").value.trim(),parseScheduleFromNotes(current?.notes||"")),photo_data:data.photo_data};
+  try{const editingId=$("studentId").value||null,
+    savedId=isAdmin
+      ?await rpc("app_save_student",{p_token:token,p_student_id:editingId,p_data:data,p_owner_id:$("studentOwner").value})
+      :await rpc("app_staff_save_student",{p_token:token,p_student_id:editingId,p_data:staffData});
+    if(isAdmin)await recordAudit(editingId?"student_updated":"student_created","student",savedId,data.name,{student_code:current?.student_code||"",tuition_total:data.tuition_total,paid:data.paid});$("studentDialog").close();await loadStudents();const saved=students.find(s=>s.id===savedId);if(currentPhoto&&(!saved||!saved.photo_data)){alert("Thông tin đã lưu nhưng ảnh chưa được cơ sở dữ liệu ghi nhận. Hãy chạy file CAP-NHAT-ANH-3X4.sql trong Supabase rồi tải ảnh lại.")}else toast("Đã lưu thông tin học viên")}
   catch(err){$("studentError").textContent=errText(err)}finally{$("saveStudentBtn").disabled=false}
 };
 
