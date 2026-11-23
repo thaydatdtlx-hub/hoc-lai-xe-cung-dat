@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="/pwa-install.css?v=1">
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
   <link rel="stylesheet" href="/questions-home-redesign.css?v=1">
+  <style>.study-license-picker{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:15px 0;color:#214f80;font-size:13px;font-weight:800}.study-license-picker[hidden],.study-license-picker button[hidden],.exam-class-picker button[hidden]{display:none!important}.study-license-picker button{min-width:45px;min-height:39px;padding:7px 12px;border:1px solid #bdd6ed;border-radius:10px;background:#f0f7ff;color:#145a9b;font-size:13px;font-weight:800;cursor:pointer}.study-license-picker button.active{background:#126bd0;color:#fff;border-color:#126bd0}@media(max-width:540px){.study-license-picker span{flex-basis:100%}}</style>
 </head>
 <body>
   <a class="skip-link" href="#questionsMain">Chuyển đến nội dung học</a>
@@ -50,6 +51,7 @@
           <p class="hero-kicker"><span></span> BỘ CÂU HỎI CHÍNH THỨC · CẬP NHẬT HIỆN HÀNH</p>
           <h1><b>600</b> câu hỏi<br>sát hạch lái xe</h1>
           <p>Học theo từng chương, luyện riêng câu điểm liệt và thi thử A1, A, B, C1 ngay trên điện thoại.</p>
+          <div id="studyLicensePicker" class="study-license-picker" role="group" aria-label="Chọn hạng GPLX"><span>Chọn hạng học:</span><button type="button" data-study-license="A1" hidden>A1</button><button type="button" data-study-license="A" hidden>A</button><button type="button" data-study-license="B" hidden>B</button><button type="button" data-study-license="C1" hidden>C1</button></div>
           <div class="hero-actions">
             <button class="hero-primary" type="button" data-start-mode="continue">Tiếp tục học <span>→</span></button>
             <button type="button" data-start-mode="exam">Thi thử theo hạng</button>
@@ -239,7 +241,7 @@
   </dialog>
 
   <div id="questionToast" role="status" aria-live="polite"></div>
-  <script type="module" src="/questions.js?v=6"></script>
+  <script type="module" src="/questions.js?v=20261123-250-600"></script>
   <script type="module" src="/questions-classic.js?v=5"></script>
   <script type="module" src="/question-numbering.js?v=2"></script>
   <script type="module" src="/site-enhancements.js?v=15"></script>

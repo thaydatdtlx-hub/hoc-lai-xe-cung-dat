@@ -72,8 +72,13 @@ function applyRegistrationConfig(config){
 
   const nav=document.querySelector(".site-header nav");
   if(nav){
-    const theory=[...nav.querySelectorAll('a[href="/600-cau-hoi.html"]')];
-    theory.slice(1).forEach(node=>node.remove());
+    const theory=[...nav.querySelectorAll('a[href^="/600-cau-hoi.html"]')];
+    const seen=new Set();
+    theory.forEach(link=>{
+      const bank=/250/.test(link.textContent||"")?"250":"600";
+      if(seen.has(bank))link.remove();
+      else seen.add(bank);
+    });
     document.querySelectorAll(".site-unified-area-badge").forEach(node=>node.remove());
   }
 
