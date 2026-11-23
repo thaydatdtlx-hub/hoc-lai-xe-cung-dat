@@ -85,7 +85,10 @@ function addFooterLinks(){
       nav.prepend(footerLink({href:"/",icon:"✎",label:"Đăng ký học lái xe",key:"register"}));
     }
     if(!nav.querySelector('[data-site-unified="theory"]')){
-      nav.prepend(footerLink({href:"/600-cau-hoi.html",icon:"600",label:"Học 600 câu",key:"theory"}));
+      nav.prepend(footerLink({href:"/600-cau-hoi.html?hang=B",icon:"600",label:"Học 600 câu · B, C1",key:"theory"}));
+    }
+    if(!nav.querySelector('[data-site-unified="theory-moto"]')){
+      nav.prepend(footerLink({href:"/600-cau-hoi.html?hang=A1",icon:"250",label:"Học 250 câu · A1, A",key:"theory-moto"}));
     }
   });
 }
@@ -129,14 +132,38 @@ function enhanceTheoryPage(){
 
 function addRegistrationNavLinks(nav){
   if(!nav)return;
-  if(!nav.querySelector('[data-site-unified="theory-nav"]')){
-    const theory=document.createElement("a");
-    theory.href="/600-cau-hoi.html";
-    theory.className="site-unified-nav-link";
-    theory.dataset.siteUnified="theory-nav";
-    theory.textContent="Học 600 câu";
-    nav.append(theory);
+  // Chuan hoa hai muc rieng biet. Khong chen them neu header/menu mobile da co.
+  const theoryLinks=[...nav.querySelectorAll("a")].filter(link=>{
+    try{return new URL(link.getAttribute("href"),location.href).pathname==="/600-cau-hoi.html"}
+    catch{return false}
+  });
+  const used=new Set();
+  function takeLink(key,license){
+    const link=theoryLinks.find(item=>item.dataset.siteUnified===key&&!used.has(item))
+      ||theoryLinks.find(item=>{
+        if(used.has(item))return false;
+        try{return new URL(item.getAttribute("href"),location.href).searchParams.get("hang")===license}
+        catch{return false}
+      })
+      ||theoryLinks.find(item=>!used.has(item))
+      ||document.createElement("a");
+    used.add(link);
+    return link;
   }
+  const moto=takeLink("theory-moto-nav","A1"),car=takeLink("theory-nav","B");
+  const configure=(link,{href,key,label,title})=>{
+    link.href=href;
+    link.dataset.siteUnified=key;
+    link.classList.add("site-unified-nav-link");
+    link.textContent=label;
+    link.title=title;
+  };
+  configure(moto,{href:"/600-cau-hoi.html?hang=A1",key:"theory-moto-nav",label:"Học 250 câu",title:"Luyện 250 câu mô tô hạng A1, A"});
+  configure(car,{href:"/600-cau-hoi.html?hang=B",key:"theory-nav",label:"Học 600 câu",title:"Luyện 600 câu ô tô hạng B, C1"});
+  theoryLinks.filter(link=>!used.has(link)).forEach(link=>link.remove());
+  const contact=nav.querySelector('a[href="#dang-ky"]')||nav.querySelector('a[href="/dang-nhap.html"]');
+  if(contact){nav.insertBefore(moto,contact);nav.insertBefore(car,contact)}
+  else nav.append(moto,car);
   if(!nav.querySelector('[data-site-unified="login-nav"]')){
     const login=document.createElement("a");
     login.href="/dang-nhap.html";
