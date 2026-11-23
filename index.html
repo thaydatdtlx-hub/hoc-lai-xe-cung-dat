@@ -27,6 +27,12 @@
   <link rel="stylesheet" href="styles.css?v=4"><link rel="stylesheet" href="theme.css?v=15"><link rel="stylesheet" href="/contact-footer.css?v=1"><link rel="stylesheet" href="/professional.css?v=15"><link rel="stylesheet" href="/pwa-install.css?v=1"><link rel="stylesheet" href="/mobile-app.css?v=1"><link rel="stylesheet" href="/driving-refresh.css?v=1">
   <link rel="stylesheet" href="/admin-toolbar-unified.css?v=2">
   <link rel="stylesheet" href="/student-quick-search.css?v=20261123">
+  <link rel="stylesheet" href="/manager-account-editor.css?v=20261123-2">
+<style id="staff-scope-layout">
+  body.staff-only-view .staff-restricted-field{display:none!important}
+  body.staff-only-view .staff-only-banner{display:block}
+  body.staff-only-view #exportBtn{display:none!important}
+</style>
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
   <link rel="preload" as="image" href="/login-cars-approved-v24.webp?v=24">
   <link rel="preload" as="image" href="/logo-thay-dat-compact.webp?v=15">
@@ -176,9 +182,9 @@
           <div class="mobile-module-track">
             <button class="mobile-module-card tone-gold" type="button" data-mobile-click="addStudentBtn"><span><b><i data-mobile-icon="userPlus"></i></b></span><strong>Thêm học viên</strong><small>Tạo hồ sơ mới</small></button>
             <a class="mobile-module-card tone-blue" href="/lich-dao-tao.html"><span><b><i data-mobile-icon="calendar"></i></b></span><strong>Lịch đào tạo</strong><small>Xếp lịch và ca học</small></a>
-            <a class="mobile-module-card tone-violet" href="/600-cau-hoi.html"><span><b>600</b></span><strong>Lý thuyết</strong><small>Theo dõi tiến độ</small></a>
-            <button class="mobile-module-card tone-green" type="button" data-mobile-click="attendanceBtn"><span><b><i data-mobile-icon="clipboard"></i></b></span><strong>Điểm danh</strong><small>Giờ học thực tế</small></button>
-            <button class="mobile-module-card tone-cyan" type="button" data-mobile-click="adminReportBtn"><span><b><i data-mobile-icon="chart"></i></b></span><strong>Báo cáo Admin</strong><small>Tổng hợp đào tạo</small></button>
+            <a class="mobile-module-card tone-violet admin-only hidden" href="/600-cau-hoi.html"><span><b>600</b></span><strong>Lý thuyết</strong><small>Theo dõi tiến độ</small></a>
+            <button class="mobile-module-card tone-green admin-only hidden" type="button" data-mobile-click="attendanceBtn"><span><b><i data-mobile-icon="clipboard"></i></b></span><strong>Điểm danh</strong><small>Giờ học thực tế</small></button>
+            <button class="mobile-module-card tone-cyan admin-only hidden" type="button" data-mobile-click="adminReportBtn"><span><b><i data-mobile-icon="chart"></i></b></span><strong>Báo cáo Admin</strong><small>Tổng hợp đào tạo</small></button>
             <button class="mobile-module-card tone-orange admin-only hidden" type="button" data-mobile-click="drivingRefreshAdminBtn"><span><b><i data-mobile-icon="car"></i></b></span><strong>Đăng ký bổ túc</strong><small>Tiếp nhận khách mới</small></button>
           </div>
         </section>
@@ -188,13 +194,13 @@
         <select id="ownerFilter" class="hidden" aria-label="Lọc tài khoản"></select>
         <button id="addStudentBtn" class="primary">＋ Thêm học viên</button>
         <a class="schedule-link" href="/lich-dao-tao.html"><span aria-hidden="true">▣</span><strong>LỊCH ĐÀO TẠO</strong></a>
-        <a class="schedule-link question-bank-link" href="/600-cau-hoi.html"><span aria-hidden="true">600</span><strong>HỌC LÝ THUYẾT</strong></a>
-        <a class="schedule-link refresh-public-link" href="/bo-tuc-tay-lai.html" target="_blank" rel="noopener"><span aria-hidden="true">🚘</span><strong>TRANG ĐĂNG KÝ BỔ TÚC</strong></a>
+        <a class="schedule-link question-bank-link admin-only hidden" href="/600-cau-hoi.html"><span aria-hidden="true">600</span><strong>HỌC LÝ THUYẾT</strong></a>
+        <a class="schedule-link refresh-public-link admin-only hidden" href="/bo-tuc-tay-lai.html" target="_blank" rel="noopener"><span aria-hidden="true">🚘</span><strong>TRANG ĐĂNG KÝ BỔ TÚC</strong></a>
         <button id="importBtn" class="data-action data-import admin-only hidden" type="button" title="Chỉ nhận file Excel .xlsx">
           <span class="data-action-icon" aria-hidden="true">↑</span>
           <span><strong>NHẬP FILE</strong><small>Chọn file .xlsx</small></span>
         </button>
-        <button id="exportBtn" class="data-action data-export" type="button" title="Xuất file Excel .xlsx">
+        <button id="exportBtn" class="data-action data-export admin-only hidden" type="button" title="Xuất file Excel .xlsx">
           <span class="data-action-icon" aria-hidden="true">↓</span>
           <span><strong>XUẤT FILE</strong><small>Mở / lưu .xlsx</small></span>
         </button>
@@ -286,14 +292,14 @@
 
       <section class="stats">
         <article class="stat-card stat-blue active" data-stat-filter="all" role="button" tabindex="0" aria-pressed="true"><span class="stat-icon">👥</span><div><small>Tổng học viên</small><strong id="totalStudents">0</strong><em>Bấm để xem tất cả hồ sơ</em></div><span class="stat-arrow">›</span></article>
-        <article class="stat-card stat-green" data-stat-filter="learning" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">🚘</span><div><small>Đang học</small><strong id="learningStudents">0</strong><em>Bấm để xem học viên đang học</em></div><span class="stat-arrow">›</span></article>
-        <article class="stat-card stat-orange" data-stat-filter="debt" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">₫</span><div><small>Còn nợ học phí</small><strong id="debtStudents">0</strong><em>Bấm để xem danh sách còn nợ</em></div><span class="stat-arrow">›</span></article>
+        <article class="stat-card stat-green admin-only hidden" data-stat-filter="learning" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">🚘</span><div><small>Đang học</small><strong id="learningStudents">0</strong><em>Bấm để xem học viên đang học</em></div><span class="stat-arrow">›</span></article>
+        <article class="stat-card stat-orange admin-only hidden" data-stat-filter="debt" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">₫</span><div><small>Còn nợ học phí</small><strong id="debtStudents">0</strong><em>Bấm để xem danh sách còn nợ</em></div><span class="stat-arrow">›</span></article>
       </section>
 
       <section class="panel">
-        <div class="panel-title"><div><h2 id="studentListTitle">Danh sách học viên</h2><p id="studentListNote">Tra cứu và cập nhật tiến độ đào tạo</p></div><span id="resultCount">0 học viên</span></div>
+        <div class="panel-title"><div><h2 id="studentListTitle">Danh sách học viên</h2><p id="studentListNote">Tra cứu và cập nhật hồ sơ</p></div><span id="resultCount">0 học viên</span></div>
         <div class="table-wrap">
-          <table><thead><tr><th>Học viên</th><th>Hạng / Khóa</th><th>Điện thoại</th><th>Tiến độ đào tạo</th><th class="admin-only hidden">Học 600 câu</th><th>Học phí</th><th>Thao tác</th></tr></thead><tbody id="studentRows"></tbody></table>
+          <table><thead><tr><th>Học viên</th><th>Hạng / Khóa</th><th>Điện thoại</th><th class="admin-only hidden">Tiến độ đào tạo</th><th class="admin-only hidden">Học 600 câu</th><th class="admin-only hidden">Học phí</th><th>Thao tác</th></tr></thead><tbody id="studentRows"></tbody></table>
         </div>
         <div id="empty" class="empty hidden"><strong>Chưa có dữ liệu học viên</strong><span>Bấm “Thêm học viên” để nhập hồ sơ đầu tiên.</span></div>
       </section>
@@ -372,9 +378,30 @@
   </dialog>
 
   <dialog id="usersDialog">
-    <div class="dialog-head"><h2>Tài khoản quản lý</h2><button type="button" class="close">×</button></div>
-    <form id="userForm" class="inline-form"><input id="newUsername" placeholder="Tên đăng nhập" required><input id="newPassword" type="password" placeholder="Mật khẩu tạm (từ 8 ký tự)" minlength="8" required><button id="createUserBtn" class="primary">Tạo tài khoản</button></form>
+    <div class="dialog-head"><h2>Tài khoản quản lý</h2><button type="button" class="close" aria-label="Đóng">×</button></div>
+    <p class="manager-account-description">Tạo tài khoản Quản trị viên / Nhân viên, chỉnh sửa phân quyền hoặc xóa quyền truy cập. Hồ sơ học viên và lịch sử hoạt động được giữ nguyên.</p>
+    <form id="userForm" class="inline-form manager-create-form"><input id="newUsername" placeholder="Tên đăng nhập" minlength="4" maxlength="40" pattern="[a-z0-9._-]{4,40}" autocomplete="off" aria-label="Tên đăng nhập mới" required><input id="newPassword" type="password" autocomplete="new-password" placeholder="Mật khẩu tạm (từ 8 ký tự)" minlength="8" aria-label="Mật khẩu tạm" required><select id="newUserRole" aria-label="Vai trò tài khoản" required><option value="user">Nhân viên</option><option value="admin">Quản trị viên</option></select><button id="createUserBtn" class="primary">Thêm tài khoản</button></form>
     <p id="userError" class="error" role="alert"></p><div id="userList" class="user-list"></div>
+  </dialog>
+  <dialog id="editManagerDialog" aria-labelledby="editManagerTitle">
+    <div class="dialog-head"><h2 id="editManagerTitle">Chỉnh sửa tài khoản</h2><button type="button" class="close" aria-label="Đóng">×</button></div>
+    <form id="editManagerForm">
+      <input id="editManagerId" type="hidden">
+      <div class="manager-edit-fields">
+        <label>Tên đăng nhập
+          <input id="editManagerUsername" required minlength="4" maxlength="40" pattern="[a-z0-9._-]{4,40}" autocomplete="off" spellcheck="false">
+        </label>
+        <label>Phân quyền
+          <select id="editManagerRole" required><option value="user">Nhân viên</option><option value="admin">Quản trị viên</option></select>
+        </label>
+        <label>Mật khẩu tạm mới (không bắt buộc)
+          <input id="editManagerPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Để trống nếu không đổi">
+        </label>
+        <p id="editManagerHelp" class="manager-edit-help">Tài khoản sẽ đăng nhập lại khi quyền hoặc mật khẩu thay đổi.</p>
+      </div>
+      <p id="editManagerError" class="error" role="alert"></p>
+      <div class="manager-edit-actions"><button type="button" class="close">Hủy</button><button id="saveManagerEditBtn" type="submit" class="primary">Lưu thay đổi</button></div>
+    </form>
   </dialog>
 
   <dialog id="publicTheoryAccountsDialog" class="public-theory-accounts-dialog">
@@ -623,7 +650,7 @@
   </dialog>
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div><div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/app.js?v=3"></script>
+  <script type="module" src="/app.js?v=staff-scope-20261123-v2"></script>
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>

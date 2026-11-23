@@ -1,0 +1,117 @@
+/* Scope styles to the manager-account dialogs; do not alter student or public screens. */
+#usersDialog {
+  width: min(780px, calc(100vw - 26px));
+  max-width: 780px;
+}
+#usersDialog .manager-account-description {
+  margin: 10px 0 14px;
+  color: #536681;
+  font-size: 13px;
+  line-height: 1.5;
+}
+#usersDialog .user-list {
+  display: grid;
+  gap: 9px;
+  max-height: min(44vh, 420px);
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+#usersDialog .user-item.manager-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 13px 14px;
+  border: 1px solid #e2e9f3;
+  background: #fff;
+  border-radius: 12px;
+}
+.manager-account-row .manager-account-name {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.manager-account-row .manager-account-name strong {
+  overflow-wrap: anywhere;
+  color: #102b53;
+  font-size: 14px;
+}
+.manager-account-row .manager-account-meta {
+  color: #5f718c;
+  font-size: 12px;
+}
+.manager-account-row .manager-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.manager-account-row .manager-account-actions button {
+  white-space: nowrap;
+  min-height: 36px;
+}
+.manager-account-row .manager-account-actions .manager-edit-button {
+  color: #fff;
+  border-color: #1b56b3;
+  background: #205fbe;
+}
+#editManagerDialog {
+  width: min(510px, calc(100vw - 24px));
+  max-width: 510px;
+}
+#editManagerDialog .manager-edit-fields {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+#editManagerDialog .manager-edit-fields label {
+  display: grid;
+  gap: 7px;
+  color: #1b3456;
+  font-size: 13px;
+  font-weight: 600;
+}
+#editManagerDialog .manager-edit-fields input,
+#editManagerDialog .manager-edit-fields select {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  border: 1px solid #cad6e5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  background: white;
+  color: #183354;
+}
+#editManagerDialog .manager-edit-fields input:focus,
+#editManagerDialog .manager-edit-fields select:focus {
+  outline: 2px solid #8db5ff;
+  border-color: #3475d6;
+}
+#editManagerDialog .manager-edit-help {
+  color: #60738c;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 2px 0 0;
+}
+#editManagerDialog .manager-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 18px;
+}
+@media (max-width: 600px) {
+  #usersDialog .inline-form { display: grid; grid-template-columns: 1fr; }
+  #usersDialog .inline-form > * { width: 100%; min-width: 0; }
+  #usersDialog .user-item.manager-account-row { align-items: stretch; }
+  .manager-account-row .manager-account-actions { width: 100%; }
+  .manager-account-row .manager-account-actions button { flex: 1 1 auto; }
+  #editManagerDialog .manager-edit-actions button { flex: 1 1 140px; }
+}
+
+#usersDialog .manager-create-form select {min-width:135px;min-height:42px;padding:9px 11px;border:1px solid #cfdae9;border-radius:10px;background:#fff;color:#172f56;font:inherit}
+#usersDialog .manager-delete-button {background:#fff6f6;color:#a52727;border:1px solid #f5c7c7}
+#usersDialog .manager-delete-button:hover {background:#ffe5e5}
+#usersDialog .manager-delete-button:disabled {opacity:.4;cursor:not-allowed}
+@media (max-width:600px){#usersDialog .manager-create-form select {width:100%}}

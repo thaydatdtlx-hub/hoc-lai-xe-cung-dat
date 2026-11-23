@@ -66,9 +66,9 @@
         <h1>Lịch đào tạo học viên</h1>
         <p>Theo dõi toàn bộ lịch học, lịch thực hành và các kỳ thi trên một màn hình.</p>
       </div>
-      <div class="hero-actions admin-only hidden">
-        <button id="openRequestsBtn" class="request-light" type="button">✋ Yêu cầu <b id="requestCountBadge">0</b></button>
-        <button id="openSlotBtn" class="secondary-light" type="button">＋ Tạo ca học</button>
+      <div class="hero-actions manager-only hidden">
+        <button id="openRequestsBtn" class="request-light admin-only hidden" type="button">✋ Yêu cầu <b id="requestCountBadge">0</b></button>
+        <button id="openSlotBtn" class="secondary-light admin-only hidden" type="button">＋ Tạo ca học</button>
         <button id="openSessionBtn" class="secondary-light private-session-btn" type="button">＋ Tạo ca học riêng</button>
         <button id="openEditorBtn" class="primary" type="button">＋ Lập mốc đào tạo</button>
       </div>
@@ -153,7 +153,7 @@
       </label>
       <p id="scheduleError" class="form-error" role="alert"></p>
       <div class="dialog-actions">
-        <button id="deleteAllScheduleBtn" class="danger-action admin-only hidden" type="button">Xóa toàn bộ mốc</button>
+        <button id="deleteAllScheduleBtn" class="danger-action hidden" type="button">Xóa toàn bộ mốc</button>
         <span class="dialog-actions-spacer"></span>
         <button class="dialog-close" type="button">Hủy</button>
         <button id="saveScheduleBtn" class="primary" type="submit">Lưu lịch đào tạo</button>
@@ -263,6 +263,6 @@
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div>
   <div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/schedule.js?v=20260828-3"></script>
+  <script type="module" src="/schedule.js?v=staff-owner-20261123"></script>
 </body>
 </html>
