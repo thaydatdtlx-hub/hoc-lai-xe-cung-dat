@@ -28,6 +28,11 @@
   <link rel="stylesheet" href="/admin-toolbar-unified.css?v=2">
   <link rel="stylesheet" href="/student-quick-search.css?v=20261123">
   <link rel="stylesheet" href="/manager-account-editor.css?v=20261123-2">
+<style id="staff-scope-layout">
+  body.staff-only-view .staff-restricted-field{display:none!important}
+  body.staff-only-view .staff-only-banner{display:block}
+  body.staff-only-view #exportBtn{display:none!important}
+</style>
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
   <link rel="preload" as="image" href="/login-cars-approved-v24.webp?v=24">
   <link rel="preload" as="image" href="/logo-thay-dat-compact.webp?v=15">
@@ -195,7 +200,7 @@
           <span class="data-action-icon" aria-hidden="true">↑</span>
           <span><strong>NHẬP FILE</strong><small>Chọn file .xlsx</small></span>
         </button>
-        <button id="exportBtn" class="data-action data-export" type="button" title="Xuất file Excel .xlsx">
+        <button id="exportBtn" class="data-action data-export admin-only hidden" type="button" title="Xuất file Excel .xlsx">
           <span class="data-action-icon" aria-hidden="true">↓</span>
           <span><strong>XUẤT FILE</strong><small>Mở / lưu .xlsx</small></span>
         </button>
@@ -287,14 +292,14 @@
 
       <section class="stats">
         <article class="stat-card stat-blue active" data-stat-filter="all" role="button" tabindex="0" aria-pressed="true"><span class="stat-icon">👥</span><div><small>Tổng học viên</small><strong id="totalStudents">0</strong><em>Bấm để xem tất cả hồ sơ</em></div><span class="stat-arrow">›</span></article>
-        <article class="stat-card stat-green" data-stat-filter="learning" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">🚘</span><div><small>Đang học</small><strong id="learningStudents">0</strong><em>Bấm để xem học viên đang học</em></div><span class="stat-arrow">›</span></article>
-        <article class="stat-card stat-orange" data-stat-filter="debt" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">₫</span><div><small>Còn nợ học phí</small><strong id="debtStudents">0</strong><em>Bấm để xem danh sách còn nợ</em></div><span class="stat-arrow">›</span></article>
+        <article class="stat-card stat-green admin-only hidden" data-stat-filter="learning" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">🚘</span><div><small>Đang học</small><strong id="learningStudents">0</strong><em>Bấm để xem học viên đang học</em></div><span class="stat-arrow">›</span></article>
+        <article class="stat-card stat-orange admin-only hidden" data-stat-filter="debt" role="button" tabindex="0" aria-pressed="false"><span class="stat-icon">₫</span><div><small>Còn nợ học phí</small><strong id="debtStudents">0</strong><em>Bấm để xem danh sách còn nợ</em></div><span class="stat-arrow">›</span></article>
       </section>
 
       <section class="panel">
         <div class="panel-title"><div><h2 id="studentListTitle">Danh sách học viên</h2><p id="studentListNote">Tra cứu và cập nhật tiến độ đào tạo</p></div><span id="resultCount">0 học viên</span></div>
         <div class="table-wrap">
-          <table><thead><tr><th>Học viên</th><th>Hạng / Khóa</th><th>Điện thoại</th><th>Tiến độ đào tạo</th><th class="admin-only hidden">Học 600 câu</th><th>Học phí</th><th>Thao tác</th></tr></thead><tbody id="studentRows"></tbody></table>
+          <table><thead><tr><th>Học viên</th><th>Hạng / Khóa</th><th>Điện thoại</th><th class="admin-only hidden">Tiến độ đào tạo</th><th class="admin-only hidden">Học 600 câu</th><th class="admin-only hidden">Học phí</th><th>Thao tác</th></tr></thead><tbody id="studentRows"></tbody></table>
         </div>
         <div id="empty" class="empty hidden"><strong>Chưa có dữ liệu học viên</strong><span>Bấm “Thêm học viên” để nhập hồ sơ đầu tiên.</span></div>
       </section>
@@ -645,7 +650,7 @@
   </dialog>
 
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div><div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="/app.js?v=manager-editor-20261123-2"></script>
+  <script type="module" src="/app.js?v=staff-scope-20261123"></script>
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>
