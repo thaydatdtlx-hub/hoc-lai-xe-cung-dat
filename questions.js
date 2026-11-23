@@ -18,7 +18,9 @@ const TOPICS=[
   {id:6,icon:"⌖",short:"Sa hình và tình huống",name:"Giải thế sa hình và xử lý tình huống",count:115,color:"#1767b7",soft:"#e2effc"}
 ];
 let questions=[],pool=[],currentIndex=0,currentMode="learn",activeTopic="all",examAnswers=new Map(),examStartedAt=0,examTimer=null,examPool=[],examResult=null;
-let activeExamKey=authKind==="student"?null:"B",storageKey=DEFAULT_STORAGE_KEY,remoteStudent=null,remoteSyncEnabled=false,remoteSyncTimer=null,remoteSyncing=false;
+const urlClass=new URLSearchParams(location.search).get("hang")?.toUpperCase();
+const defaultExamClass=["A1","A","B","C1"].includes(urlClass)?urlClass:"B";
+let activeExamKey=authKind==="student"?null:defaultExamClass,storageKey=DEFAULT_STORAGE_KEY,remoteStudent=null,remoteSyncEnabled=false,remoteSyncTimer=null,remoteSyncing=false;
 let progress=readProgress(storageKey);
 
 function readProgress(key=storageKey){
@@ -68,16 +70,40 @@ function scopedQuestions(){
   return questions;
 }
 function scopedQuestionCount(){return isMotorcycleClass()?250:600}
+function syncTheoryClassButtons(){
+  const motorcycle=isMotorcycleClass();
+  for(const button of document.querySelectorAll("[data-study-license]")){
+    const key=button.dataset.studyLicense;
+    button.hidden=motorcycle?!["A1","A"].includes(key):!["B","C1"].includes(key);
+    button.classList.toggle("active",key===activeExamKey);
+    button.setAttribute("aria-pressed",String(key===activeExamKey));
+  }
+  for(const button of document.querySelectorAll("[data-exam-class]")){
+    const key=button.dataset.examClass;
+    button.hidden=motorcycle?!["A1","A"].includes(key):!["B","C1"].includes(key);
+  }
+  const picker=document.getElementById("studyLicensePicker");
+  if(picker)picker.hidden=authKind==="student"&&Boolean(remoteStudent);
+}
 function syncTheoryCopy(){
   const total=scopedQuestionCount();
   const critical=scopedQuestions().filter(practiceCritical).length;
   const heroCount=document.querySelector(".study-hero h1 b");if(heroCount)heroCount.textContent=String(total);
+  const visual=document.querySelector(".road-sign.sign-main strong");if(visual)visual.textContent=String(total);
+  const intro=document.querySelector(".study-hero .hero-copy>p:not(.hero-kicker)");
+  if(intro)intro.textContent=isMotorcycleClass()?"Luyện 250 câu dành riêng cho hạng A1, A: ôn theo chương, câu điểm liệt và thi thử mô tô.":"Luyện 600 câu dành cho hạng B, C1: ôn theo chương, câu điểm liệt và thi thử ô tô.";
+  const rule=document.querySelector(".current-rule p");
+  if(rule)rule.textContent=isMotorcycleClass()?"A1: 25 câu · 19 phút · đạt 21. A: 25 câu · 19 phút · đạt 23.":"B: 30 câu · 20 phút · đạt 27. C1: 35 câu · 22 phút · đạt 32.";
+  const source=document.querySelector(".source-note p");
+  if(source)source.textContent=isMotorcycleClass()?"Nguồn nội dung: Nhóm 250 câu dành cho A1, A được chọn từ bộ 600 câu hỏi chính thức của Cục CSGT.":"Nguồn nội dung: Bộ 600 câu hỏi do Cục CSGT, Bộ Công an biên soạn, dùng để luyện lý thuyết hạng B, C1.";
   const trust=document.querySelectorAll(".hero-trust span");
   if(trust[0])trust[0].textContent=`✓ ${total} câu đầy đủ`;
   if(trust[1])trust[1].textContent=`✓ ${critical} câu điểm liệt`;
+  if(trust[2])trust[2].textContent=isMotorcycleClass()?"✓ Dành cho mô tô A1, A":"✓ 318 hình minh họa";
   const criticalCard=document.querySelector('[data-start-mode="critical"] strong');if(criticalCard)criticalCard.textContent=`${critical} câu điểm liệt`;
   const topicSummary=document.querySelector(".topic-section .section-title>span");if(topicSummary)topicSummary.textContent=`${total} câu · áp dụng từ 01/06/2025`;
-  if(authKind==="student"&&activeExamKey)document.title=`${total} câu hỏi sát hạch hạng ${activeExamKey} · Thầy Đạt`;
+  document.title=`${total} câu hỏi sát hạch hạng ${activeExamKey||"B"} · Thầy Đạt`;
+  syncTheoryClassButtons();
 }
 function localProgressSummary(){
   const answered=scopedQuestions().filter(question=>Number(progress.answers[question.id])>0);
@@ -289,7 +315,20 @@ function reviewExam(){closeDialog($("examResultDialog"));currentMode="exam-revie
 document.querySelectorAll("[data-start-mode]").forEach(button=>button.onclick=()=>startFromButton(button.dataset.startMode));
 document.querySelectorAll(".dialog-close").forEach(button=>button.onclick=()=>closeDialog(button.closest("dialog")));
 $("backHomeBtn").onclick=returnHome;$("prevQuestionBtn").onclick=()=>goToQuestion(currentIndex-1);$("nextQuestionBtn").onclick=()=>goToQuestion(currentIndex+1);$("bookmarkBtn").onclick=toggleBookmark;$("applyFilterBtn").onclick=()=>applyFilters();$("questionSearch").onkeydown=event=>{if(event.key==="Enter"){event.preventDefault();applyFilters()}};$("openPaletteBtn").onclick=()=>{$("paletteDialog").showModal();renderPalette()};$("mobileFilterBtn").onclick=()=>$("studySidebar").classList.add("open");$("closeSidebarBtn").onclick=()=>$("studySidebar").classList.remove("open");$("examReadyCheck").onchange=event=>$("startExamBtn").disabled=!event.target.checked;
-document.querySelectorAll("[data-exam-class]").forEach(button=>button.onclick=()=>{const requested=button.dataset.examClass;if(authKind==="student"&&remoteStudent&&requested!==activeExamKey){toast(`Tài khoản này được Admin xếp hạng ${activeExamKey}. Không thể chuyển sang hạng ${requested}.`);return}activeExamKey=requested;syncTheoryCopy();renderExamIntro();$("examReadyCheck").checked=false;$("startExamBtn").disabled=true});
+document.querySelectorAll("[data-exam-class]").forEach(button=>button.onclick=()=>{
+  const requested=button.dataset.examClass;
+  if(authKind==="student"&&remoteStudent&&requested!==activeExamKey){toast("Hạng GPLX do Admin quản lý.");return}
+  if(isMotorcycleClass()!==["A1","A"].includes(requested)){toast("Vui lòng chọn đúng nhóm câu hỏi 250 hoặc 600.");return}
+  activeExamKey=requested;syncTheoryCopy();renderExamIntro();$("examReadyCheck").checked=false;$("startExamBtn").disabled=true;
+});
+document.querySelectorAll("[data-study-license]").forEach(button=>button.onclick=()=>{
+  const requested=button.dataset.studyLicense;
+  if(authKind==="student"&&remoteStudent){toast("Hạng GPLX do Admin quản lý.");return}
+  if(isMotorcycleClass()!==["A1","A"].includes(requested))return;
+  activeExamKey=requested;syncTheoryCopy();renderHome();populateFilters();
+  const url=new URL(location.href);url.searchParams.set("hang",requested);
+  history.replaceState(null,"",url.pathname+url.search+url.hash);
+});
 $("startExamBtn").onclick=beginExam;$("finishExamBtn").onclick=()=>finishExam(false);$("reviewExamBtn").onclick=reviewExam;$("retryExamBtn").onclick=()=>{closeDialog($("examResultDialog"));openExamIntro()};
 $("resetProgressBtn").onclick=()=>{const message=remoteSyncEnabled?"Làm mới tiến độ học và câu đã đánh dấu của tài khoản này? Lịch sử thi đã gửi cho Admin vẫn được giữ lại.":"Xóa toàn bộ tiến độ học, câu đã đánh dấu và lịch sử thi thử trên thiết bị này?";if(!confirm(message))return;progress={answers:{},bookmarks:[],lastId:1,exams:[]};saveProgress();renderHome();toast("Đã làm mới tiến độ học")};
 document.addEventListener("keydown",event=>{if(["INPUT","SELECT","TEXTAREA"].includes(document.activeElement?.tagName)||document.querySelector("dialog[open]"))return;if($("studyWorkspace").classList.contains("hidden"))return;if(event.key==="ArrowLeft")goToQuestion(currentIndex-1);if(event.key==="ArrowRight")goToQuestion(currentIndex+1);if(/^[1-4]$/.test(event.key)){const option=currentQuestion()?.options.find(item=>item.n===Number(event.key));if(option)chooseAnswer(option.n)}});
