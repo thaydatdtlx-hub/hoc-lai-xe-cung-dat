@@ -17,7 +17,7 @@ function mountOnlineBanner(){
       </div>
     </div>
     <div class="td-online-banner__actions">
-      <a href="/600-cau-hoi.html">Học 600 câu</a>
+      <a href="/600-cau-hoi.html?hang=B">Học 600 câu</a>
       <a href="/dang-nhap.html">Đăng nhập học viên</a>
     </div>`;
   anchor.insertAdjacentElement('afterend',section);
@@ -54,22 +54,10 @@ function improveHeaderLabels(){
   if(eyebrow)eyebrow.textContent='HỌC LÁI XE CÙNG ĐẠT · ĐÀO TẠO & ĐỒNG HÀNH';
 }
 
-function addTheoryNav(){
-  const nav=document.querySelector('.site-header nav');
-  if(!nav||nav.querySelector('[data-td-theory-link]'))return;
-  const link=document.createElement('a');
-  link.href='/600-cau-hoi.html';
-  link.dataset.tdTheoryLink='true';
-  link.textContent='Học 600 câu';
-  const contact=nav.querySelector('a[href="#dang-ky"]');
-  contact?nav.insertBefore(link,contact):nav.append(link);
-}
-
 function initTaplaiInspired(){
   if(location.pathname!=='/dang-ky-hoc-lai-xe.html')return;
   document.body.classList.add('td-taplai-inspired');
   improveHeaderLabels();
-  addTheoryNav();
   mountOnlineBanner();
   mountMobileActions();
   stabilizeMobileControls();
