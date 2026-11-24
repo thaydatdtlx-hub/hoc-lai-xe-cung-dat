@@ -354,7 +354,7 @@ function openSessionEditor(sessionId=""){
   $("trainingRequestId").value="";
   $("trainingStudent").disabled=false;
   $("trainingType").disabled=false;
-  $("trainingStudent").value=session?.student_id||students[0]?.id||"";
+  $("trainingStudent").value=session?.student_id||students.find(item=>!isMotorcycleLicense(item.license_class))?.id||"";
   $("trainingType").value=session?.session_type||"familiar";
   $("trainingStartsAt").value=toDatetimeLocal(session?.starts_at);
   $("trainingLocation").value=session?.location||"";
