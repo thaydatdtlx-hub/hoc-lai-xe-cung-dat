@@ -5,7 +5,7 @@ if(document.getElementById("app")){
   import("./training-center.js?v=1").catch(error=>console.warn("[site-enhancements] Không thể tải trường Trung tâm đào tạo.",error));
 }
 
-if(location.pathname==="/600-cau-hoi.html"){
+if(["/250-cau-hoi.html","/600-cau-hoi.html"].includes(location.pathname)){
   import("./theory-account-identity.js?v=1").catch(error=>console.warn("[site-enhancements] Không thể tải thông tin tài khoản lý thuyết.",error));
 }
 
