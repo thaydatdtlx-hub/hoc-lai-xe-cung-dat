@@ -359,3 +359,30 @@ html[data-hv-theme="dark"] .site-color-control__select option{
 }
 html[data-hv-theme="dark"] .mobile-bar a{background:#23405c!important;color:#eaf2ff!important}
 html[data-hv-theme="dark"] .mobile-bar button{background:#1e6fb6!important;color:#fff!important}
+
+/* Some pages have a WHITE topbar in light mode; contrast must remain dark there. */
+html:not([data-hv-theme="dark"]) :is(
+  .student-topbar,.quiz-topbar,.site-header
+) .site-color-control--header{color:#244766!important}
+html:not([data-hv-theme="dark"]) :is(
+  .student-topbar,.quiz-topbar,.site-header
+) .site-color-control--header .site-color-control__select{
+  color:#173d65!important;background:#f1f6fc!important;
+  border-color:#c0d2e3!important;
+}
+html:not([data-hv-theme="dark"]) :is(
+  .student-topbar,.quiz-topbar,.site-header
+) .site-color-control--header .site-color-control__select option{
+  color:#173d65!important;background:#f1f6fc!important;
+}
+/* Learner desktop header follows theme; do not lose the student name. */
+html[data-hv-theme="dark"] .student-topbar{
+  background:#10263c!important;border-color:#304660!important;color:#e7effb!important;
+}
+html[data-hv-theme="dark"] :is(
+  .student-brand,.student-brand strong,.student-brand small,
+  .student-account span,.student-topbar .site-color-control__caption
+){color:#e7effb!important}
+html[data-hv-theme="dark"] .student-topbar .site-color-control__select{
+  background:#1c3b5a!important;color:#e7effb!important;border-color:#436586!important;
+}
