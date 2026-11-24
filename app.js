@@ -389,10 +389,32 @@ function studentSearchScore(student,query){
   const name=normalize(student.name).replace(/\s+/g," ");
   return name===query?0:name.startsWith(query)?1:name.includes(query)?2:3;
 }
+// Đặt kết quả ngay dưới ô tìm kiếm trên desktop, giữ layout hiện có trên điện thoại.
+function positionStudentQuickSearch(){
+  const input=$("search"),panel=$("studentQuickSearch"),toolbar=input?.closest(".toolbar");
+  if(!input||!panel||!toolbar)return;
+  if(window.matchMedia("(min-width: 901px)").matches){
+    if(panel.parentElement!==toolbar)toolbar.appendChild(panel);
+    panel.style.setProperty("--quick-search-left",input.offsetLeft+"px");
+    panel.style.setProperty("--quick-search-width",input.offsetWidth+"px");
+  }else{
+    if(panel.parentElement!==toolbar.parentElement||panel.previousElementSibling!==toolbar){
+      toolbar.insertAdjacentElement("afterend",panel);
+    }
+    panel.style.removeProperty("--quick-search-left");
+    panel.style.removeProperty("--quick-search-width");
+  }
+}
 function renderStudentQuickSearch(query){
   const panel=$("studentQuickSearch");
   if(!panel)return;
-  if(!query||!me){panel.hidden=true;panel.replaceChildren();return}
+  positionStudentQuickSearch();
+  const input=$("search");
+  if(!query||!me){
+    panel.hidden=true;panel.replaceChildren();
+    input.setAttribute("aria-expanded","false");
+    return;
+  }
   const matches=students.filter(s=>studentSearchText(s).includes(query)).sort((a,b)=>
     studentSearchScore(a,query)-studentSearchScore(b,query)||String(a.name||"").localeCompare(String(b.name||""),"vi")
   );
@@ -448,7 +470,9 @@ function renderStudentQuickSearch(query){
       panel.querySelector(".quick-search-head").after(grid);
     }
   }
+  panel.scrollTop=0;
   panel.hidden=false;
+  input.setAttribute("aria-expanded","true");
 }
 
 function renderStudents({searchOnly=false}={}){
@@ -747,6 +771,23 @@ $("exportReportBtn").onclick=async()=>{
   try{const ExcelJS=await getExcelJS(),wb=new ExcelJS.Workbook(),ws=wb.addWorksheet("BÁO CÁO ADMIN",{views:[{state:"frozen",ySplit:1}]});ws.addRow(["Mã học viên","Họ và tên","Khóa","Hạng","Tổng buổi","Có mặt","Vắng","Vắng có phép","Giờ thực học","Tỷ lệ chuyên cần","Đã học 600 câu","Bài thi thử","Tổng học phí","Đã thu","Còn nợ"]);for(const item of rows){const theory=reportTheory(item);ws.addRow([item.student_code,item.name,item.course,item.license_class,Number(item.session_count)||0,Number(item.present_count)||0,Number(item.absent_count)||0,Number(item.excused_count)||0,Math.round((Number(item.actual_minutes)||0)/60*100)/100,Number(item.attendance_rate)||0,Number(theory.answered_count)||0,Number(theory.exam_count)||0,Number(item.tuition_total)||0,Number(item.paid)||0,Number(item.debt)||0])}ws.columns=[14,24,16,12,12,10,10,14,14,16,16,12,16,16,16].map(width=>({width}));const header=ws.getRow(1);header.font={bold:true,color:{argb:"FFFFFFFF"}};header.fill={type:"pattern",pattern:"solid",fgColor:{argb:"FF155FAF"}};for(let row=2;row<=ws.rowCount;row++){ws.getCell(`I${row}`).numFmt='0.00 "giờ"';ws.getCell(`J${row}`).numFmt='0.0"%"';for(const col of ["M","N","O"])ws.getCell(`${col}${row}`).numFmt='#,##0 [$₫-vi-VN]'}const file=await buildExcelFile(wb,`Bao-cao-Admin-${$("reportFrom").value}-${$("reportTo").value}.xlsx`);renderExcelPreview({title:"Báo cáo Admin đã sẵn sàng",file,headers:["Học viên","Buổi","Giờ","Chuyên cần","Còn nợ"],rows:rows.slice(0,20).map(item=>[item.name,item.session_count,formatAttendanceDuration(item.actual_minutes),`${Math.round(Number(item.attendance_rate)||0)}%`,money(item.debt)]),note:`Báo cáo gồm ${rows.length} học viên trong khoảng thời gian đã chọn.`,mode:"export"});await recordAudit("admin_report_export","attendance_report","","Báo cáo tổng hợp",{student_count:rows.length,from:$("reportFrom").value,to:$("reportTo").value})}catch(error){$("adminReportError").textContent=errText(error)}finally{$("exportReportBtn").disabled=false}
 };
 $("search").oninput=()=>renderStudents({searchOnly:true});
+$("search").addEventListener("focus",()=>{
+  const query=normalize($("search").value).replace(/\s+/g," ");
+  if(query)renderStudentQuickSearch(query);
+});
+$("search").addEventListener("keydown",event=>{
+  if(event.key!=="Escape")return;
+  $("studentQuickSearch").hidden=true;
+  $("search").setAttribute("aria-expanded","false");
+});
+document.addEventListener("pointerdown",event=>{
+  const panel=$("studentQuickSearch");
+  if(!window.matchMedia("(min-width: 901px)").matches||panel.hidden)return;
+  if(event.target.closest("#search, #studentQuickSearch"))return;
+  panel.hidden=true;
+  $("search").setAttribute("aria-expanded","false");
+});
+window.addEventListener("resize",positionStudentQuickSearch,{passive:true});
 $("studentQuickSearch").addEventListener("click",event=>{
   const button=event.target.closest("[data-quick-student-action]");
   if(!button)return;
