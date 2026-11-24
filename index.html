@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="/student-quick-search.css?v=20261124-inline-v2">
   <link rel="stylesheet" href="/manager-account-editor.css?v=20261123-2">
   <link rel="stylesheet" href="/student-owner-handover.css?v=20261123">
+  <link rel="stylesheet" href="/mobile-admin-tools-compact.css?v=20261124-1">
 <style id="staff-scope-layout">
   body.staff-only-view .staff-restricted-field{display:none!important}
   body.staff-only-view .staff-only-banner{display:block}
@@ -190,7 +191,12 @@
           </div>
         </section>
       </section>
-      <section class="toolbar">
+      <button id="mobileAdminToolsToggle" class="mobile-admin-tools-toggle" type="button" aria-controls="mobileAdminToolsPanel" aria-expanded="false">
+        <span class="mobile-admin-tools-icon" data-mobile-icon="grid" aria-hidden="true"></span>
+        <span class="mobile-admin-tools-copy"><strong>Công cụ quản trị</strong><small>Nhấn để mở các chức năng</small></span>
+        <span class="mobile-admin-tools-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <section id="mobileAdminToolsPanel" class="toolbar" aria-label="Các công cụ quản trị">
         <input id="search" type="search" aria-label="Tìm kiếm học viên" aria-controls="studentQuickSearch" aria-expanded="false" autocomplete="off" placeholder="Tìm tên, CCCD, điện thoại, mã học viên">
         <select id="ownerFilter" class="hidden" aria-label="Lọc tài khoản"></select>
         <button id="addStudentBtn" class="primary">＋ Thêm học viên</button>
@@ -310,7 +316,7 @@
       <button type="button" data-mobile-scroll=".panel"><span data-mobile-icon="users"></span><small>Học viên</small></button>
       <a href="/lich-dao-tao.html"><span data-mobile-icon="calendar"></span><small>Lịch</small></a>
       <button class="mobile-bottom-notification" type="button" data-mobile-click="notificationBtn"><span data-mobile-icon="bell"></span><small>Thông báo</small><b id="mobileAdminBottomBadge" class="hidden">0</b></button>
-      <button type="button" data-mobile-action="admin-more"><span data-mobile-icon="more"></span><small>Thêm</small></button>
+      <button type="button" data-mobile-action="admin-more" aria-controls="mobileAdminToolsPanel" aria-expanded="false" aria-label="Mở công cụ quản trị"><span data-mobile-icon="more"></span><small>Công cụ</small></button>
     </nav>
     <footer class="contact-footer">
       <div class="contact-footer__brand"><strong>THẦY ĐẠT · ĐÀO TẠO LÁI XE TRỌN GÓI</strong><span>Kết nối với chúng tôi</span></div>
@@ -708,7 +714,7 @@
   <script type="module" src="/site-enhancements.js?v=16"></script>
   <script type="module" src="/pwa-install.js?v=1"></script>
   <script type="module" src="/push-notifications.js?v=1"></script>
-  <script type="module" src="/mobile-dashboard.js?v=1"></script>
+  <script type="module" src="/mobile-dashboard.js?v=20261124-compact-tools"></script>
   <script type="module" src="/admin-assistant.js?v=1"></script>
   <script type="module" src="/driving-refresh-admin.js?v=1"></script>
 </body>

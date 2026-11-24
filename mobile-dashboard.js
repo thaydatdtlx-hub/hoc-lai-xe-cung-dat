@@ -64,18 +64,58 @@ function syncStudent(){
 let syncFrame=0;function scheduleSync(){cancelAnimationFrame(syncFrame);syncFrame=requestAnimationFrame(()=>{syncAdmin();syncStudent()})}
 
 function closeMenus(except){document.querySelectorAll(".mobile-account-menu").forEach(menu=>{if(menu!==except)menu.classList.add("hidden")})}
+
+// Compact/mobile toolbar modes reuse every original button and its permissions.
+function setAdminMobileTools(mode="closed",{scroll=false}={}){
+  const toolbar=document.querySelector("#dashboardMain>.toolbar");
+  if(!toolbar)return;
+  const expanded=mode==="tools",searching=mode==="search",open=expanded||searching;
+  toolbar.classList.toggle("mobile-tools-open",open);
+  toolbar.classList.toggle("mobile-tools-search-mode",searching);
+  const trigger=$("mobileAdminToolsToggle");
+  if(trigger){
+    trigger.classList.toggle("is-open",expanded);
+    trigger.setAttribute("aria-expanded",String(expanded));
+    const hint=trigger.querySelector(".mobile-admin-tools-copy small");
+    if(hint)hint.textContent=expanded?"Nhấn để thu gọn":"Nhấn để mở các chức năng";
+  }
+  const bottom=document.querySelector('[data-mobile-action="admin-more"]');
+  bottom?.setAttribute("aria-expanded",String(expanded));
+  bottom?.setAttribute("aria-label",expanded?"Thu gọn công cụ quản trị":"Mở công cụ quản trị");
+  const input=$("search"),results=$("studentQuickSearch");
+  if(!searching){if(results)results.hidden=true;input?.setAttribute("aria-expanded","false")}
+  if(!open)return;
+  if(scroll)requestAnimationFrame(()=>(searching?toolbar:trigger||toolbar).scrollIntoView({behavior:"smooth",block:"start"}));
+  if(searching)requestAnimationFrame(()=>{
+    input?.focus({preventScroll:true});
+    if(input?.value.trim())input.dispatchEvent(new Event("input",{bubbles:true}));
+  });
+}
 document.addEventListener("click",event=>{
   const proxy=event.target.closest("[data-mobile-click]");
   if(proxy){event.preventDefault();$(proxy.dataset.mobileClick)?.click();closeMenus();return}
   const scroll=event.target.closest("[data-mobile-scroll]");
   if(scroll){
-    event.preventDefault();const target=document.querySelector(scroll.dataset.mobileScroll);target?.scrollIntoView({behavior:"smooth",block:"start"});
+    event.preventDefault();if(isMobile()&&document.querySelector("#dashboardMain>.toolbar.mobile-tools-open"))setAdminMobileTools("closed");
+    const target=document.querySelector(scroll.dataset.mobileScroll);target?.scrollIntoView({behavior:"smooth",block:"start"});
     const nav=scroll.closest("nav");nav?.querySelectorAll(".active").forEach(item=>item.classList.remove("active"));scroll.classList.add("active");return;
   }
   const action=event.target.closest("[data-mobile-action]")?.dataset.mobileAction;
-  if(action==="admin-search"||action==="admin-more"){
-    const toolbar=document.querySelector("#dashboardMain>.toolbar");toolbar?.classList.toggle("mobile-tools-open");
-    if(toolbar?.classList.contains("mobile-tools-open")){toolbar.scrollIntoView({behavior:"smooth",block:"start"});if(action==="admin-search")setTimeout(()=>$("search")?.focus(),350)}
+  if(event.target.closest("#mobileAdminToolsToggle")){
+    const toolbar=document.querySelector("#dashboardMain>.toolbar");
+    const expanded=toolbar?.classList.contains("mobile-tools-open")&&!toolbar?.classList.contains("mobile-tools-search-mode");
+    setAdminMobileTools(expanded?"closed":"tools");
+    return;
+  }
+  if(action==="admin-search"){setAdminMobileTools("search",{scroll:true});return}
+  if(action==="admin-more"){
+    const toolbar=document.querySelector("#dashboardMain>.toolbar");
+    const expanded=toolbar?.classList.contains("mobile-tools-open")&&!toolbar?.classList.contains("mobile-tools-search-mode");
+    setAdminMobileTools(expanded?"closed":"tools",{scroll:true});
+    return;
+  }
+  if(isMobile()&&event.target.closest("#dashboardMain>.toolbar>button, #dashboardMain>.toolbar>a")){
+    setAdminMobileTools("closed");
     return;
   }
   if(action==="student-search"){const target=$("mobileStudentShortcuts");target?.scrollIntoView({behavior:"smooth",block:"start"});target?.classList.add("mobile-highlight");setTimeout(()=>target?.classList.remove("mobile-highlight"),900);return}
@@ -86,6 +126,6 @@ document.addEventListener("click",event=>{
 });
 
 const observer=new MutationObserver(scheduleSync);observer.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class"]});
-addEventListener("resize",()=>{if(!isMobile())closeMenus()});
+addEventListener("resize",()=>{if(!isMobile()){closeMenus();setAdminMobileTools("closed")}});
 renderIcons();
 scheduleSync();
