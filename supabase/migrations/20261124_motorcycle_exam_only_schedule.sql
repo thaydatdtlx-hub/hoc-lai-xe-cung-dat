@@ -343,15 +343,21 @@ CREATE OR REPLACE FUNCTION public.app_staff_save_student_schedule(p_token text, 
  SET search_path TO ''
 AS $function$
 declare v_me jsonb; v_id uuid; v_name text;
-  v_license text; v_old_notes text; v_old jsonb; v_new jsonb;
+  v_license text; v_old_notes text; v_course text; v_old jsonb; v_new jsonb;
 begin
   v_me:=public.app_me(p_token);
   if v_me->>'role'<>'user' then raise exception 'Chỉ nhân viên sử dụng chức năng lập lịch riêng này.'; end if;
   if pg_catalog.length(coalesce(p_notes,''))>30000 then raise exception 'Nội dung lịch quá dài.'; end if;
-  select id,name,license_class,notes into v_id,v_name,v_license,v_old_notes from public.students
+  select id,name,license_class,notes,course into v_id,v_name,v_license,v_old_notes,v_course from public.students
   where id::text=pg_catalog.btrim(coalesce(p_student_id,'')) and owner_id=(v_me->>'id')::uuid
     and deleted_at is null for update;
   if v_id is null then raise exception 'Chỉ được quản lý lịch của học viên do tài khoản này nhập.'; end if;
+  if private.app_is_motorcycle_license(v_license)
+    and private.app_course_key(v_course) <> ''
+    and exists (select 1 from private.app_course_schedules cs
+                where cs.course_key=private.app_course_key(v_course)) then
+    raise exception 'Lịch Thi sát hạch A1/A đang được lập chung cho khóa. Vui lòng liên hệ Quản trị viên để cập nhật lịch chung.';
+  end if;
   if private.app_is_motorcycle_license(v_license) then
     v_old := public.app_schedule_payload(v_old_notes);
     v_new := public.app_schedule_payload(p_notes);
