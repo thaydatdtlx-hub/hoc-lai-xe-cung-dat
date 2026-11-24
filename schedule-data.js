@@ -13,6 +13,16 @@ export const SCHEDULE_FIELDS=[
   {key:"exam",label:"Thi sát hạch",short:"Sát hạch",icon:"🏁",tone:"red"}
 ];
 
+// Hạng A1/A chỉ lập lịch thi sát hạch; ô tô B/C1 dùng các mốc đào tạo khác.
+// Chấp nhận nhãn "Hạng A1", "Xe máy A1", không dựa vào chuỗi tên người học.
+export function isMotorcycleLicense(value){
+  const license=String(value??"").trim().normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"").replace(/đ/gi,"d")
+    .toUpperCase().replace(/[^A-Z0-9]+/g," ").trim();
+  return /(?:^| )(?:A1|A)(?: |$)/.test(license)
+    && !/(?:^| )(?:B|C1)(?: |$)/.test(license);
+}
+
 const TOKEN_RE=/(?:\n\n)?\[\[HV_SCHEDULE_V1:([A-Za-z0-9+/=]+)\]\]\s*$/;
 
 function encode(value){
