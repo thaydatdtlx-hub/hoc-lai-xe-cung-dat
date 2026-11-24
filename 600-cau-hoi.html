@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#075fce">
-  <meta name="description" content="Ôn tập 600 câu hỏi sát hạch lái xe của Cục Cảnh sát giao thông, có câu điểm liệt và thi thử hạng A1, A, B, C1.">
+  <meta name="description" content="Học 600 câu lý thuyết lái xe ô tô hạng B và C1. Luyện từng chương, 60 câu điểm liệt và thi thử theo hạng B, C1.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
@@ -12,14 +12,18 @@
   <meta name="apple-mobile-web-app-title" content="Thầy Đạt">
   <meta property="og:locale" content="vi_VN">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="600 câu hỏi sát hạch lái xe · Thầy Đạt">
-  <meta property="og:description" content="Ôn đủ 600 câu, 60 câu điểm liệt và thi thử A1, A, B, C1 ngay trên điện thoại.">
+  <meta property="og:title" content="Học 600 câu lý thuyết ô tô B, C1 | Học lái xe cùng Đạt">
+  <meta property="og:description" content="600 câu sát hạch dành riêng cho ô tô hạng B, C1: 60 câu điểm liệt, luyện theo chương, thi thử và lưu tiến độ.">
   <meta property="og:image" content="https://www.hoclaixecungdat.com/hero-vip-navy-champagne.webp?v=2">
   <link rel="canonical" href="https://www.hoclaixecungdat.com/600-cau-hoi.html">
+  <script>
+    // Keep existing links and QR codes working without mixing A1/A into the car page.
+    (()=>{const hang=new URLSearchParams(location.search).get("hang")?.toUpperCase();if(hang==="A1"||hang==="A"){const url=new URL(location.href);url.pathname="/250-cau-hoi.html";location.replace(url.pathname+url.search+url.hash)}})();
+  </script>
   <link rel="icon" href="/app-icon-192.png" type="image/png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180.png">
   <link rel="manifest" href="/site.webmanifest">
-  <title>600 câu hỏi sát hạch lái xe · Thầy Đạt</title>
+  <title>Học 600 câu lý thuyết ô tô B, C1 | Học lái xe cùng Đạt</title>
   <link rel="stylesheet" href="/questions.css?v=3">
   <link rel="stylesheet" href="/questions-classic.css?v=5">
   <link rel="stylesheet" href="/contact-footer.css?v=1">
@@ -27,9 +31,10 @@
   <link rel="stylesheet" href="/pwa-install.css?v=1">
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
   <link rel="stylesheet" href="/questions-home-redesign.css?v=1">
+  <link rel="stylesheet" href="/theory-bank-switch.css?v=20261124">
   <style>.study-license-picker{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:15px 0;color:#214f80;font-size:13px;font-weight:800}.study-license-picker[hidden],.study-license-picker button[hidden],.exam-class-picker button[hidden]{display:none!important}.study-license-picker button{min-width:45px;min-height:39px;padding:7px 12px;border:1px solid #bdd6ed;border-radius:10px;background:#f0f7ff;color:#145a9b;font-size:13px;font-weight:800;cursor:pointer}.study-license-picker button.active{background:#126bd0;color:#fff;border-color:#126bd0}@media(max-width:540px){.study-license-picker span{flex-basis:100%}}</style>
 </head>
-<body>
+<body data-theory-bank="600">
   <a class="skip-link" href="#questionsMain">Chuyển đến nội dung học</a>
   <header class="quiz-topbar">
     <a class="quiz-brand" href="/">
@@ -50,7 +55,7 @@
         <div class="hero-copy">
           <p class="hero-kicker"><span></span> BỘ CÂU HỎI CHÍNH THỨC · CẬP NHẬT HIỆN HÀNH</p>
           <h1><b>600</b> câu hỏi<br>sát hạch lái xe</h1>
-          <p>Học theo từng chương, luyện riêng câu điểm liệt và thi thử A1, A, B, C1 ngay trên điện thoại.</p>
+          <p>Luyện 600 câu lý thuyết hạng B, C1 theo từng chương, học câu điểm liệt và thi thử ô tô ngay trên điện thoại.</p>
           <div id="studyLicensePicker" class="study-license-picker" role="group" aria-label="Chọn hạng GPLX"><span>Chọn hạng học:</span><button type="button" data-study-license="A1" hidden>A1</button><button type="button" data-study-license="A" hidden>A</button><button type="button" data-study-license="B" hidden>B</button><button type="button" data-study-license="C1" hidden>C1</button></div>
           <div class="hero-actions">
             <button class="hero-primary" type="button" data-start-mode="continue">Tiếp tục học <span>→</span></button>
@@ -71,11 +76,21 @@
         </div>
       </div>
 
+      <nav class="theory-bank-switch" aria-label="Chọn bộ câu hỏi sát hạch">
+        <a href="/250-cau-hoi.html" class="theory-bank-switch__link">
+          <span class="theory-bank-switch__icon" aria-hidden="true">🏍</span>
+          <span><strong>Học 250 câu</strong><small>Xe máy · A1, A</small></span>
+        </a>
+        <a href="/600-cau-hoi.html" class="theory-bank-switch__link is-current" aria-current="page">
+          <span class="theory-bank-switch__icon" aria-hidden="true">🚘</span>
+          <span><strong>Học 600 câu</strong><small>Ô tô · B, C1</small></span>
+        </a>
+      </nav>
       <div class="current-rule">
         <span class="rule-icon">NEW</span>
         <div>
           <strong>Cấu trúc đề thi thử hiện hành</strong>
-          <p>A1: 25 câu · 19 phút · đạt 21. A: 25 câu · 19 phút · đạt 23. B: 30 câu · 20 phút · đạt 27. C1: 35 câu · 22 phút · đạt 32.</p>
+          <p>B: 30 câu · 20 phút · đạt 27. C1: 35 câu · 22 phút · đạt 32.</p>
         </div>
         <a href="https://csgt.bocongan.gov.vn/trac-nghiem-gplx" target="_blank" rel="noopener noreferrer">Đối chiếu Cục CSGT ↗</a>
       </div>
@@ -106,7 +121,7 @@
             <span class="mode-icon">!</span><div><small>KHÔNG ĐƯỢC SAI</small><strong>60 câu điểm liệt</strong><p>Tập trung các tình huống mất an toàn nghiêm trọng.</p></div><b>→</b>
           </button>
           <button class="mode-card exam" type="button" data-start-mode="exam">
-            <span class="mode-icon">⏱</span><div><small>MÔ PHỎNG KỲ THI</small><strong>Thi thử A1 · A · B · C1</strong><p>Chọn đúng hạng bằng, tính giờ và chấm điểm ngay khi nộp bài.</p></div><b>→</b>
+            <span class="mode-icon">⏱</span><div><small>MÔ PHỎNG KỲ THI</small><strong>Thi thử B · C1</strong><p>Chọn đúng hạng bằng, tính giờ và chấm điểm ngay khi nộp bài.</p></div><b>→</b>
           </button>
           <button class="mode-card review" type="button" data-start-mode="wrong">
             <span class="mode-icon">↻</span><div><small>CÁ NHÂN HÓA</small><strong>Ôn câu đã sai</strong><p>Tự động gom những câu bạn cần luyện thêm.</p></div><b>→</b>
@@ -123,7 +138,7 @@
       </section>
 
       <section class="source-note">
-        <div><span>i</span><p><strong>Nguồn nội dung</strong>Bộ 600 câu hỏi do Cục Cảnh sát giao thông, Bộ Công an biên soạn. Đáp án đúng được đối chiếu theo phần gạch chân trong tài liệu chính thức.</p></div>
+        <div><span>i</span><p><strong>Nguồn nội dung</strong>Bộ 600 câu hỏi do Cục Cảnh sát giao thông, Bộ Công an biên soạn. Trang này chỉ dành cho ô tô hạng B, C1; đáp án được đối chiếu với tài liệu chính thức.</p></div>
         <a href="https://csgt.bocongan.gov.vn/van-ban/bo-600-cau-hoi-dung-cho-sat-hach-lai-xe-co-gioi-duong-bo" target="_blank" rel="noopener noreferrer">Mở nguồn Cục CSGT ↗</a>
       </section>
     </section>
@@ -241,7 +256,7 @@
   </dialog>
 
   <div id="questionToast" role="status" aria-live="polite"></div>
-  <script type="module" src="/questions.js?v=20261123-250-600"></script>
+  <script type="module" src="/questions.js?v=20261124-separated-banks"></script>
   <script type="module" src="/questions-classic.js?v=5"></script>
   <script type="module" src="/question-numbering.js?v=2"></script>
   <script type="module" src="/site-enhancements.js?v=15"></script>
