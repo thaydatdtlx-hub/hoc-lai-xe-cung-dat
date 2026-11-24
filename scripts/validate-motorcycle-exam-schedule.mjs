@@ -7,6 +7,7 @@ const schedule=read("schedule.js");
 const course=read("course-schedule-sync-v2.js");
 const migration=read("supabase/migrations/20261124_motorcycle_exam_only_schedule.sql");
 const correction=read("supabase/migrations/20261124_motorcycle_staff_course_guard.sql");
+const sessionGuard=read("supabase/migrations/20261124_motorcycle_car_session_guard.sql");
 
 for(const value of ["A1","A","Hạng A1","Xe máy hạng A"]){
   assert.equal(isMotorcycleLicense(value),true,"Must recognize motorcycle class: "+value);
@@ -45,4 +46,6 @@ assert.ok(migration.includes("if private.app_is_motorcycle_license(p_license_cla
   "Backend must preserve old motorcycle training data");
 assert.ok(correction.includes("Lịch Thi sát hạch A1/A đang được lập chung"),
   "Staff must not silently overwrite centrally managed course dates");
+assert.ok(sessionGuard.includes("before insert or update of student_id, session_type"),"Table trigger must intercept motorcycle car-session creation and reassignment");
+assert.ok(sessionGuard.includes("private.app_is_motorcycle_license(v_license)"),"Table trigger must use motorcycle-class check");
 console.log("PASS: A1/A chỉ có Thi sát hạch ngày/giờ và địa điểm; B/C1 giữ lịch đầy đủ; lịch cũ không bị xóa; khóa trộn bị chặn.");
