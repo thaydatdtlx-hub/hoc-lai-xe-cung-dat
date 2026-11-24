@@ -121,7 +121,7 @@ for(const required of ["hoclaixecungdat_sw_refresh_v52","registration.update()",
   if(!pwaSource.includes(required))throw new Error(`PWA chưa buộc nhận bản sửa thanh toán mới: ${required}`);
 }
 const serviceWorkerSource=readFileSync(new URL("../public/sw.js",import.meta.url),"utf8");
-const serviceWorkerCacheVersion=Number(serviceWorkerSource.match(/const CACHE_NAME="hoclaixecungdat-pwa-v(\\d+)"/)?.[1]||0);
+const serviceWorkerCacheVersion=Number(serviceWorkerSource.match(/const CACHE_NAME="hoclaixecungdat-pwa-v([0-9]+)"/)?.[1]||0);
 if(serviceWorkerCacheVersion<52)throw new Error("Service worker đã dùng cache cũ, có nguy cơ lỗi thanh toán trên iPhone.");
 for(const required of ['/student-payment-modal.js','/student-payment-navigation.js','/student-payment-navigation.css','/api/tuition-qr',"SKIP_WAITING"]){
   if(!serviceWorkerSource.includes(required))throw new Error(`Service worker chưa làm mới trang thanh toán: ${required}`);
