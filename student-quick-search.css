@@ -100,31 +100,27 @@
   #app #studentQuickSearch .quick-student-actions button{transition:none}
 }
 
-/* Desktop: hiển thị kết quả ngay dưới input như một dropdown,
-   không làm nhảy dashboard và không ảnh hưởng giao diện mobile. */
+/* Kết quả theo luồng trang, nằm ngay dưới ô tìm kiếm trên mọi thiết bị.
+   Không dùng position:absolute, nên không bị các dashboard phía sau che. */
+#app #dashboardMain>#studentQuickSearch:not([hidden]){
+  display:block!important;
+  position:relative!important;
+  inset:auto!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  overflow:visible!important;
+  visibility:visible!important;
+  opacity:1!important;
+  margin:10px 0 22px!important;
+  z-index:auto!important;
+  box-sizing:border-box!important;
+}
 @media (min-width:901px){
-  #app #dashboardMain>.toolbar{position:relative!important;overflow:visible!important;z-index:30!important}
-  #app #dashboardMain>.toolbar>#studentQuickSearch:not([hidden]){
-    display:block!important;
-    position:absolute!important;
-    top:calc(100% + 8px)!important;
-    left:var(--quick-search-left,10px)!important;
-    width:var(--quick-search-width,760px)!important;
-    max-width:calc(100% - 20px)!important;
-    max-height:min(68vh,680px)!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    overscroll-behavior:contain;
-    margin:0!important;
-    padding:16px!important;
-    z-index:200!important;
-    border:1px solid #b8d4ee!important;
-    box-shadow:0 22px 62px rgba(18,54,92,.24)!important;
+  #app #dashboardMain>#studentQuickSearch .quick-search-grid{
+    grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))!important;
   }
-  #app #dashboardMain>.toolbar>#studentQuickSearch .quick-search-grid{
-    grid-template-columns:minmax(0,1fr)!important;
-  }
-  #app #dashboardMain>.toolbar>#studentQuickSearch .quick-student-card{
-    padding:15px!important;
+  #app #dashboardMain>#studentQuickSearch .quick-student-card{
+    padding:17px!important;
   }
 }

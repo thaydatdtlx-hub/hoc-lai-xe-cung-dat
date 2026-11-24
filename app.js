@@ -389,21 +389,15 @@ function studentSearchScore(student,query){
   const name=normalize(student.name).replace(/\s+/g," ");
   return name===query?0:name.startsWith(query)?1:name.includes(query)?2:3;
 }
-// Đặt kết quả ngay dưới ô tìm kiếm trên desktop, giữ layout hiện có trên điện thoại.
+// Đặt kết quả ngay dưới toolbar theo luồng trang, không tạo lớp phủ.
 function positionStudentQuickSearch(){
   const input=$("search"),panel=$("studentQuickSearch"),toolbar=input?.closest(".toolbar");
   if(!input||!panel||!toolbar)return;
-  if(window.matchMedia("(min-width: 901px)").matches){
-    if(panel.parentElement!==toolbar)toolbar.appendChild(panel);
-    panel.style.setProperty("--quick-search-left",input.offsetLeft+"px");
-    panel.style.setProperty("--quick-search-width",input.offsetWidth+"px");
-  }else{
-    if(panel.parentElement!==toolbar.parentElement||panel.previousElementSibling!==toolbar){
-      toolbar.insertAdjacentElement("afterend",panel);
-    }
-    panel.style.removeProperty("--quick-search-left");
-    panel.style.removeProperty("--quick-search-width");
+  if(panel.parentElement!==toolbar.parentElement||panel.previousElementSibling!==toolbar){
+    toolbar.insertAdjacentElement("afterend",panel);
   }
+  panel.style.removeProperty("--quick-search-left");
+  panel.style.removeProperty("--quick-search-width");
 }
 function renderStudentQuickSearch(query){
   const panel=$("studentQuickSearch");
@@ -780,14 +774,11 @@ $("search").addEventListener("keydown",event=>{
   $("studentQuickSearch").hidden=true;
   $("search").setAttribute("aria-expanded","false");
 });
-document.addEventListener("pointerdown",event=>{
-  const panel=$("studentQuickSearch");
-  if(!window.matchMedia("(min-width: 901px)").matches||panel.hidden)return;
-  if(event.target.closest("#search, #studentQuickSearch"))return;
-  panel.hidden=true;
-  $("search").setAttribute("aria-expanded","false");
+// Không ẩn khi bấm ra ngoài: học viên vẫn hiện để tra cứu và thao tác.
+$("search").addEventListener("search",()=>renderStudents({searchOnly:true}));
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="visible"&&$("search").value.trim())renderStudents({searchOnly:true});
 });
-window.addEventListener("resize",positionStudentQuickSearch,{passive:true});
 $("studentQuickSearch").addEventListener("click",event=>{
   const button=event.target.closest("[data-quick-student-action]");
   if(!button)return;
