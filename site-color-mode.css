@@ -315,3 +315,47 @@ html[data-hv-theme="dark"] :is(
   html[data-hv-theme="dark"] body{background:#fff!important;color:#111!important}
   .site-color-control{display:none!important}
 }
+
+/* Keep the public registration page legible without changing its hero artwork. */
+.site-color-control--marketing-mobile{display:none!important}
+@media(max-width:760px){
+  .site-color-control--marketing-mobile{
+    position:fixed;right:auto;left:12px;bottom:calc(78px + env(safe-area-inset-bottom));
+    z-index:90;display:inline-flex!important;gap:7px;padding:7px 9px;
+    border:1px solid #7098b9;border-radius:12px;
+    background:#102f50e8;color:#fff;box-shadow:0 10px 30px #07142655;
+  }
+  .site-color-control--marketing-mobile .site-color-control__caption{display:none}
+  .site-color-control--marketing-mobile .site-color-control__select{
+    min-width:90px;max-width:104px;min-height:35px!important;
+    padding:5px 6px!important;font-size:12px!important;
+    background:#203e60!important;color:#fff!important;
+  }
+}
+html[data-hv-theme="dark"] :is(
+  .quick-features article,.intro-section,.condition-section,.course-section,
+  .license-info-section,.schedule-section,.gallery-section,.process-section,
+  .faq-section,.benefit-section,.training-map-section,.registration-section,
+  .info-cards article,.intro-grid article,.license-grid article,
+  .course-card,.info-card,.process-card,.benefit-list article,
+  .faq-item,.registration-form,.form-card,.selected-bar,.top-strip,
+  .footer-main,.mobile-bar,.training-map article
+){
+  background:#101f32!important;background-image:none!important;
+  color:#e8f2ff!important;border-color:#304660!important;
+}
+html[data-hv-theme="dark"] :is(
+  .intro-section,.condition-section,.course-section,.license-info-section,
+  .schedule-section,.process-section,.faq-section,.benefit-section,
+  .training-map-section,.registration-section,.hero-form-card
+) :is(h2,h3,h4,strong,small,label,p,span){
+  color:#dbeafa!important
+}
+html[data-hv-theme="dark"] .site-color-control :is(span,option){
+  color:inherit;
+}
+html[data-hv-theme="dark"] .site-color-control__select option{
+  background:#15283d!important;color:#e6effe!important;
+}
+html[data-hv-theme="dark"] .mobile-bar a{background:#23405c!important;color:#eaf2ff!important}
+html[data-hv-theme="dark"] .mobile-bar button{background:#1e6fb6!important;color:#fff!important}
