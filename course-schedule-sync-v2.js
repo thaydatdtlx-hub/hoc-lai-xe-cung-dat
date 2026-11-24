@@ -162,11 +162,11 @@ function renderFields(row,preferredStudentId=""){
   host.innerHTML=fields.map(field=>`
     <section class="schedule-field tone-${esc(field.tone)}">
       <div class="field-title"><span>${field.icon}</span><strong>${esc(field.label)}</strong></div>
-      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" value="${esc(inputValue(field,dates[field.key]))}"></label>
-      <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}"></label>
+      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" value="${esc(inputValue(field,dates[field.key]))}" ${aCourse&&field.key==="exam"?"required":""}></label>
+      <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key==="exam"?"Ví dụ: Trung tâm sát hạch · Thi trực tiếp":field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}" ${aCourse&&field.key==="exam"?"required":""}></label>
     </section>`).join("");
 
-  const onlineRangeNote=aCourse?"":`
+  const onlineRangeNote=aCourse||mixedCourse?"":`
     <div class="dat-range-note">
       <strong>Thời gian lý thuyết online</strong>
       <span>Nhập đủ ngày bắt đầu và ngày kết thúc của khóa học online.</span>
@@ -180,7 +180,7 @@ function renderFields(row,preferredStudentId=""){
     ${draftSourceName&&!row.has_schedule?`<div class="dat-range-note course-draft-note"><strong>Đã lấy mốc cũ để tham khảo</strong><span>Các ô đang được điền từ lịch của ${esc(draftSourceName)}. Khi bấm lưu, lịch này mới trở thành lịch chung của toàn khóa.</span></div>`:""}
     ${onlineRangeNote}`);
 
-  if(members.some(isAutomaticB)||members.some(isManualB)){
+  if(!mixedCourse&&(members.some(isAutomaticB)||members.some(isManualB))){
     host.insertAdjacentHTML("beforeend",`
       <div class="dat-range-note course-dat-note">
         <strong>Lịch DAT theo hạng bằng</strong>
