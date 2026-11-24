@@ -14,7 +14,7 @@ function ensureTheoryHeroPolish(){
 }
 
 function enhanceTheoryHero(){
-  if(location.pathname!=="/600-cau-hoi.html")return;
+  if(!["/250-cau-hoi.html","/600-cau-hoi.html"].includes(location.pathname))return;
   ensureTheoryHeroPolish();
   const hero=document.querySelector(".study-hero");
   const copy=hero?.querySelector(".hero-copy");
@@ -24,6 +24,8 @@ function enhanceTheoryHero(){
 
   hero.dataset.brandRefresh="1";
   hero.classList.add("theory-brand-hero");
+  const moto=location.pathname==="/250-cau-hoi.html";
+  const count=moto?250:600;
 
   const brand=document.createElement("div");
   brand.className="theory-hero-brandline";
@@ -33,13 +35,13 @@ function enhanceTheoryHero(){
     <i></i>`;
   copy.prepend(brand);
 
-  title.innerHTML=`<span class="theory-title-blue"><b>600</b> câu hỏi</span><span class="theory-title-green">sát hạch lái xe</span>`;
+  title.innerHTML=`<span class="theory-title-blue"><b>${count}</b> câu hỏi</span><span class="theory-title-green">sát hạch ${moto?"xe máy":"ô tô"}</span>`;
 
   visual.innerHTML=`
     <div class="theory-visual-brand"><img src="/logo-thay-dat-compact.webp?v=15" alt=""></div>
-    <div class="theory-round-sign"><strong>600</strong><small>CÂU HỎI</small></div>
+    <div class="theory-round-sign"><strong>${count}</strong><small>CÂU HỎI</small></div>
     <div class="theory-pass-dot">✓</div>
-    <div class="theory-license-card"><strong>A1&nbsp;&nbsp;A&nbsp;&nbsp;B&nbsp;&nbsp;C1</strong><span>✓</span><i></i><span>✓</span><i></i><span>✓</span><i></i></div>
+    <div class="theory-license-card"><strong>${moto?"A1 &nbsp; A":"B &nbsp; C1"}</strong><span>✓</span><i></i><span>✓</span><i></i><span>✓</span><i></i></div>
     <div class="theory-road-label">TẬP LÁI</div>`;
 }
 
