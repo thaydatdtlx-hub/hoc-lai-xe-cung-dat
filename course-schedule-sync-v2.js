@@ -49,6 +49,7 @@ function isA1OrA(student){
   return /(^| )(a1|a)( |$)/.test(value);
 }
 function isA1OrACourse(members){return members.length>0&&members.every(isA1OrA)}
+function isMixedLicenseCourse(members){return members.some(isA1OrA)&&members.some(student=>!isA1OrA(student))}
 function courseMembers(key){return students.filter(student=>courseKey(student.course)===key&&student.deleted_at==null)}
 function courseRow(key){return courseRows.find(item=>String(item.course_key)===String(key))||null}
 function clone(value){return value?JSON.parse(JSON.stringify(value)):null}
@@ -107,6 +108,7 @@ async function refreshData(force=false){
 }
 
 function fieldsForMembers(members){
+  if(isMixedLicenseCourse(members))return [];
   if(isA1OrACourse(members))return SCHEDULE_FIELDS.filter(field=>field.key==="exam");
   const keys=new Set(BASE_KEYS);
   if(members.some(student=>isAutomaticB(student)||isManualB(student))){
@@ -149,26 +151,28 @@ function renderFields(row,preferredStudentId=""){
   const host=$("scheduleFields");
   const members=courseMembers(row.course_key);
   const aCourse=isA1OrACourse(members);
+  const mixedCourse=isMixedLicenseCourse(members);
   const fields=fieldsForMembers(members);
   const schedule=scheduleDraft(row,preferredStudentId);
   const dates=schedule.dates&&typeof schedule.dates==="object"?schedule.dates:{};
   const locations=schedule.locations&&typeof schedule.locations==="object"?schedule.locations:{};
   if(aCourse&&!dates.exam)draftSourceName="";
-  host.style.gridTemplateColumns=aCourse?"1fr":"";
+  host.style.gridTemplateColumns=aCourse||mixedCourse?"minmax(0,1fr)":"";
 
   host.innerHTML=fields.map(field=>`
     <section class="schedule-field tone-${esc(field.tone)}">
       <div class="field-title"><span>${field.icon}</span><strong>${esc(field.label)}</strong></div>
-      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" value="${esc(inputValue(field,dates[field.key]))}"></label>
-      <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}"></label>
+      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" value="${esc(inputValue(field,dates[field.key]))}" ${aCourse&&field.key==="exam"?"required":""}></label>
+      <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key==="exam"?"Ví dụ: Trung tâm sát hạch · Thi trực tiếp":field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}" ${aCourse&&field.key==="exam"?"required":""}></label>
     </section>`).join("");
 
-  const onlineRangeNote=aCourse?"":`
+  const onlineRangeNote=aCourse||mixedCourse?"":`
     <div class="dat-range-note">
       <strong>Thời gian lý thuyết online</strong>
       <span>Nhập đủ ngày bắt đầu và ngày kết thúc của khóa học online.</span>
     </div>`;
   host.insertAdjacentHTML("afterbegin",`
+    ${mixedCourse?`<div class="dat-range-note course-draft-note" role="alert"><strong>Không thể lập lịch chung cho khóa trộn hạng</strong><span>Khóa có cả học viên A1/A và B/C1. Hãy tách thành khóa xe máy và khóa ô tô trước khi lập lịch, để tránh áp dụng ONLINE, CABIN, DAT hoặc TỐT NGHIỆP cho A1/A.</span></div>`:""}
     <div class="course-schedule-scope">
       <strong>Áp dụng đồng bộ cho toàn khóa</strong>
       <span>Mọi thay đổi bên dưới sẽ cập nhật cùng lúc cho ${members.length} học viên. Các ca học riêng và buổi thực hành cá nhân vẫn được giữ nguyên.</span>
@@ -176,7 +180,7 @@ function renderFields(row,preferredStudentId=""){
     ${draftSourceName&&!row.has_schedule?`<div class="dat-range-note course-draft-note"><strong>Đã lấy mốc cũ để tham khảo</strong><span>Các ô đang được điền từ lịch của ${esc(draftSourceName)}. Khi bấm lưu, lịch này mới trở thành lịch chung của toàn khóa.</span></div>`:""}
     ${onlineRangeNote}`);
 
-  if(members.some(isAutomaticB)||members.some(isManualB)){
+  if(!mixedCourse&&(members.some(isAutomaticB)||members.some(isManualB))){
     host.insertAdjacentHTML("beforeend",`
       <div class="dat-range-note course-dat-note">
         <strong>Lịch DAT theo hạng bằng</strong>
@@ -186,7 +190,7 @@ function renderFields(row,preferredStudentId=""){
 
   const noteField=$("scheduleNote");
   const noteLabel=noteField?.closest("label");
-  if(noteLabel)noteLabel.hidden=aCourse;
+  if(noteLabel)noteLabel.hidden=aCourse||mixedCourse;
   noteField.value=schedule.note||"";
   noteField.maxLength=1000;
 }
@@ -248,7 +252,10 @@ function prepareCourse(row,preferredStudentId=""){
     deleteButton.classList.toggle("hidden",!row.has_schedule);
   }
   const saveButton=$("saveScheduleBtn");
-  if(saveButton)saveButton.textContent=row.has_schedule?"Cập nhật toàn khóa":"Lưu cho toàn khóa";
+  if(saveButton){
+    saveButton.textContent=isMixedLicenseCourse(members)?"Cần tách khóa học":row.has_schedule?"Cập nhật toàn khóa":"Lưu cho toàn khóa";
+    saveButton.disabled=isMixedLicenseCourse(members);
+  }
 }
 
 async function openCourseDialog(preferredKey=""){
@@ -289,6 +296,7 @@ async function openCourseForStudent(studentId){
 
 function readScheduleFromForm(row){
   const members=courseMembers(row.course_key);
+  if(isMixedLicenseCourse(members))throw new Error("Khóa đang trộn A1/A với B/C1. Hãy tách khóa xe máy và ô tô trước khi lập lịch chung.");
   const fields=fieldsForMembers(members);
   const schedule={version:2,dates:{},locations:{},note:$("scheduleNote").value.trim()};
   for(const field of fields){
@@ -305,6 +313,10 @@ function readScheduleFromForm(row){
     if(start&&new Date(end)<new Date(start))throw new Error(`Ngày kết thúc ${label} không được trước ngày bắt đầu.`);
   }
   if(!Object.keys(schedule.dates).length)throw new Error("Vui lòng nhập ít nhất một mốc đào tạo.");
+  if(isA1OrACourse(members)){
+    if(!schedule.dates.exam)throw new Error("Vui lòng nhập ngày và giờ Thi sát hạch cho hạng A1/A.");
+    if(!schedule.locations.exam)throw new Error("Vui lòng nhập Địa điểm / hình thức Thi sát hạch cho hạng A1/A.");
+  }
   return schedule;
 }
 async function saveCourseSchedule(event){
