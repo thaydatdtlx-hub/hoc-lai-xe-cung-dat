@@ -1,4 +1,4 @@
-import {SCHEDULE_FIELDS,embedScheduleInNotes,parseScheduleFromNotes} from "./schedule-data.js";
+import {SCHEDULE_FIELDS,embedScheduleInNotes,parseScheduleFromNotes,isMotorcycleLicense} from "./schedule-data.js";
 import {studentRpc} from "./student-rpc-client.js";
 import "./ai-chat.js";
 
@@ -86,11 +86,19 @@ function dateParts(value){
 }
 function studentSchedule(student){return parseScheduleFromNotes(student.notes)||{version:1,dates:{},locations:{},note:""}}
 function isManualBStudent(student){return normalize(student?.license_class).includes("b so co khi")}
-function editorFieldsFor(student){return MILESTONE_FIELDS.filter(field=>field.onlyFor!=="b_manual"||isManualBStudent(student))}
+function scheduleFieldsForStudent(student){
+  return isMotorcycleLicense(student?.license_class)
+    ?SCHEDULE_FIELDS.filter(field=>field.key==="exam")
+    :SCHEDULE_FIELDS;
+}
+function editorFieldsFor(student){
+  if(isMotorcycleLicense(student?.license_class))return MILESTONE_FIELDS.filter(field=>field.key==="exam");
+  return MILESTONE_FIELDS.filter(field=>field.onlyFor!=="b_manual"||isManualBStudent(student));
+}
 function createEvents(){
   const fixedEvents=students.flatMap(student=>{
     const schedule=studentSchedule(student);
-    return SCHEDULE_FIELDS.filter(field=>schedule.dates?.[field.key]).map(field=>({
+    return scheduleFieldsForStudent(student).filter(field=>schedule.dates?.[field.key]).map(field=>({
       id:`${student.id}-${field.key}`,
       student,
       field,
@@ -113,7 +121,7 @@ function createEvents(){
     durationMinutes:Number(session.duration_minutes)||120,
     source:"session",
     session
-  })).filter(event=>event.student&&event.field);
+  })).filter(event=>event.student&&event.field&&!isMotorcycleLicense(event.student.license_class));
   events=[...fixedEvents,...repeatEvents].sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 
@@ -122,8 +130,9 @@ function renderStats(){
   $("upcomingCount").textContent=events.filter(event=>new Date(event.date)>=start).length;
   $("weekCount").textContent=events.filter(event=>new Date(event.date)>=start&&new Date(event.date)<=weekEnd).length;
   $("todayCount").textContent=events.filter(event=>dayKey(event.date)===today).length;
-  const scheduledIds=new Set(trainingSessions.map(session=>String(session.student_id)));
-  $("unscheduledCount").textContent=students.filter(student=>!scheduledIds.has(String(student.id))&&!SCHEDULE_FIELDS.some(field=>studentSchedule(student).dates?.[field.key])).length;
+  const carIds=new Set(students.filter(student=>!isMotorcycleLicense(student.license_class)).map(student=>String(student.id)));
+  const scheduledIds=new Set(trainingSessions.filter(session=>carIds.has(String(session.student_id))).map(session=>String(session.student_id)));
+  $("unscheduledCount").textContent=students.filter(student=>!scheduledIds.has(String(student.id))&&!scheduleFieldsForStudent(student).some(field=>studentSchedule(student).dates?.[field.key])).length;
 }
 
 function renderEvents(){
@@ -164,18 +173,22 @@ function renderEvents(){
 function renderAll(){createEvents();renderStats();renderEvents()}
 
 function renderEditorFields(student){
-  $("scheduleFields").innerHTML=editorFieldsFor(student).map(field=>`
+  const motorcycle=isMotorcycleLicense(student?.license_class);
+  const host=$("scheduleFields");
+  host.style.gridTemplateColumns=motorcycle?"minmax(0,1fr)":"";
+  host.innerHTML=editorFieldsFor(student).map(field=>`
     <section class="schedule-field tone-${field.tone}">
       <div class="field-title"><span>${field.icon}</span><strong>${field.label}</strong></div>
-      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}"></label>
-      <label>Địa điểm / hình thức<input id="location-${field.key}" placeholder="${field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}"></label>
+      <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" ${motorcycle&&field.key==="exam"?"required":""}></label>
+      <label>Địa điểm / hình thức<input id="location-${field.key}" placeholder="${field.key==="exam"?"Ví dụ: Trung tâm sát hạch · Thi trực tiếp":field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}" ${motorcycle&&field.key==="exam"?"required":""}></label>
     </section>`).join("");
-  $("scheduleFields").insertAdjacentHTML("afterbegin",`
+  if(motorcycle)return;
+  host.insertAdjacentHTML("afterbegin",`
     <div class="dat-range-note">
       <strong>Thời gian lý thuyết online</strong>
       <span>Nhập đủ ngày bắt đầu và ngày kết thúc của khóa học online.</span>
     </div>`);
-  if(isManualBStudent(student))$("scheduleFields").insertAdjacentHTML("afterbegin",`
+  if(isManualBStudent(student))host.insertAdjacentHTML("afterbegin",`
     <div class="dat-range-note">
       <strong>DAT dành cho học viên B số cơ khí</strong>
       <span>Nhập đủ ngày bắt đầu và kết thúc cho DAT số tự động, DAT số cơ khí.</span>
@@ -193,7 +206,9 @@ function fillEditor(studentId){
     $(`location-${field.key}`).value=schedule.locations?.[field.key]||"";
   }
   $("scheduleNote").value=schedule.note||"";
-  $("deleteAllScheduleBtn").classList.toggle("hidden",me.role==="student"||!SCHEDULE_FIELDS.some(field=>schedule.dates?.[field.key]));
+  const motorcycle=isMotorcycleLicense(student.license_class);
+  $("deleteAllScheduleBtn").textContent=motorcycle?"Xóa lịch thi sát hạch":"Xóa toàn bộ mốc";
+  $("deleteAllScheduleBtn").classList.toggle("hidden",me.role==="student"||!scheduleFieldsForStudent(student).some(field=>schedule.dates?.[field.key]));
 }
 
 function openEditor(studentId=""){
@@ -328,6 +343,11 @@ function openSessionEditor(sessionId=""){
     return alert("Admin cần chạy file CAP-NHAT-NHIEU-BUOI-THUC-HANH.sql trong Supabase trước khi thêm nhiều buổi thực hành.");
   }
   const session=trainingSessions.find(item=>String(item.id)===String(sessionId));
+  const chosen=students.find(item=>String(item.id)===String(session?.student_id||$("trainingStudent").value));
+  if(session&&isMotorcycleLicense(chosen?.license_class)){
+    return alert("Học viên A1/A chỉ có lịch Thi sát hạch; các buổi thực hành ô tô cũ được giữ trong dữ liệu nhưng không được sửa tại đây.");
+  }
+  if(![...$("trainingStudent").options].length)return alert("Chỉ học viên ô tô B/C1 mới có ca học thực hành.");
   $("sessionForm").reset();
   $("sessionError").textContent="";
   $("trainingSessionId").value=session?.id||"";
@@ -511,18 +531,28 @@ $("scheduleForm").onsubmit=async event=>{
   event.preventDefault();$("scheduleError").textContent="";
   const student=students.find(item=>item.id===$("scheduleStudent").value);
   if(!student)return $("scheduleError").textContent="Vui lòng chọn học viên.";
-  const previous=studentSchedule(student);
-  const schedule={version:1,dates:{},locations:{},note:$("scheduleNote").value.trim(),updatedAt:new Date().toISOString()};
-  for(const key of REPEATABLE_KEYS){
+  const previous=studentSchedule(student),motorcycle=isMotorcycleLicense(student.license_class);
+  // Preserve previously stored non-motorcycle milestones as historical data.
+  // Only the exam field is editable or presented for A1/A.
+  const schedule=motorcycle
+    ?{...previous,version:previous.version||1,dates:{...(previous.dates||{})},locations:{...(previous.locations||{})},note:$("scheduleNote").value.trim(),updatedAt:new Date().toISOString()}
+    :{version:1,dates:{},locations:{},note:$("scheduleNote").value.trim(),updatedAt:new Date().toISOString()};
+  if(!motorcycle)for(const key of REPEATABLE_KEYS){
     if(previous.dates?.[key])schedule.dates[key]=previous.dates[key];
     if(previous.locations?.[key])schedule.locations[key]=previous.locations[key];
   }
   for(const field of editorFieldsFor(student)){
     const date=$(`date-${field.key}`).value,location=$(`location-${field.key}`).value.trim();
     if(date)schedule.dates[field.key]=date;
-    if(location)schedule.locations[field.key]=location;
+    else delete schedule.dates[field.key];
+    if(date&&location)schedule.locations[field.key]=location;
+    else delete schedule.locations[field.key];
   }
-  const rangePairs=[...ONLINE_RANGE_PAIRS,...(isManualBStudent(student)?DAT_RANGE_PAIRS:[])];
+  if(motorcycle){
+    if(!schedule.dates.exam)return $("scheduleError").textContent="Vui lòng nhập ngày và giờ thi sát hạch.";
+    if(!schedule.locations.exam)return $("scheduleError").textContent="Vui lòng nhập địa điểm / hình thức thi sát hạch.";
+  }
+  const rangePairs=motorcycle?[]:[...ONLINE_RANGE_PAIRS,...(isManualBStudent(student)?DAT_RANGE_PAIRS:[])];
   for(const [startKey,endKey,label] of rangePairs){
       const start=schedule.dates[startKey],end=schedule.dates[endKey];
       if(Boolean(start)!==Boolean(end))return $("scheduleError").textContent=`Vui lòng nhập đủ ngày bắt đầu và kết thúc ${label}.`;
@@ -542,6 +572,9 @@ $("scheduleForm").onsubmit=async event=>{
 $("sessionForm").onsubmit=async event=>{
   event.preventDefault();$("sessionError").textContent="";
   if(!sessionFeatureAvailable)return $("sessionError").textContent="Cơ sở dữ liệu chưa được cập nhật chức năng nhiều buổi.";
+  const chosenStudent=students.find(item=>String(item.id)===String($("trainingStudent").value));
+  if(chosenStudent&&isMotorcycleLicense(chosenStudent.license_class))
+    return $("sessionError").textContent="A1/A chỉ có lịch Thi sát hạch; không thể tạo ca thực hành ô tô.";
   const startsAt=$("trainingStartsAt").value;
   if(!startsAt)return $("sessionError").textContent="Vui lòng chọn ngày và giờ đào tạo.";
   $("saveSessionBtn").disabled=true;busy(true);
@@ -607,8 +640,20 @@ $("adminRequestList").onclick=event=>{
 $("deleteAllScheduleBtn").onclick=async()=>{
   if(me.role!=="admin"&&me.role!=="user")return;
   const student=students.find(item=>String(item.id)===String($("scheduleStudent").value));
-  if(!student||!confirm(`Xóa toàn bộ mốc Online, Cabin, DAT và kỳ thi của học viên ${student.name}? Các buổi thực hành riêng không bị xóa.`))return;
-  const notes=embedScheduleInNotes(student.notes,null);
+  if(!student)return;
+  const motorcycle=isMotorcycleLicense(student.license_class);
+  if(!confirm(motorcycle
+    ?`Xóa riêng lịch Thi sát hạch của ${student.name}? Các lịch sử khác được giữ nguyên.`
+    :`Xóa toàn bộ mốc Online, Cabin, DAT và kỳ thi của học viên ${student.name}? Các buổi thực hành riêng không bị xóa.`))return;
+  const previous=studentSchedule(student);
+  let notes;
+  if(motorcycle){
+    const updated={...previous,dates:{...(previous.dates||{})},locations:{...(previous.locations||{})},updatedAt:new Date().toISOString()};
+    delete updated.dates.exam;
+    delete updated.locations.exam;
+    const stillHasData=Object.keys(updated.dates).length||Object.keys(updated.locations).length||updated.note;
+    notes=embedScheduleInNotes(student.notes,stillHasData?updated:null);
+  }else notes=embedScheduleInNotes(student.notes,null);
   $("deleteAllScheduleBtn").disabled=true;busy(true);$("scheduleError").textContent="";
   try{
     await saveScheduleNotes(student,notes,true);
@@ -662,8 +707,11 @@ async function boot(){
       document.querySelector(".schedule-hero .hero-kicker").textContent="LỊCH HỌC VIÊN CỦA TÔI";
     }
     $("scheduleStudent").innerHTML=students.map(student=>`<option value="${student.id}">${esc(student.name)} · ${esc(student.student_code||student.course||"Chưa có mã")}</option>`).join("");
-    $("trainingStudent").innerHTML=$("scheduleStudent").innerHTML;
-    $("typeFilter").innerHTML+=[...SCHEDULE_FIELDS].map(field=>`<option value="${field.key}">${field.label}</option>`).join("");
+    const carStudents=students.filter(student=>!isMotorcycleLicense(student.license_class));
+    $("trainingStudent").innerHTML=carStudents.map(student=>`<option value="${student.id}">${esc(student.name)} · ${esc(student.student_code||student.course||"Chưa có mã")}</option>`).join("");
+    $("openSessionBtn").classList.toggle("hidden",me.role==="student"||!carStudents.length);
+    const availableFields=carStudents.length?SCHEDULE_FIELDS:SCHEDULE_FIELDS.filter(field=>field.key==="exam");
+    $("typeFilter").innerHTML+=availableFields.map(field=>`<option value="${field.key}">${field.label}</option>`).join("");
     await loadTrainingSessions();
     if(me.role==="admin")await Promise.all([loadTrainingRequests(),loadTrainingSlots()]);
     if(students.length)renderEditorFields(students[0]);renderAll();renderTrainingRequests();renderTrainingSlots();
