@@ -69,8 +69,9 @@ for(const required of [
 ])if(!pwa.includes(required))throw new Error(`PWA chưa tích hợp nâng cấp: ${required}`);
 if(pwa.includes('import("./brand-wording-cleanup.js")'))throw new Error("PWA vẫn tải trình theo dõi thương hiệu toàn DOM cũ.");
 
+const professionalSwCacheVersion=Number(serviceWorker.match(/const CACHE_NAME="hoclaixecungdat-pwa-v([0-9]+)"/)?.[1]||0);
+if(professionalSwCacheVersion<52)throw new Error('Service worker đang dùng phiên bản cache cũ không hỗ trợ giao diện mới.');
 for(const required of [
-  'hoclaixecungdat-pwa-v52',
   '/platform-professional.js',
   '/platform-professional.css',
   'SKIP_WAITING'

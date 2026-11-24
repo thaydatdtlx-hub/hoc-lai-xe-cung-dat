@@ -19,7 +19,8 @@ const TOPICS=[
 ];
 let questions=[],pool=[],currentIndex=0,currentMode="learn",activeTopic="all",examAnswers=new Map(),examStartedAt=0,examTimer=null,examPool=[],examResult=null;
 const urlClass=new URLSearchParams(location.search).get("hang")?.toUpperCase();
-const defaultExamClass=["A1","A","B","C1"].includes(urlClass)?urlClass:"B";
+const motorcyclePage=location.pathname==="/250-cau-hoi.html";
+const defaultExamClass=["A1","A","B","C1"].includes(urlClass)?urlClass:(motorcyclePage?"A1":"B");
 let activeExamKey=authKind==="student"?null:defaultExamClass,storageKey=DEFAULT_STORAGE_KEY,remoteStudent=null,remoteSyncEnabled=false,remoteSyncTimer=null,remoteSyncing=false;
 let progress=readProgress(storageKey);
 
@@ -62,7 +63,7 @@ function examKeyForLicense(value){
   if(/^b(?:\b|$)/.test(text))return"B";
   return null;
 }
-function isMotorcycleClass(){return activeExamKey==="A1"||activeExamKey==="A"}
+function isMotorcycleClass(){return activeExamKey==="A1"||activeExamKey==="A"||(authKind==="student"&&!activeExamKey&&motorcyclePage)}
 function practiceCritical(question){return isMotorcycleClass()?MOTORCYCLE_CRITICAL_SET.has(question.id):Boolean(question.critical)}
 function scopedQuestions(){
   if(authKind==="student"&&!activeExamKey)return[];
@@ -89,7 +90,9 @@ function syncTheoryCopy(){
   const total=scopedQuestionCount();
   const critical=scopedQuestions().filter(practiceCritical).length;
   const heroCount=document.querySelector(".study-hero h1 b");if(heroCount)heroCount.textContent=String(total);
-  const visual=document.querySelector(".road-sign.sign-main strong");if(visual)visual.textContent=String(total);
+  const visual=document.querySelector(".road-sign.sign-main strong, .theory-round-sign strong");if(visual)visual.textContent=String(total);
+  const visualLicense=document.querySelector(".theory-license-card strong");if(visualLicense)visualLicense.textContent=isMotorcycleClass()?"A1  ·  A":"B  ·  C1";
+  const badge=document.querySelector(".site-unified-area-badge");if(badge)badge.textContent="Học lý thuyết "+total+" câu";
   const intro=document.querySelector(".study-hero .hero-copy>p:not(.hero-kicker)");
   if(intro)intro.textContent=isMotorcycleClass()?"Luyện 250 câu dành riêng cho hạng A1, A: ôn theo chương, câu điểm liệt và thi thử mô tô.":"Luyện 600 câu dành cho hạng B, C1: ôn theo chương, câu điểm liệt và thi thử ô tô.";
   const rule=document.querySelector(".current-rule p");
@@ -100,9 +103,11 @@ function syncTheoryCopy(){
   if(trust[0])trust[0].textContent=`✓ ${total} câu đầy đủ`;
   if(trust[1])trust[1].textContent=`✓ ${critical} câu điểm liệt`;
   if(trust[2])trust[2].textContent=isMotorcycleClass()?"✓ Dành cho mô tô A1, A":"✓ 318 hình minh họa";
+  const examMode=document.querySelector('[data-start-mode="exam"] strong');if(examMode)examMode.textContent=isMotorcycleClass()?"Thi thử A1 · A":"Thi thử B · C1";
+  const heroKicker=document.querySelector(".study-hero .hero-kicker");if(heroKicker)heroKicker.lastChild.textContent=" BỘ "+total+" CÂU LÝ THUYẾT · "+(isMotorcycleClass()?"XE MÁY A1/A":"Ô TÔ B/C1");
   const criticalCard=document.querySelector('[data-start-mode="critical"] strong');if(criticalCard)criticalCard.textContent=`${critical} câu điểm liệt`;
   const topicSummary=document.querySelector(".topic-section .section-title>span");if(topicSummary)topicSummary.textContent=`${total} câu · áp dụng từ 01/06/2025`;
-  document.title=`${total} câu hỏi sát hạch hạng ${activeExamKey||"B"} · Thầy Đạt`;
+  document.title=`Học ${total} câu lý thuyết ${isMotorcycleClass()?"xe máy A1, A":"ô tô B, C1"} | Học lái xe cùng Đạt`;
   syncTheoryClassButtons();
 }
 function localProgressSummary(){
@@ -166,6 +171,16 @@ async function initStudentSync(){
     progress=mergeProgress(remoteStudent,accountLocal);
     activeExamKey=isPublic?"B":examKeyForLicense(remoteStudent.license_class);
     if(!isPublic&&!activeExamKey)throw new Error("Hồ sơ học viên chưa có Hạng GPLX hợp lệ. Vui lòng yêu cầu Admin cập nhật A1, A, B hoặc C1 trước khi học lý thuyết.");
+    // Signed-in students must use the bank matching the license on their record.
+    // Keep existing local/remote progress keys unchanged.
+    const expectedPath=["A1","A"].includes(activeExamKey)?"/250-cau-hoi.html":"/600-cau-hoi.html";
+    if(location.pathname!==expectedPath){
+      const destination=new URL(location.href);
+      destination.pathname=expectedPath;
+      destination.searchParams.set("hang",activeExamKey);
+      location.replace(destination.pathname+destination.search+destination.hash);
+      return;
+    }
     remoteSyncEnabled=true;
     $("studentPortalLink").textContent=isPublic?`${remoteStudent.account_name||me.full_name||"Người học"} · Đăng xuất`:`${remoteStudent.student_name||"Học viên"} · Tài khoản`;
     if(isPublic){

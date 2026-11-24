@@ -20,7 +20,7 @@ function currentCanonicalPath(){
 function setAreaClass(){
   document.body.classList.add("site-unified");
   if(isLoginPage())document.body.classList.add("site-area-login");
-  if(location.pathname==="/600-cau-hoi.html")document.body.classList.add("site-area-theory");
+  if(["/250-cau-hoi.html","/600-cau-hoi.html"].includes(location.pathname))document.body.classList.add("site-area-theory");
   if(isRegistrationPage())document.body.classList.add("site-area-registration");
 }
 
@@ -88,7 +88,7 @@ function addFooterLinks(){
       nav.prepend(footerLink({href:"/600-cau-hoi.html?hang=B",icon:"600",label:"Học 600 câu · B, C1",key:"theory"}));
     }
     if(!nav.querySelector('[data-site-unified="theory-moto"]')){
-      nav.prepend(footerLink({href:"/600-cau-hoi.html?hang=A1",icon:"250",label:"Học 250 câu · A1, A",key:"theory-moto"}));
+      nav.prepend(footerLink({href:"/250-cau-hoi.html?hang=A1",icon:"250",label:"Học 250 câu · A1, A",key:"theory-moto"}));
     }
   });
 }
@@ -108,10 +108,10 @@ function enhanceLoginPage(){
 }
 
 function enhanceTheoryPage(){
-  if(location.pathname!=="/600-cau-hoi.html")return;
+  if(!["/250-cau-hoi.html","/600-cau-hoi.html"].includes(location.pathname))return;
   const header=document.querySelector(".quiz-topbar");
   const brand=header?.querySelector(".quiz-brand");
-  if(brand&&!header.querySelector(".site-unified-area-badge"))brand.insertAdjacentElement("afterend",areaBadge("Học lý thuyết 600 câu"));
+  if(brand&&!header.querySelector(".site-unified-area-badge"))brand.insertAdjacentElement("afterend",areaBadge(location.pathname==="/250-cau-hoi.html"?"Học lý thuyết 250 câu":"Học lý thuyết 600 câu"));
   const nav=header?.querySelector("nav");
   if(nav){
     [...nav.querySelectorAll('a[href="/"]')].forEach(item=>{
@@ -134,7 +134,7 @@ function addRegistrationNavLinks(nav){
   if(!nav)return;
   // Chuan hoa hai muc rieng biet. Khong chen them neu header/menu mobile da co.
   const theoryLinks=[...nav.querySelectorAll("a")].filter(link=>{
-    try{return new URL(link.getAttribute("href"),location.href).pathname==="/600-cau-hoi.html"}
+    try{return ["/250-cau-hoi.html","/600-cau-hoi.html"].includes(new URL(link.getAttribute("href"),location.href).pathname)}
     catch{return false}
   });
   const used=new Set();
@@ -158,7 +158,7 @@ function addRegistrationNavLinks(nav){
     link.textContent=label;
     link.title=title;
   };
-  configure(moto,{href:"/600-cau-hoi.html?hang=A1",key:"theory-moto-nav",label:"Học 250 câu",title:"Luyện 250 câu mô tô hạng A1, A"});
+  configure(moto,{href:"/250-cau-hoi.html?hang=A1",key:"theory-moto-nav",label:"Học 250 câu",title:"Luyện 250 câu mô tô hạng A1, A"});
   configure(car,{href:"/600-cau-hoi.html?hang=B",key:"theory-nav",label:"Học 600 câu",title:"Luyện 600 câu ô tô hạng B, C1"});
   theoryLinks.filter(link=>!used.has(link)).forEach(link=>link.remove());
   const contact=nav.querySelector('a[href="#dang-ky"]')||nav.querySelector('a[href="/dang-nhap.html"]');
