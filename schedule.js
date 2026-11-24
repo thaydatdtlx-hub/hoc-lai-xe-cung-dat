@@ -176,6 +176,8 @@ function renderEditorFields(student){
   const motorcycle=isMotorcycleLicense(student?.license_class);
   const host=$("scheduleFields");
   host.style.gridTemplateColumns=motorcycle?"minmax(0,1fr)":"";
+  const noteLabel=$("scheduleNote")?.closest("label");
+  if(noteLabel)noteLabel.hidden=motorcycle;
   host.innerHTML=editorFieldsFor(student).map(field=>`
     <section class="schedule-field tone-${field.tone}">
       <div class="field-title"><span>${field.icon}</span><strong>${field.label}</strong></div>
@@ -201,6 +203,17 @@ function fillEditor(studentId){
   $("scheduleStudent").value=student.id;
   renderEditorFields(student);
   const schedule=studentSchedule(student);
+  const sharedMotorcycleExam=me.role==="user"&&isMotorcycleLicense(student.license_class)&&schedule.source==="course";
+  $("saveScheduleBtn").disabled=sharedMotorcycleExam;
+  if(sharedMotorcycleExam){
+    $("scheduleFields").insertAdjacentHTML("beforeend",
+      '<div class="dat-range-note" role="status"><strong>Lịch thi sát hạch đã lập chung theo khóa</strong><span>Nhân viên có thể xem lịch nhưng chỉ Quản trị viên được sửa lịch chung của cả khóa.</span></div>');
+    for(const field of editorFieldsFor(student)){
+      const date=$(`date-${field.key}`),location=$(`location-${field.key}`);
+      if(date)date.disabled=true;
+      if(location)location.disabled=true;
+    }
+  }
   for(const field of editorFieldsFor(student)){
     $(`date-${field.key}`).value=schedule.dates?.[field.key]||"";
     $(`location-${field.key}`).value=schedule.locations?.[field.key]||"";
@@ -535,7 +548,7 @@ $("scheduleForm").onsubmit=async event=>{
   // Preserve previously stored non-motorcycle milestones as historical data.
   // Only the exam field is editable or presented for A1/A.
   const schedule=motorcycle
-    ?{...previous,version:previous.version||1,dates:{...(previous.dates||{})},locations:{...(previous.locations||{})},note:$("scheduleNote").value.trim(),updatedAt:new Date().toISOString()}
+    ?{...previous,version:previous.version||1,dates:{...(previous.dates||{})},locations:{...(previous.locations||{})},note:previous.note||"",updatedAt:new Date().toISOString()}
     :{version:1,dates:{},locations:{},note:$("scheduleNote").value.trim(),updatedAt:new Date().toISOString()};
   if(!motorcycle)for(const key of REPEATABLE_KEYS){
     if(previous.dates?.[key])schedule.dates[key]=previous.dates[key];
