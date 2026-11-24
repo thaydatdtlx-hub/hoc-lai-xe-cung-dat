@@ -51,6 +51,11 @@ function theoryDuration(seconds){
 function isExamPassed(value){const status=normalize(value);return status.includes("da dau")||status.includes("da nhan bang")}
 function progressTone(v){const n=normalize(v);if(n.includes("thi rot"))return"fail";if(n.includes("dang"))return"doing";if(n.includes("da hoan thanh")||isExamPassed(n))return"done";return"pending"}
 function progressHtml(s){
+  // Hạng A1/A (xe máy) chỉ theo dõi kỳ sát hạch. Tuyệt đối không hiển thị
+  // ONLINE, CABIN, DAT hoặc TỐT NGHIỆP vốn dành cho đào tạo ô tô.
+  if(isMotorcycleLicense(s.license_class)){
+    return `<div class="progress-list progress-list--motorcycle"><span class="progress-chip ${progressTone(s.exam_status)}"><b>Sát hạch</b>${esc(s.exam_status||"Chưa thi sát hạch")}</span></div>`;
+  }
   const dates=(parseScheduleFromNotes(s.notes)||{}).dates||{},onlineDates=dateRange(dates.online_start,dates.online_end);
   return `<div class="progress-list"><span class="progress-chip ${progressTone(s.online_status)}"><b>Online</b><span>${esc(s.online_status||"Chưa hoàn thành")}${onlineDates?`<small>${esc(onlineDates)}</small>`:""}</span></span><span class="progress-chip ${progressTone(s.cabin_status)}"><b>Cabin</b>${esc(s.cabin_status||"Chưa hoàn thành")}</span><span class="progress-chip ${progressTone(s.dat_status)}"><b>DAT</b>${esc(s.dat_status||"Chưa thực hiện")}</span><span class="progress-chip ${progressTone(s.graduation_status)}"><b>Tốt nghiệp</b>${esc(s.graduation_status||"Chưa hoàn thành")}</span><span class="progress-chip ${progressTone(s.exam_status)}"><b>Sát hạch</b>${esc(s.exam_status||"Chưa thi sát hạch")}</span></div>`;
 }
@@ -240,8 +245,9 @@ function theoryProgressHtml(student){
   if(!theoryProgressReady)return'<div class="theory-table-empty warning">Cần cập nhật CSDL tiến độ</div>';
   const item=theoryFor(student.id),answered=Number(item?.answered_count)||0,correct=Number(item?.correct_count)||0,exams=Number(item?.exam_count)||0;
   const accuracy=answered?Math.round(correct/answered*100):0;
+  const bankTotal=isMotorcycleLicense(student.license_class)?250:600;
   return `<div class="theory-table-progress">
-    <div><strong>${answered}/600 câu</strong><span>${answered?`${accuracy}% trả lời đúng`:"Chưa bắt đầu học"}</span></div>
+    <div><strong>${answered}/${bankTotal} câu</strong><span>${answered?`${accuracy}% trả lời đúng`:"Chưa bắt đầu học"}</span></div>
     <div><strong>${exams} bài thi</strong><span>${item?.best_total?`Tốt nhất ${Number(item.best_score)||0}/${Number(item.best_total)||0}`:"Chưa có kết quả"}</span></div>
     <button type="button" data-theory-progress="${student.id}">Xem học & thi</button>
   </div>`;
