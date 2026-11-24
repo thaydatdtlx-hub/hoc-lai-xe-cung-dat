@@ -5,6 +5,7 @@ const root=document.documentElement;
 const modes=["system","light","dark"];
 const labels={system:"◐ Tự động",light:"☀ Sáng",dark:"☾ Tối"};
 const themeMeta=document.querySelector('meta[name="theme-color"]');
+const originalThemeColor=themeMeta?.getAttribute("content")||"#0b63d8";
 const preferenceMedia=window.matchMedia?.("(prefers-color-scheme: dark)");
 const controls=[];
 
@@ -21,7 +22,7 @@ function syncMode(){
   const effective=effectiveMode();
   root.setAttribute("data-hv-theme",effective);
   root.style.colorScheme=effective;
-  if(themeMeta)themeMeta.setAttribute("content",effective==="dark"?"#0b1729":"#0b63d8");
+  if(themeMeta)themeMeta.setAttribute("content",effective==="dark"?"#0b1729":originalThemeColor);
   for(const element of controls){
     if(element.value!==currentMode)element.value=currentMode;
     const wrapper=element.closest(".site-color-control");
@@ -67,6 +68,7 @@ function initControls(){
   // the existing account menu so there are no extra buttons crowding the bar.
   const mobileMenu=document.querySelector(".mobile-account-menu");
   if(mobileMenu)placeControl(mobileMenu,"mobile-menu","prepend");
+  if(marketing)placeControl(document.body,"marketing-mobile");
 
   // The theory topbar disappears during an exercise. Keep an accessible
   // selector in the workspace too (without modifying quiz state).
@@ -82,6 +84,9 @@ function initControls(){
   syncMode();
 }
 
+window.addEventListener("storage",event=>{
+  if(event.key===STORAGE_KEY){currentMode=readMode();syncMode()}
+});
 try{
   preferenceMedia?.addEventListener?.("change",()=>{if(currentMode==="system")syncMode()});
 }catch{/* Older Safari: chosen theme remains fully functional */}
