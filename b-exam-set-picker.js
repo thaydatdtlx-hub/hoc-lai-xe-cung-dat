@@ -64,7 +64,7 @@ function syncMode(){
 }
 
 function mountPicker(){
-  if(location.pathname!=="/600-cau-hoi.html")return;
+  if(!["/250-cau-hoi.html","/600-cau-hoi.html"].includes(location.pathname))return;
   const dialog=document.getElementById("examIntroDialog");
   const classPicker=dialog?.querySelector(".exam-class-picker");
   if(!dialog||!classPicker)return;
