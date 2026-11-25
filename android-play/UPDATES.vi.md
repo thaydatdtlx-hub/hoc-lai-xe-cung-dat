@@ -10,3 +10,6 @@ Khi mở icon ứng dụng sideload, UpdateActivity đọc JSON HTTPS từ nhán
 5. Cập nhật android-play/updates/latest.json trên đúng nhánh: versionCode, versionName, apkUrl, notes; minimumVersionCode chỉ tăng nếu thật sự cần. Đảm bảo link tải công khai HTTP 200 trước khi công bố metadata.
 6. Bản mới có thể nhận cập nhật đè bằng trình cài đặt Android khi cùng mã gói và chữ ký. Android sẽ yêu cầu người dùng xác nhận. Nếu mất khóa ký, không thể bảo đảm cập nhật đè.
 Feed ban đầu ghi 1.1.0, apkUrl trống vì chưa phát hành bản mới hơn. Không đưa link giả hoặc bắt buộc cập nhật trước khi APK sẵn sàng.
+
+## 1.1.3 (versionCode 5)
+Giữ nguyên package chính thức. CI xuất APK chưa ký và bản debug .test ký thử riêng; không được phát hành bản debug thay cho bản chính thức. Đối chiếu chứng chỉ ký 1.1.2 và 1.1.3, thử cài đè và kiểm thử Web Push trên Android thật. Chỉ sau khi có tệp ký hợp lệ và URL tải công khai mới cập nhật feed. Không tự động cài APK hoặc ép cập nhật chưa kiểm chứng.

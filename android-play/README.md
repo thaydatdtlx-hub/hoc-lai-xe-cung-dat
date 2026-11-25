@@ -15,3 +15,6 @@ Sau đó đưa riêng public/.well-known/assetlinks.json lên website đã kiể
 Android thật: mở app, 250/600, đăng nhập bằng tài khoản thử nghiệm, lịch A1/A/B/C1, đăng xuất, biên lai, Back, sáng/tối, mạng lỗi, deep links. Kiểm tra thanh Chrome biến mất sau xác minh domain. Đảm bảo không ghi dữ liệu học viên thật trong ảnh chụp và không dùng thông tin đăng nhập sản xuất khi quay video.
 ## Release
 Đăng ký Google Play Console ($25 một lần), tạo ứng dụng, thêm hồ sơ STORE-LISTING.vi.md, ký và tải AAB, khai báo chính sách, kiểm thử nội bộ/kín theo yêu cầu tài khoản. Với tài khoản cá nhân mới thuộc diện áp dụng: ít nhất 12 tester tham gia liên tục 14 ngày. Sau đó xin Production access và gửi xét duyệt. Không có bảo đảm duyệt.
+
+## 1.1.3
+Mặc định mở cổng đăng nhập bằng TWA/Custom Tabs để tận dụng Web Push của trình duyệt. Giữ WebView là phương án dự phòng không hỗ trợ Web Push nền. Kiểm tra phiên bản lúc mở ứng dụng sideload tối đa 3,5 giây; nếu mạng chậm thì tiếp tục mở website. Chrome có thể yêu cầu đăng nhập lại một lần khi chuyển từ WebView. Quyền thông báo phải do người dùng cấp. Debug có package .test và chỉ dùng thử, không thay thế APK chính thức. Chưa xác minh Digital Asset Links cho tới khi có SHA-256 chứng chỉ ký chính thức; trong thời gian này có thể hiện thanh trình duyệt.

@@ -45,8 +45,9 @@ public final class UpdateActivity extends Activity {
     private static final String APK_PREFIX = "/thaydatdtlx-hub/hoc-lai-xe-cung-dat/releases/download/";
     private final Handler main = new Handler(Looper.getMainLooper());
     private boolean resolved = false;
-    private final Runnable timeout = () -> { resolved = true; };
-    private static final String HOME = "https://www.hoclaixecungdat.com/";
+    private final Runnable timeout = () -> { if (!resolved) openWebsite(); };
+    private final Runnable pageTimeout = () -> showError("Trang tải quá lâu. Vui lòng thử lại hoặc mở bằng Chrome.");
+    private static final String HOME = "https://www.hoclaixecungdat.com/?login=1";
     private WebView web;
     private FrameLayout page;
     private LinearLayout errorPanel;
@@ -62,14 +63,58 @@ public final class UpdateActivity extends Activity {
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
                 android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::navigateBack);
         }
+        createLaunchScreen();
+        if (state != null) return;
         if (!BuildConfig.APK_UPDATES) { openWebsite(); return; }
-        createBrowser();
-        loadPage(HOME);
-        main.postDelayed(timeout, 6500);
+        main.postDelayed(timeout, 3500);
         new Thread(() -> {
             JSONObject info = readFeed();
             main.post(() -> handleFeed(info));
         }, "apk-version-check").start();
+    }
+
+    private void createLaunchScreen() {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setGravity(Gravity.CENTER);
+        root.setPadding(dp(24),dp(24),dp(24),dp(24));
+        root.setBackgroundColor(Color.WHITE);
+        root.setOnApplyWindowInsetsListener((v,insets) -> {
+            v.setPadding(dp(24)+insets.getSystemWindowInsetLeft(),dp(24)+insets.getSystemWindowInsetTop(),
+                dp(24)+insets.getSystemWindowInsetRight(),dp(24)+insets.getSystemWindowInsetBottom());
+            return insets;
+        });
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.mipmap.ic_launcher);
+        root.addView(logo,new LinearLayout.LayoutParams(dp(88),dp(88)));
+        TextView label = new TextView(this);
+        label.setText("HỌC LÁI XE CÙNG ĐẠT");
+        label.setTextSize(21); label.setTextColor(Color.rgb(7,24,47)); label.setGravity(Gravity.CENTER);
+        root.addView(label);
+        TextView version = new TextView(this);
+        version.setText("Phiên bản "+BuildConfig.VERSION_NAME+" · Cổng đào tạo");
+        version.setGravity(Gravity.CENTER); version.setPadding(0,dp(12),0,dp(16));
+        root.addView(version);
+        Button launch = new Button(this);
+        launch.setText("Mở ứng dụng");
+        launch.setOnClickListener(v -> openWebsite());
+        root.addView(launch,new LinearLayout.LayoutParams(-1,-2));
+        Button recover = new Button(this);
+        recover.setText("Mở chế độ dự phòng");
+        recover.setOnClickListener(v -> openRecovery());
+        root.addView(recover,new LinearLayout.LayoutParams(-1,-2));
+        TextView help = new TextView(this);
+        help.setText("Để nhận thông báo nền, hãy dùng Chrome và bật thông báo trong tài khoản. Chế độ dự phòng WebView không hỗ trợ Web Push nền.");
+        help.setTextSize(12); help.setGravity(Gravity.CENTER); help.setPadding(0,dp(14),0,0);
+        root.addView(help);
+        setContentView(root); root.requestApplyInsets();
+    }
+
+    private void openRecovery() {
+        if (isFinishing() || isDestroyed()) return;
+        resolved = true; main.removeCallbacks(timeout);
+        if (web != null) { loadPage(HOME); return; }
+        createBrowser(); loadPage(HOME);
     }
 
     private JSONObject readFeed() {
@@ -109,13 +154,13 @@ public final class UpdateActivity extends Activity {
 
     private void handleFeed(JSONObject info) {
         if (resolved || isFinishing() || isDestroyed()) return;
-        if (info == null || !PACKAGE.equals(info.optString("packageName"))) { resolved = true; main.removeCallbacks(timeout); return; }
+        if (info == null || !PACKAGE.equals(info.optString("packageName"))) { openWebsite(); return; }
         int latest = info.optInt("versionCode", 0);
         int minimum = info.optInt("minimumVersionCode", 0);
         String name = info.optString("versionName", "");
         String url = info.optString("apkUrl", "");
         if (latest <= BuildConfig.VERSION_CODE || minimum < 1 || minimum > latest
-                || name.isEmpty() || name.length() > 32 || !allowedApk(url)) { resolved = true; main.removeCallbacks(timeout); return; }
+                || name.isEmpty() || name.length() > 32 || !allowedApk(url)) { openWebsite(); return; }
         resolved = true;
         main.removeCallbacks(timeout);
         boolean required = minimum > BuildConfig.VERSION_CODE;
@@ -129,9 +174,10 @@ public final class UpdateActivity extends Activity {
             .setCancelable(!required)
             .setPositiveButton("Cập nhật ngay", null)
             .setNegativeButton(required ? "Thoát" : "Để sau", (d,w) -> {
-                if (required) finish();
+                if (required) finish(); else openWebsite();
             });
         AlertDialog dialog = builder.create();
+        dialog.setOnCancelListener(d -> { if (!required) openWebsite(); });
 
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             try {
@@ -200,8 +246,11 @@ public final class UpdateActivity extends Activity {
                 @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap icon) {
                     if (internal(Uri.parse(url))) retryUrl = url;
                     progress.setVisibility(View.VISIBLE);
+                    main.removeCallbacks(pageTimeout);
+                    main.postDelayed(pageTimeout,18000);
                 }
                 @Override public void onPageFinished(WebView view, String url) {
+                    main.removeCallbacks(pageTimeout);
                     progress.setVisibility(View.GONE);
                     CookieManager.getInstance().flush();
                 }
@@ -265,6 +314,7 @@ public final class UpdateActivity extends Activity {
 
     private void showError(String message) {
         if (isFinishing() || isDestroyed() || page == null) return;
+        main.removeCallbacks(pageTimeout);
         if (web != null) web.setVisibility(View.GONE);
         progress.setVisibility(View.GONE);
         if (errorPanel != null) page.removeView(errorPanel);
@@ -294,7 +344,7 @@ public final class UpdateActivity extends Activity {
         errorPanel.addView(retry,new LinearLayout.LayoutParams(-1,-2));
         Button browser = new Button(this);
         browser.setText("Mở bằng trình duyệt");
-        browser.setOnClickListener(v -> openExternal(Uri.parse(retryUrl)));
+        browser.setOnClickListener(v -> openWebsite());
         errorPanel.addView(browser,new LinearLayout.LayoutParams(-1,-2));
         page.addView(errorPanel,new FrameLayout.LayoutParams(-1,-1));
     }
@@ -303,10 +353,17 @@ public final class UpdateActivity extends Activity {
         if (isFinishing() || isDestroyed()) return;
         resolved = true;
         main.removeCallbacks(timeout);
-        // Only the Play and debug variants use the TWA launcher.
-        if (BuildConfig.APK_UPDATES) return;
-        try { startActivity(new Intent(this, LauncherActivity.class)); finish(); }
-        catch (RuntimeException ex) { createBrowser(); loadPage(HOME); }
+        // All variants use a browser-backed launcher for Web Push.
+        // Android Browser Helper uses a verified TWA or Custom Tabs when verification is unavailable.
+        try {
+            Intent probe = new Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com/"));
+            probe.addCategory(Intent.CATEGORY_BROWSABLE);
+            if (probe.resolveActivity(getPackageManager()) == null) { openRecovery(); return; }
+            Intent intent = new Intent(this, LauncherActivity.class);
+            intent.setData(Uri.parse(HOME));
+            startActivity(intent);
+            finish();
+        } catch (RuntimeException ex) { openRecovery(); }
     }
 
     private void navigateBack() {
@@ -333,6 +390,7 @@ public final class UpdateActivity extends Activity {
     @Override protected void onDestroy() {
         resolved = true;
         main.removeCallbacks(timeout);
+        main.removeCallbacks(pageTimeout);
         if (fileCallback != null) { fileCallback.onReceiveValue(null); fileCallback = null; }
         if (web != null) { page.removeView(web); web.destroy(); web = null; }
         super.onDestroy();

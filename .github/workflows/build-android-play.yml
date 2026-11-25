@@ -37,11 +37,13 @@ jobs:
           printf '%s  gradle.zip\n' "$(cat gradle.sha256)" | sha256sum -c -
           unzip -q gradle.zip
           echo "$RUNNER_TEMP/gradle-8.13/bin" >> "$GITHUB_PATH"
+      - name: Validate release configuration
+        run: node android-play/scripts/validate-release.mjs
       - name: Build and lint
         working-directory: android-play
         run: |
           set -euo pipefail
-          gradle --no-daemon :app:assembleSideload :app:lintSideload || gradle --no-daemon :app:assembleSideload :app:lintSideload
+          gradle --no-daemon :app:assembleSideload :app:lintSideload :app:assembleDebug
       - name: Prepare local signing utilities
         shell: bash
         run: |
@@ -54,11 +56,18 @@ jobs:
       - name: Upload unsigned sideload APK and local signing tools
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: hoc-lai-xe-cung-dat-android-1.1.2
+          name: hoc-lai-xe-cung-dat-android-1.1.3-unsigned
           path: |
             android-play/app/build/outputs/apk/sideload/app-sideload-unsigned.apk
             android-play/signing-tools/apksigner.jar
             android-play/signing-tools/zipalign
             android-play/app/build/reports/lint-results-sideload.html
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload separately installable debug test APK
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hoc-lai-xe-cung-dat-android-1.1.3-test
+          path: android-play/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
