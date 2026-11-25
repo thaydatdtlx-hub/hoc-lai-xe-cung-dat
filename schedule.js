@@ -74,7 +74,7 @@ function formatTimeRange(value,minutes){
   return `${formatter.format(start)} – ${formatter.format(end)}`;
 }
 export function splitTrainingMinutes(duration,capacity){
-  if(!Number.isInteger(duration)||!Number.isInteger(capacity)||capacity<1||capacity>100||duration<capacity)return [];
+  if(!Number.isInteger(duration)||!Number.isInteger(capacity)||capacity<1||capacity>100||duration<capacity*15)return [];
   return Array.from({length:capacity},(_,i)=>({offset:Math.floor(i*duration/capacity),minutes:Math.floor((i+1)*duration/capacity)-Math.floor(i*duration/capacity)}));
 }
 function renderSlotTimePreview(){
@@ -83,7 +83,7 @@ function renderSlotTimePreview(){
   const segments=splitTrainingMinutes(duration,capacity);
   if(!startsAt){$("slotTimePreview").textContent="Khung giờ sẽ hiển thị sau khi chọn ngày, giờ bắt đầu và thời lượng.";return}
   if(slot?.split_enabled===false){$("slotTimePreview").textContent="Ca cũ giữ nguyên lịch đã đăng ký.";return}
-  if(!segments.length){$("slotTimePreview").textContent="Số học viên phải nhỏ hơn hoặc bằng tổng số phút.";return}
+  if(!segments.length){$("slotTimePreview").textContent="Mỗi khung giờ học phải có ít nhất 15 phút.";return}
   $("slotTimePreview").innerHTML=`<strong>Tự chia ${segments.length} khung giờ · mỗi học viên chọn 1 khung</strong><div class="slot-segment-grid">${segments.map((segment,index)=>`<span><b>${index+1}. ${esc(formatTimeRange(new Date(new Date(startsAt).getTime()+segment.offset*60000),segment.minutes))}</b><small>${esc(formatDuration(segment.minutes))}</small></span>`).join("")}</div>`;
 }
 function dateParts(value){
@@ -558,7 +558,7 @@ $("slotForm").onsubmit=async event=>{
   const startsAt=$("slotStartsAt").value;
   if(!startsAt)return $("slotError").textContent="Vui lòng chọn ngày và giờ bắt đầu.";
   const editingSlot=trainingSlots.find(s=>String(s.id)===String($("trainingSlotId").value));
-  if(editingSlot?.split_enabled!==false&&!splitTrainingMinutes(Number($("slotDuration").value),Number($("slotCapacity").value)).length)return $("slotError").textContent="Số học viên phải nhỏ hơn hoặc bằng tổng số phút.";
+  if(editingSlot?.split_enabled!==false&&!splitTrainingMinutes(Number($("slotDuration").value),Number($("slotCapacity").value)).length)return $("slotError").textContent="Mỗi khung giờ học phải có ít nhất 15 phút.";
   const allowedIds=$("slotAudienceMode").value==="all"?null:[...slotSelectedStudentIds];
   if(allowedIds!==null&&!allowedIds.length)return $("slotError").textContent="Vui lòng chọn ít nhất một học viên hoặc mở đăng ký cho tất cả học viên phù hợp.";
   $("saveSlotBtn").disabled=true;busy(true);

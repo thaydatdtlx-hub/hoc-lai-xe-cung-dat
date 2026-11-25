@@ -1,6 +1,6 @@
 -- Individual training time slices; keep already booked legacy group slots intact.
 alter table public.training_slots add column if not exists split_enabled boolean not null default true;
-update public.training_slots t set split_enabled=false where t.capacity>t.duration_minutes
+update public.training_slots t set split_enabled=false where t.capacity*15>t.duration_minutes
  or exists(select 1 from public.student_training_requests r where r.slot_id=t.id and r.status='pending')
  or exists(select 1 from public.student_training_sessions s where s.slot_id=t.id);
 alter table public.student_training_requests add column if not exists slot_segment_index integer;
@@ -382,8 +382,8 @@ begin
       raise exception 'Ca đã có học viên đăng ký. Không được đổi giờ, thời lượng, số chỗ hoặc nội dung khi còn lịch đã đặt.';
     end if;
   end if;
-  if (v_id is null or v_existing.split_enabled) and v_capacity > v_duration then
-    raise exception 'Số học viên không thể lớn hơn số phút của ca học.';
+  if (v_id is null or v_existing.split_enabled) and v_capacity*15 > v_duration then
+    raise exception 'Mỗi khung giờ học phải có ít nhất 15 phút.';
   end if;
   select count(*)::integer
   into v_booked

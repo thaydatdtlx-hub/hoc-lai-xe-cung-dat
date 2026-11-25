@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {studentNotifications} from "../account-notifications.js";
+import {runInNewContext} from "node:vm";
+import {SCHEDULE_FIELDS,parseScheduleFromNotes} from "../schedule-data.js";
 const read=path=>readFileSync(new URL("../"+path,import.meta.url),"utf8");
+const context={SCHEDULE_FIELDS,parseScheduleFromNotes};
+runInNewContext(read("account-notifications.js").replace(/^import .*;\s*$/gm,"").replace(/export function /g,"function "),context);
+const {studentNotifications}=context;
 const slot={id:"fixture-1",session_type:"practice",status:"open",starts_at:"2099-11-28T06:00:00Z",ends_at:"2099-11-28T10:00:00Z",duration_minutes:240,available_count:4,location:"Sân tập"};
 const learner={name:"Học viên thử",training_requests:[],training_sessions:[]};
 const invites=(s,slots)=>studentNotifications(s,slots).filter(n=>n.id.startsWith("training-slot-invite:"));
