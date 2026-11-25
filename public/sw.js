@@ -3,7 +3,7 @@ function fixNoticeText(value){return String(value??"").replace(/\bng(?:à6|á6)(
 const CACHE_NAME="hoclaixecungdat-pwa-v54";
 const RETIRED_SIMULATION_PAGES=new Set(["/mo-phong-120","/mo-phong-120.html"]);
 const RETIRED_SIMULATION_ASSETS=new Set(["/mo-phong/app.mjs","/mo-phong/core.mjs","/data/mo-phong-120-media.json","/data/mo-phong-120-timing-source.json"]);
-const CORE_ASSETS=["/offline.html","/site.webmanifest","/mobile-viewport-lock.css?v=3","/rpc-preflight.js?v=20260902-1","/app-icon-192.png","/app-icon-512.png","/app-icon-maskable-512.png","/apple-touch-icon-180.png","/logo-thay-dat-compact.webp"];
+const CORE_ASSETS=["/offline.html","/site.webmanifest","/app-icon-192.png","/app-icon-512.png","/app-icon-maskable-512.png","/apple-touch-icon-180.png","/logo-thay-dat-compact.webp"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE_ASSETS)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>(key.startsWith("thay-dat-pwa-")||key.startsWith("hoclaixecungdat-pwa-"))&&key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
 self.addEventListener("message",event=>{if(event.data?.type==="SKIP_WAITING")self.skipWaiting()});
