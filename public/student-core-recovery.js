@@ -65,6 +65,7 @@
   }
   function renderProgress(student){
     var host=byId("studentProgress");if(!host)return;
+    var motorcycle=/^(A1|A)$/.test(String(student.license_class||"").trim().toUpperCase());
     var rows=[
       ["▤","Hồ sơ",student.profile_status||"Chưa cập nhật"],
       ["◉","Lý thuyết online",student.online_status||"Chưa hoàn thành"],
@@ -72,7 +73,7 @@
       ["⌖","DAT",student.dat_status||"Chưa thực hiện"],
       ["✓","Thi tốt nghiệp",student.graduation_status||"Chưa hoàn thành"],
       ["★","Thi sát hạch",student.exam_status||"Chưa thi sát hạch"]
-    ];
+    ].filter(function(row){return !motorcycle||row[1]==="Hồ sơ"||row[1]==="Thi sát hạch";});
     host.innerHTML=rows.map(function(row){return '<article class="progress-card"><span>'+esc(row[0])+'</span><div><small>'+esc(row[1])+'</small><strong>'+esc(row[2])+'</strong></div><i></i></article>'}).join("");
   }
   function renderProfile(student){

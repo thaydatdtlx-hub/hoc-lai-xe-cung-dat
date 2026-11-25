@@ -260,6 +260,7 @@ function renderPortal(){
   }
 
   const schedule=parseScheduleFromNotes(student.notes||"")||{dates:{},locations:{},note:""};
+  const motorcycle=/^(A1|A)$/.test(String(student.license_class||"").trim().toUpperCase());
   const progress=[
     ["▤","Hồ sơ",student.profile_status||"Chưa cập nhật",""],
     ["◉","Lý thuyết online",student.online_status||"Chưa hoàn thành",dateRange(schedule.dates?.online_start,schedule.dates?.online_end)],
@@ -267,7 +268,7 @@ function renderPortal(){
     ["⌖","DAT",student.dat_status||"Chưa thực hiện",""],
     ["✓","Thi tốt nghiệp",student.graduation_status||"Chưa hoàn thành",""],
     ["★","Thi sát hạch",student.exam_status||"Chưa thi sát hạch",""]
-  ];
+  ].filter(([,label])=>!motorcycle||label==="Hồ sơ"||label==="Thi sát hạch");
   $("studentProgress").innerHTML=progress.map(([icon,label,status,detail])=>`<article class="progress-card ${progressTone(status)}"><span>${icon}</span><div><small>${esc(label)}</small><strong>${esc(status)}</strong>${detail?`<em>${esc(detail)}</em>`:""}</div><i></i></article>`).join("");
 
   const profile=[

@@ -126,3 +126,32 @@ observerCallback?.();
 if(textWrites!==0)throw new Error("MutationObserver vẫn tự ghi lại DOM và có thể làm treo trang.");
 
 console.log("Render hồ sơ mobile hợp lệ: dữ liệu hiển thị và MutationObserver không còn tự lặp.");
+
+// Regression: motorcycle accounts must never see the four car-only roadmap stages.
+const {runInNewContext}=await import("node:vm");
+const polishSource=await readFile(new URL("../student-portal-polish.js",import.meta.url),"utf8");
+const roadmapSource=polishSource.slice(polishSource.indexOf("function statusFromText("),polishSource.indexOf("function mountPriority("));
+let license="A1";
+const progressGrid={children:["Hồ sơ","Lý thuyết online","Cabin","DAT","Thi tốt nghiệp","Thi sát hạch"].map(label=>({textContent:label+" · Chưa tới"})),innerText:"Chưa tới"};
+const priorityHost={innerHTML:""};
+const context={
+  document:{getElementById:id=>id==="studentProgress"?progressGrid:id==="studentPriorityCenter"?priorityHost:null},
+  normalize:value=>String(value??"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d"),
+  text:selector=>selector==="#studentLicense"?license:"",
+  numberFromText:()=>0,
+  esc:value=>String(value??""),
+  lastPrioritySignature:""
+};
+runInNewContext(roadmapSource,context);
+for(const value of ["A1","A"," a1 ","a","B","B số tự động","B số sàn","C1","A2",""]){
+  license=value;
+  const motorcycle=/^(A1|A)$/.test(value.trim().toUpperCase());
+  const expected=motorcycle?["Sát hạch","Nhận bằng"]:["Online","Cabin","DAT","Tốt nghiệp","Sát hạch","Nhận bằng"];
+  const actual=Array.from(context.roadmapData(),step=>step.label);
+  if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error("Sai lộ trình cho hạng "+value+": "+actual.join(", "));
+  context.renderPriority();
+  if(!priorityHost.innerHTML.includes('data-step-count="'+expected.length+'"'))throw new Error("Sai số ô lộ trình cho hạng "+value);
+  if(motorcycle&&(!priorityHost.innerHTML.includes("<i>1</i>")||!priorityHost.innerHTML.includes("<i>2</i>")||priorityHost.innerHTML.includes("<i>3</i>")))throw new Error("Sai số thứ tự lộ trình xe máy.");
+  if(motorcycle&&context.nextAction().title!=="Bước tiếp theo: Sát hạch")throw new Error("Gợi ý sai bước tiếp theo cho hạng "+value);
+}
+console.log("Lộ trình học viên hợp lệ: A1/A chỉ còn Sát hạch và Nhận bằng; các hạng khác giữ 6 bước.");
