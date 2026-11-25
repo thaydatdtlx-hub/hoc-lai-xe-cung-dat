@@ -27,19 +27,19 @@ jobs:
           test -s "$new"
           cp "$old" "$RUNNER_TEMP/qa/old-unsigned.apk"
           cp "$new" "$RUNNER_TEMP/qa/new-unsigned.apk"
-      - name: Install Android emulator and SDK tools
+      - name: Prepare KVM and signing tools
         run: |
           set -euo pipefail
           SDK="$ANDROID_HOME"
           manager="$(find "$SDK/cmdline-tools" -path '*/bin/sdkmanager' -type f | sort -V | tail -1)"
           test -x "$manager"
-          "$manager" --sdk_root="$SDK" "platform-tools" "emulator" "build-tools;35.0.0" "system-images;android-34;google_apis_playstore;x86_64"
-          echo no | "$(dirname "$manager")/avdmanager" create avd --force --name hld-qa --package "system-images;android-34;google_apis_playstore;x86_64"
-          test -x "$SDK/platform-tools/adb"
-          echo "$SDK/platform-tools" >> "$GITHUB_PATH"
-          echo "$SDK/emulator" >> "$GITHUB_PATH"
+          "$manager" --sdk_root="$SDK" "build-tools;35.0.0" "platform-tools"
           test -e /dev/kvm
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
           sudo chmod 666 /dev/kvm
+          echo "$SDK/platform-tools" >> "$GITHUB_PATH"
       - name: Sign both versions with one disposable test key
         run: |
           set -euo pipefail
@@ -56,23 +56,11 @@ jobs:
           grep -q "name='com.hoclaixecungdat.app' versionCode='4' versionName='1.1.2'" old-badging.txt
           grep -q "name='com.hoclaixecungdat.app' versionCode='5' versionName='1.1.3'" new-badging.txt
           rm -f qa.p12
-      - name: Boot Android 14 emulator
+      - name: Prepare emulator smoke script
         run: |
           set -euo pipefail
-          "$ANDROID_HOME/emulator/emulator" -avd hld-qa -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -memory 3072 -netdelay none -netspeed full > "$RUNNER_TEMP/qa/emulator.log" 2>&1 &
-          timeout 300 adb wait-for-device
-          for i in $(seq 1 120); do
-            if [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; then break; fi
-            sleep 3
-          done
-          test "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1"
-          adb shell input keyevent 82
-          adb shell pm path com.android.chrome
-          adb shell settings put global window_animation_scale 0
-          adb shell settings put global transition_animation_scale 0
-          adb shell settings put global animator_duration_scale 0
-      - name: Install 1.1.2 and upgrade without uninstalling
-        run: |
+          mkdir -p "$RUNNER_TEMP/qa"
+          cat > "$RUNNER_TEMP/qa/smoke.sh" <<'HLD_SMOKE'
           set -euo pipefail
           cd "$RUNNER_TEMP/qa"
           pkg=com.hoclaixecungdat.app
@@ -86,8 +74,9 @@ jobs:
           grep -q 'versionName=1.1.3' new-installed.txt
           grep -q 'versionCode=5' new-installed.txt
           echo 'PASS: install and upgrade using identical disposable signing certificate'
-      - name: Launch and inspect Chrome handoff
-        run: |
+          echo 'PASS: installed application package and version metadata'
+          adb shell pm path com.android.chrome
+          adb shell cmd role add-role-holder android.app.role.BROWSER com.android.chrome || true
           set -euo pipefail
           cd "$RUNNER_TEMP/qa"
           pkg=com.hoclaixecungdat.app
@@ -107,6 +96,21 @@ jobs:
           fi
           echo 'PASS: native startup and Chrome handoff on Android 14'
           adb shell am force-stop "$pkg"
+          HLD_SMOKE
+      - name: Run Android 14 emulator using reviewed pinned runner
+        uses: ReactiveCircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d
+        with:
+          api-level: 34
+          target: google_apis_playstore
+          arch: x86_64
+          profile: pixel_6
+          cores: 2
+          ram-size: 2048M
+          avd-name: hld-qa
+          emulator-boot-timeout: 600
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim -camera-back none -camera-front none -feature -Vulkan
+          disable-animations: true
+          script: bash "$RUNNER_TEMP/qa/smoke.sh"
       - name: Record scope of evidence
         if: always()
         run: |
@@ -123,5 +127,9 @@ jobs:
             ${{ runner.temp }}/qa/upgrade.txt
             ${{ runner.temp }}/qa/launch.txt
             ${{ runner.temp }}/qa/launch.png
+            ${{ runner.temp }}/qa/activities.txt
+            ${{ runner.temp }}/qa/logcat.txt
+            ${{ runner.temp }}/qa/old-badging.txt
+            ${{ runner.temp }}/qa/new-badging.txt
           if-no-files-found: warn
           retention-days: 7
