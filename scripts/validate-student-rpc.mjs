@@ -54,7 +54,7 @@ for(const token of ["/api/student-rpc","same-origin","app_student_login","app_lo
   if(!login.includes(token))throw new Error(`Đăng nhập mobile hoặc trình nhập học phí thiếu: ${token}`);
 }
 if(/headers:\{apikey:[^}]*Cache-Control/.test(login))throw new Error("Fallback đăng nhập trực tiếp không được gửi header Cache-Control qua CORS.");
-if(!serviceWorker.includes('thay-dat-pwa-v44')||!serviceWorker.includes('/mobile-login-stability.js')||!serviceWorker.includes('/student-core-recovery.js')||!serviceWorker.includes('/student-mobile-recovery.js')||!serviceWorker.includes('/lich-dao-tao.html'))throw new Error("PWA chưa làm mới cache cho luồng đăng nhập, lịch và hồ sơ mobile.");
+if(!serviceWorker.includes('hoclaixecungdat-pwa-v54')||!serviceWorker.includes('fetch(request,{cache:"no-store"})')||serviceWorker.includes('cache.put(')||serviceWorker.includes('"/?login=1",'))throw new Error("PWA phải tải hồ sơ và đăng nhập qua mạng, không lưu cache dữ liệu riêng.");
 for(const token of ['mobile-login-stability.js?v=20260901-1','login-final-v28.css?v=28-1','copyFile','resolve("dist","mobile-login-stability.js")']){
   if(!injector.includes(token))throw new Error(`Bản build đăng nhập mobile thiếu: ${token}`);
 }
