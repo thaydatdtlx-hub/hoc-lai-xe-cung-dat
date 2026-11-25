@@ -294,7 +294,7 @@ begin
     )
     values (
       v_request.student_id, v_slot.session_type, v_start_at,
-      v_slot.location, v_session_note, v_slot.id, v_request.slot_segment_index, case when v_slot.split_enabled then v_minutes else null end
+      v_slot.location, v_session_note, v_slot.id, v_request.slot_segment_index, v_minutes
     )
     returning id into v_session_id;
   end if;
