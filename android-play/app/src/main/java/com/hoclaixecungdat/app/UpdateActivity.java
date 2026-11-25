@@ -58,6 +58,10 @@ public final class UpdateActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::navigateBack);
+        }
         if (!BuildConfig.APK_UPDATES) { openWebsite(); return; }
         createBrowser();
         loadPage(HOME);
@@ -305,11 +309,19 @@ public final class UpdateActivity extends Activity {
         catch (RuntimeException ex) { createBrowser(); loadPage(HOME); }
     }
 
-    @Override public void onBackPressed() {
+    private void navigateBack() {
         if (web != null && web.canGoBack()) {
             if (errorPanel != null) { page.removeView(errorPanel); errorPanel = null; web.setVisibility(View.VISIBLE); }
             web.goBack();
-        } else super.onBackPressed();
+        } else finish();
+    }
+
+    @Override public boolean onKeyUp(int keyCode, android.view.KeyEvent event) {
+        if (Build.VERSION.SDK_INT < 33 && keyCode == android.view.KeyEvent.KEYCODE_BACK) {
+            navigateBack();
+            return true;
+        }
+        return super.onKeyUp(keyCode,event);
     }
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);

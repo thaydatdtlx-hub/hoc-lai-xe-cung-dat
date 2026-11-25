@@ -51,7 +51,7 @@ jobs:
           cp "$SDK/build-tools/35.0.0/lib/apksigner.jar" android-play/signing-tools/
           cp "$SDK/build-tools/35.0.0/zipalign" android-play/signing-tools/
           ldd "$SDK/build-tools/35.0.0/zipalign" || true
-      - name: Upload test APK, unsigned sideload APK, AAB and local signing tools
+      - name: Upload unsigned sideload APK and local signing tools
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: hoc-lai-xe-cung-dat-android-1.1.2
