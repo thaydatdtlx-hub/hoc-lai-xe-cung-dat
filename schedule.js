@@ -73,11 +73,18 @@ function formatTimeRange(value,minutes){
   const formatter=new Intl.DateTimeFormat("vi-VN",{hour:"2-digit",minute:"2-digit"});
   return `${formatter.format(start)} – ${formatter.format(end)}`;
 }
+export function splitTrainingMinutes(duration,capacity){
+  if(!Number.isInteger(duration)||!Number.isInteger(capacity)||capacity<1||capacity>100||duration<capacity)return [];
+  return Array.from({length:capacity},(_,i)=>({offset:Math.floor(i*duration/capacity),minutes:Math.floor((i+1)*duration/capacity)-Math.floor(i*duration/capacity)}));
+}
 function renderSlotTimePreview(){
-  const startsAt=$("slotStartsAt").value,duration=Number($("slotDuration").value)||120;
-  $("slotTimePreview").textContent=startsAt
-    ?`Khung giờ đã chọn: ${formatTimeRange(startsAt,duration)} · ${formatDuration(duration)}`
-    :"Khung giờ sẽ hiển thị sau khi chọn ngày, giờ bắt đầu và thời lượng.";
+  const startsAt=$("slotStartsAt").value,duration=Number($("slotDuration").value)||120,capacity=Number($("slotCapacity").value);
+  const slot=trainingSlots.find(item=>String(item.id)===String($("trainingSlotId").value));
+  const segments=splitTrainingMinutes(duration,capacity);
+  if(!startsAt){$("slotTimePreview").textContent="Khung giờ sẽ hiển thị sau khi chọn ngày, giờ bắt đầu và thời lượng.";return}
+  if(slot?.split_enabled===false){$("slotTimePreview").textContent="Ca cũ giữ nguyên lịch đã đăng ký.";return}
+  if(!segments.length){$("slotTimePreview").textContent="Số học viên phải nhỏ hơn hoặc bằng tổng số phút.";return}
+  $("slotTimePreview").innerHTML=`<strong>Tự chia ${segments.length} khung giờ · mỗi học viên chọn 1 khung</strong><div class="slot-segment-grid">${segments.map((segment,index)=>`<span><b>${index+1}. ${esc(formatTimeRange(new Date(new Date(startsAt).getTime()+segment.offset*60000),segment.minutes))}</b><small>${esc(formatDuration(segment.minutes))}</small></span>`).join("")}</div>`;
 }
 function dateParts(value){
   const date=new Date(value);
@@ -290,6 +297,13 @@ function renderTrainingSlots(){
         <span>🚘 ${esc(slot.vehicle_plate||"Chưa gán xe")}</span>
       </div>
       <div class="training-slot-capacity"><div class="capacity-bar"><i style="width:${percent}%"></i></div><strong>${booked}/${capacity} học viên${Number(slot.pending_count)?` · ${Number(slot.pending_count)} chờ duyệt`:""}</strong></div>
+      ${slot.split_enabled&&Array.isArray(slot.segments)?`<div class="slot-segment-grid">${slot.segments.map(segment=>{
+        const session=trainingSessions.find(s=>String(s.slot_id)===String(slot.id)&&s.slot_segment_index===segment.index);
+        const request=trainingRequests.find(r=>String(r.slot_id)===String(slot.id)&&r.slot_segment_index===segment.index&&r.status==="pending");
+        const person=students.find(s=>String(s.id)===String(session?.student_id||request?.student_id));
+        const label=segment.status==="booked"?"Đã duyệt":segment.status==="pending"?"Chờ duyệt":segment.status==="available"?"Còn trống":segment.status==="expired"?"Đã qua giờ":"Đã đóng";
+        return `<span class="slot-segment-${esc(segment.status)}"><b>${esc(formatTimeRange(segment.starts_at,segment.duration_minutes))}</b><small>${esc(label)}${person?" · "+esc(person.name):""}</small></span>`;
+      }).join("")}</div>`:""}
       <p class="slot-audience-summary">${Array.isArray(slot.allowed_student_ids)?`Chỉ ${slot.allowed_student_ids.length} học viên được đăng ký`:"Tất cả học viên phù hợp được đăng ký"}</p>
       <div class="training-slot-actions"><button class="edit-slot" type="button" data-edit-slot="${slot.id}">Sửa ca học</button>${slot.status==="open"?`<button class="close-slot" type="button" data-close-slot="${slot.id}">Đóng đăng ký</button>`:""}</div>
     </article>`;
@@ -434,7 +448,7 @@ function openRequestApproval(requestId){
 }
 async function approveTrainingRequest(request){
   const slot=trainingSlots.find(item=>String(item.id)===String(request.slot_id));
-  const detail=slot?`${formatDate(slot.starts_at)} · ${slot.location||"Chưa có địa điểm"}`:formatDate(request.slot_starts_at||request.requested_at);
+  const detail=slot?`${formatDate(request.slot_starts_at||request.requested_at)} · ${formatTimeRange(request.slot_starts_at||request.requested_at,request.slot_duration_minutes||slot.duration_minutes)} · ${slot.location||"Chưa có địa điểm"}`:formatDate(request.requested_at);
   if(!confirm(`Duyệt yêu cầu của ${request.student_name||"học viên"} vào ca ${detail}?`))return;
   busy(true);
   try{
@@ -543,6 +557,8 @@ $("slotForm").onsubmit=async event=>{
   event.preventDefault();$("slotError").textContent="";
   const startsAt=$("slotStartsAt").value;
   if(!startsAt)return $("slotError").textContent="Vui lòng chọn ngày và giờ bắt đầu.";
+  const editingSlot=trainingSlots.find(s=>String(s.id)===String($("trainingSlotId").value));
+  if(editingSlot?.split_enabled!==false&&!splitTrainingMinutes(Number($("slotDuration").value),Number($("slotCapacity").value)).length)return $("slotError").textContent="Số học viên phải nhỏ hơn hoặc bằng tổng số phút.";
   const allowedIds=$("slotAudienceMode").value==="all"?null:[...slotSelectedStudentIds];
   if(allowedIds!==null&&!allowedIds.length)return $("slotError").textContent="Vui lòng chọn ít nhất một học viên hoặc mở đăng ký cho tất cả học viên phù hợp.";
   $("saveSlotBtn").disabled=true;busy(true);
@@ -583,6 +599,7 @@ $("slotAudienceList").onchange=event=>{
 };
 $("slotStartsAt").oninput=renderSlotTimePreview;
 $("slotDuration").onchange=renderSlotTimePreview;
+$("slotCapacity").oninput=renderSlotTimePreview;
 
 $("deleteSlotBtn").onclick=async()=>{
   const slot=trainingSlots.find(item=>String(item.id)===String($("trainingSlotId").value));

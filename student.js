@@ -166,34 +166,62 @@ function renderTheoryProgress(){
   $("theoryLatestExam").className=`theory-latest-exam ${latest.passed?"passed":"failed"}`;
   $("theoryLatestExam").innerHTML=`<span>${latest.passed?"✓":"!"}</span><p><strong>Bài thi gần nhất: hạng ${esc(latest.license_class)} · ${Number(latest.score)||0}/${Number(latest.total)||0}</strong><br>${latest.passed?"Đạt yêu cầu":"Chưa đạt"} · ${esc(date(latest.submitted_at,true))}${latest.critical_correct?"":" · Sai câu điểm liệt"}</p>`;
 }
+function segmentTimeRange(start,end){
+  const f=new Intl.DateTimeFormat("vi-VN",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+  return f.format(new Date(start))+" – "+f.format(new Date(end));
+}
 function availableSlots(type){
-  return trainingSlots.filter(slot=>
-    slot.session_type===type&&slot.status==="open"&&new Date(slot.starts_at)>new Date()&&Number(slot.available_count)>0
-  );
+  return trainingSlots.filter(slot=>slot.session_type===type&&slot.status==="open"&&new Date(slot.ends_at||slot.starts_at)>new Date());
+}
+function slotChoices(type){
+  return availableSlots(type).flatMap(slot=>{
+    if(slot.split_enabled&&Array.isArray(slot.segments))return slot.segments.map(segment=>({
+      key:slot.id+":"+segment.index,slot,index:segment.index,start:segment.starts_at,end:segment.ends_at,minutes:segment.duration_minutes,
+      status:segment.status,available:segment.status==="available"&&!slot.student_registered&&new Date(segment.starts_at)>new Date()
+    }));
+    return [{key:String(slot.id),slot,index:null,start:slot.starts_at,end:slot.ends_at,minutes:slot.duration_minutes,status:Number(slot.available_count)>0?"available":"booked",available:Number(slot.available_count)>0&&!slot.student_registered&&new Date(slot.starts_at)>new Date()}];
+  });
+}
+function selectedSlotChoice(){return slotChoices($("requestType").value).find(choice=>choice.key===$("requestSlot").value)}
+function choiceStatus(choice){
+  if(choice.status==="booked"||choice.status==="pending")return "Ca học đã được đăng ký";
+  if(choice.slot.student_registered)return "Bạn đã đăng ký trong ca này";
+  if(choice.status==="expired"||new Date(choice.start)<=new Date())return "Đã qua giờ đăng ký";
+  if(choice.status==="closed")return "Đã đóng đăng ký";
+  return choice.available?"Còn trống":"Không thể đăng ký";
 }
 function renderRequestSlotDetails(){
-  const slot=trainingSlots.find(item=>String(item.id)===String($("requestSlot").value));
-  if(!slot){
+  const choice=selectedSlotChoice(),choices=slotChoices($("requestType").value);
+  $("submitTrainingRequest").disabled=!choice?.available;
+  if(!choice){
     $("requestSlotDetails").className="request-slot-details is-empty";
-    $("requestSlotDetails").textContent="Hiện chưa có ca học phù hợp còn chỗ. Vui lòng quay lại sau.";
+    $("requestSlotDetails").textContent=choices.length?(choices.some(c=>c.available)?"Chọn khung giờ phù hợp. Khung giờ đã đăng ký được khóa.":"Không còn khung giờ trống. Ca học đã được đăng ký hoặc đã qua giờ."):"Hiện chưa có ca học phù hợp. Vui lòng quay lại sau.";
     return;
   }
+  const slot=choice.slot;
   $("requestSlotDetails").className="request-slot-details";
   $("requestSlotDetails").innerHTML=`
-    <strong>${esc(date(slot.starts_at,true))} · ${esc(formatDuration(slot.duration_minutes))}</strong>
+    <strong>${esc(date(choice.start))} · ${esc(choice.end?segmentTimeRange(choice.start,choice.end):date(choice.start,true))} · ${esc(formatDuration(choice.minutes))}</strong>
     <span>⌖ ${esc(slot.location||"Địa điểm sẽ được Admin cập nhật")}</span>
     <span>👤 ${esc(slot.instructor_name||"Chưa gán giáo viên")} · 🚘 ${esc(slot.vehicle_plate||"Chưa gán xe")}</span>
-    <span>✓ Còn ${Math.max(0,Number(slot.available_count)||0)} chỗ</span>`;
+    <span>${esc(choiceStatus(choice))}</span>`;
 }
-function fillSlotOptions(type){
-  const slots=availableSlots(type);
-  $("requestSlot").innerHTML=slots.map(slot=>
-    `<option value="${slot.id}">${esc(date(slot.starts_at,true))} · còn ${Math.max(0,Number(slot.available_count)||0)} chỗ</option>`
+function fillSlotOptions(type,preserve=false){
+  const current=preserve?$("requestSlot").value:"", choices=slotChoices(type);
+  $("requestSlot").innerHTML='<option value="">Chọn khung giờ học</option>'+choices.map(choice=>
+    `<option value="${esc(choice.key)}" ${choice.available?"":"disabled"}>${esc(date(choice.start))} · ${esc(choice.end?segmentTimeRange(choice.start,choice.end):date(choice.start,true))} · ${esc(choiceStatus(choice))}</option>`
   ).join("");
-  $("requestSlot").disabled=slots.length===0;
-  $("submitTrainingRequest").disabled=slots.length===0;
+  $("requestSlot").value=choices.some(c=>c.key===current&&c.available)?current:"";
+  $("requestSlot").disabled=choices.length===0;
   renderRequestSlotDetails();
 }
+let slotRefreshBusy=false,slotSubmitBusy=false;
+async function refreshBookingChoices(){
+  if(slotRefreshBusy||slotSubmitBusy||!$("trainingRequestDialog").open||!slotFeatureAvailable)return;
+  slotRefreshBusy=true;
+  try{await loadTrainingSlots();if($("trainingRequestDialog").open&&!slotSubmitBusy&&slotFeatureAvailable)fillSlotOptions($("requestType").value,true)}catch{}finally{slotRefreshBusy=false}
+}
+setInterval(()=>{if(document.visibilityState!=="hidden")void refreshBookingChoices()},10000);
 function renderTrainingRequests(){
   const pending=trainingRequests.filter(request=>request.status==="pending").length;
   $("bookingPendingBadge").textContent=`${pending} yêu cầu chờ duyệt`;
@@ -202,7 +230,7 @@ function renderTrainingRequests(){
     const status=requestStatus[request.status]||requestStatus.pending;
     return `<article class="booking-request">
       <span>${field.icon}</span>
-      <div><strong>${esc(field.label)}</strong><small>${esc(date(request.slot_starts_at||request.requested_at,true))}</small>${request.slot_id?`<em class="slot-meta">⌖ ${esc(request.slot_location||"Chưa có địa điểm")} · 👤 ${esc(request.slot_instructor_name||"Chưa gán giáo viên")} · 🚘 ${esc(request.slot_vehicle_plate||"Chưa gán xe")}</em>`:""}${request.note?`<em>Ghi chú: ${esc(request.note)}</em>`:""}${request.admin_note?`<em>Admin: ${esc(request.admin_note)}</em>`:""}</div>
+      <div><strong>${esc(field.label)}</strong><small>${esc(date(request.slot_starts_at||request.requested_at,true))}${request.slot_segment_index!=null?` · ${esc(formatDuration(request.slot_duration_minutes))}`:""}</small>${request.slot_id?`<em class="slot-meta">⌖ ${esc(request.slot_location||"Chưa có địa điểm")} · 👤 ${esc(request.slot_instructor_name||"Chưa gán giáo viên")} · 🚘 ${esc(request.slot_vehicle_plate||"Chưa gán xe")}</em>`:""}${request.note?`<em>Ghi chú: ${esc(request.note)}</em>`:""}${request.admin_note?`<em>Admin: ${esc(request.admin_note)}</em>`:""}</div>
       <span class="request-status ${status.className}">${status.label}</span>
       ${request.status==="pending"?`<button class="cancel-request" type="button" data-cancel-request="${request.id}">Hủy yêu cầu</button>`:""}
     </article>`;
@@ -226,6 +254,7 @@ function openTrainingRequest(type){
     $("requestStartsAt").min=new Date(now-offset).toISOString().slice(0,16);
   }
   $("trainingRequestDialog").showModal();
+  void refreshBookingChoices();
 }
 function renderPortal(){
   $("studentUsername").textContent=`${me.username} · Học viên`;
@@ -391,14 +420,15 @@ document.querySelectorAll("[data-booking-type]").forEach(button=>button.onclick=
 $("requestSlot").onchange=renderRequestSlotDetails;
 $("trainingRequestForm").onsubmit=async event=>{
   event.preventDefault();$("trainingRequestError").textContent="";
-  const slotId=$("requestSlot").value,startsAt=$("requestStartsAt").value;
-  if(slotFeatureAvailable&&!slotId)return $("trainingRequestError").textContent="Hiện chưa có ca học phù hợp còn chỗ.";
+  const choice=selectedSlotChoice(),startsAt=$("requestStartsAt").value;
+  if(slotFeatureAvailable&&!choice?.available)return $("trainingRequestError").textContent="Vui lòng chọn khung giờ còn trống.";
   if(!slotFeatureAvailable&&!startsAt)return $("trainingRequestError").textContent="Vui lòng chọn ngày và giờ mong muốn.";
   $("submitTrainingRequest").disabled=true;
+  slotSubmitBusy=true;
   try{
     if(slotFeatureAvailable){
-      await rpc("app_student_create_training_request_slot",{
-        p_token:token,p_slot_id:slotId,p_note:$("requestNote").value.trim()
+      await rpc("app_student_create_training_request_segment",{
+        p_token:token,p_slot_id:choice.slot.id,p_segment_index:choice.index,p_note:$("requestNote").value.trim()
       });
     }else{
       await rpc("app_student_create_training_request",{
@@ -408,8 +438,12 @@ $("trainingRequestForm").onsubmit=async event=>{
     }
     await Promise.all([loadTrainingRequests(),loadTrainingSlots()]);
     $("trainingRequestDialog").close();renderTrainingRequests();renderStudentNotifications();toast("Đã gửi yêu cầu đến Admin");
-  }catch(error){$("trainingRequestError").textContent=error?.message||"Không thể gửi yêu cầu đăng ký."}
-  finally{if(!slotFeatureAvailable||availableSlots($("requestType").value).length)$("submitTrainingRequest").disabled=false}
+  }catch(error){
+    const message=error?.message||"Không thể gửi yêu cầu đăng ký.";
+    if(slotFeatureAvailable){try{await loadTrainingSlots();fillSlotOptions($("requestType").value,true)}catch{}}
+    $("trainingRequestError").textContent=message;
+  }
+  finally{slotSubmitBusy=false;$("submitTrainingRequest").disabled=slotFeatureAvailable&&!selectedSlotChoice()?.available}
 };
 $("studentBookingRequests").onclick=async event=>{
   const requestId=event.target.dataset.cancelRequest;
