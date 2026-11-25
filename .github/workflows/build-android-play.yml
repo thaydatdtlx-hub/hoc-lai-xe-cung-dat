@@ -1,0 +1,48 @@
+name: Build Android CH Play
+on:
+  push:
+    branches: [android-play-release-20261125]
+    paths:
+      - 'android-play/**'
+      - '.github/workflows/build-android-play.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Configure JDK and Android SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "JAVA_HOME=$JAVA_HOME_17_X64" >> "$GITHUB_ENV"
+          echo "$JAVA_HOME_17_X64/bin" >> "$GITHUB_PATH"
+          sdkmanager "platforms;android-36" "build-tools;35.0.0"
+      - name: Install Gradle
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          curl --fail --location --retry 3 -o gradle.zip https://services.gradle.org/distributions/gradle-8.13-bin.zip
+          curl --fail --location --retry 3 -o gradle.sha256 https://services.gradle.org/distributions/gradle-8.13-bin.zip.sha256
+          printf '%s  gradle.zip\n' "$(cat gradle.sha256)" | sha256sum -c -
+          unzip -q gradle.zip
+          echo "$RUNNER_TEMP/gradle-8.13/bin" >> "$GITHUB_PATH"
+      - name: Build and lint
+        working-directory: android-play
+        run: gradle --no-daemon :app:assembleDebug :app:bundleRelease :app:lintRelease
+      - name: Upload test APK and unsigned AAB
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hoc-lai-xe-cung-dat-android-1.0.0
+          path: |
+            android-play/app/build/outputs/apk/debug/app-debug.apk
+            android-play/app/build/outputs/bundle/release/app-release.aab
+            android-play/app/build/reports/lint-results-release.html
+          if-no-files-found: error
+          retention-days: 14
