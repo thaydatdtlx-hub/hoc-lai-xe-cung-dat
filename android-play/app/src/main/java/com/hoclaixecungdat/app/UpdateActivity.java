@@ -5,6 +5,22 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.view.View;
+import android.view.WindowInsets;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceResponse;
+import android.webkit.RenderProcessGoneDetail;
+import android.webkit.CookieManager;
+import android.webkit.ValueCallback;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,29 +45,22 @@ public final class UpdateActivity extends Activity {
     private static final String APK_PREFIX = "/thaydatdtlx-hub/hoc-lai-xe-cung-dat/releases/download/";
     private final Handler main = new Handler(Looper.getMainLooper());
     private boolean resolved = false;
-    private final Runnable timeout = () -> openWebsite();
+    private final Runnable timeout = () -> { resolved = true; };
+    private static final String HOME = "https://www.hoclaixecungdat.com/";
+    private WebView web;
+    private FrameLayout page;
+    private LinearLayout errorPanel;
+    private ProgressBar progress;
+    private TextView status;
+    private String retryUrl = HOME;
+    private ValueCallback<Uri[]> fileCallback;
+    private static final int PICK_FILE = 7201;
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         if (!BuildConfig.APK_UPDATES) { openWebsite(); return; }
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setGravity(Gravity.CENTER);
-        layout.setPadding(32, 32, 32, 32);
-        layout.setBackgroundColor(Color.WHITE);
-        TextView title = new TextView(this);
-        title.setText("Học lái xe cùng Đạt");
-        title.setTextSize(23);
-        title.setTextColor(Color.rgb(7,24,47));
-        layout.addView(title);
-        ProgressBar progress = new ProgressBar(this);
-        layout.addView(progress);
-        TextView status = new TextView(this);
-        status.setText("Đang kiểm tra phiên bản...");
-        status.setTextSize(14);
-        status.setPadding(0,16,0,0);
-        layout.addView(status);
-        setContentView(layout);
+        createBrowser();
+        loadPage(HOME);
         main.postDelayed(timeout, 6500);
         new Thread(() -> {
             JSONObject info = readFeed();
@@ -96,13 +105,13 @@ public final class UpdateActivity extends Activity {
 
     private void handleFeed(JSONObject info) {
         if (resolved || isFinishing() || isDestroyed()) return;
-        if (info == null || !PACKAGE.equals(info.optString("packageName"))) { openWebsite(); return; }
+        if (info == null || !PACKAGE.equals(info.optString("packageName"))) { resolved = true; main.removeCallbacks(timeout); return; }
         int latest = info.optInt("versionCode", 0);
         int minimum = info.optInt("minimumVersionCode", 0);
         String name = info.optString("versionName", "");
         String url = info.optString("apkUrl", "");
         if (latest <= BuildConfig.VERSION_CODE || minimum < 1 || minimum > latest
-                || name.isEmpty() || name.length() > 32 || !allowedApk(url)) { openWebsite(); return; }
+                || name.isEmpty() || name.length() > 32 || !allowedApk(url)) { resolved = true; main.removeCallbacks(timeout); return; }
         resolved = true;
         main.removeCallbacks(timeout);
         boolean required = minimum > BuildConfig.VERSION_CODE;
@@ -116,16 +125,16 @@ public final class UpdateActivity extends Activity {
             .setCancelable(!required)
             .setPositiveButton("Cập nhật ngay", null)
             .setNegativeButton(required ? "Thoát" : "Để sau", (d,w) -> {
-                if (required) finish(); else openWebsite();
+                if (required) finish();
             });
         AlertDialog dialog = builder.create();
-        if (!required) dialog.setOnCancelListener(d -> openWebsite());
+
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
             try {
                 Intent download = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 startActivity(download);
                 dialog.dismiss();
-                finish();
+                if (required) finish();
             } catch (ActivityNotFoundException ex) {
                 Toast.makeText(this,"Không có trình duyệt để tải APK.",Toast.LENGTH_LONG).show();
             }
@@ -133,12 +142,187 @@ public final class UpdateActivity extends Activity {
         dialog.show();
     }
 
+    private int dp(float n) { return (int)(n * getResources().getDisplayMetrics().density + .5f); }
+
+    private static boolean internal(Uri uri) {
+        return uri != null && "https".equalsIgnoreCase(uri.getScheme())
+            && ("www.hoclaixecungdat.com".equalsIgnoreCase(uri.getHost())
+                || "hoclaixecungdat.com".equalsIgnoreCase(uri.getHost()))
+            && uri.getUserInfo() == null && (uri.getPort() == -1 || uri.getPort() == 443);
+    }
+
+    private void createBrowser() {
+        LinearLayout root = new LinearLayout(this);
+        root.setOrientation(LinearLayout.VERTICAL);
+        root.setBackgroundColor(Color.WHITE);
+        root.setOnApplyWindowInsetsListener((v,insets) -> {
+            if (Build.VERSION.SDK_INT >= 30) {
+                android.graphics.Insets i = insets.getInsets(WindowInsets.Type.systemBars() | WindowInsets.Type.displayCutout());
+                v.setPadding(i.left, i.top, i.right, i.bottom);
+            } else {
+                v.setPadding(insets.getSystemWindowInsetLeft(), insets.getSystemWindowInsetTop(),
+                    insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
+            }
+            return insets;
+        });
+        progress = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        progress.setMax(100);
+        root.addView(progress, new LinearLayout.LayoutParams(-1, dp(3)));
+        page = new FrameLayout(this);
+        root.addView(page, new LinearLayout.LayoutParams(-1, 0, 1));
+        setContentView(root);
+        root.requestApplyInsets();
+        initWebView();
+    }
+
+    private void initWebView() {
+        try {
+            web = new WebView(this);
+            web.setBackgroundColor(Color.WHITE);
+            web.getSettings().setJavaScriptEnabled(true);
+            web.getSettings().setDomStorageEnabled(true);
+            web.getSettings().setAllowFileAccess(false);
+            web.getSettings().setAllowContentAccess(false);
+            web.getSettings().setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+            web.getSettings().setSupportMultipleWindows(false);
+            web.getSettings().setJavaScriptCanOpenWindowsAutomatically(false);
+            CookieManager.getInstance().setAcceptCookie(true);
+            web.setWebViewClient(new WebViewClient() {
+                @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    if (!request.isForMainFrame()) return false;
+                    return route(request.getUrl());
+                }
+                @Override public boolean shouldOverrideUrlLoading(WebView view, String url) { return route(Uri.parse(url)); }
+                @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap icon) {
+                    if (internal(Uri.parse(url))) retryUrl = url;
+                    progress.setVisibility(View.VISIBLE);
+                }
+                @Override public void onPageFinished(WebView view, String url) {
+                    progress.setVisibility(View.GONE);
+                    CookieManager.getInstance().flush();
+                }
+                @Override public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                    if (request.isForMainFrame()) showError("Không thể kết nối website. Kiểm tra mạng rồi thử lại.");
+                }
+                @Override public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse response) {
+                    if (request.isForMainFrame() && response.getStatusCode() >= 400)
+                        showError("Website tạm thời không truy cập được (HTTP " + response.getStatusCode() + ").");
+                }
+                @Override public boolean onRenderProcessGone(WebView view, RenderProcessGoneDetail detail) {
+                    page.removeView(view);
+                    view.destroy();
+                    web = null;
+                    showError("Bộ hiển thị Android gặp lỗi. Hãy thử lại.");
+                    return true;
+                }
+            });
+            web.setWebChromeClient(new WebChromeClient() {
+                @Override public void onProgressChanged(WebView view, int n) {
+                    progress.setProgress(n);
+                    if (n == 100) progress.setVisibility(View.GONE);
+                }
+                @Override public boolean onShowFileChooser(WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                    if (fileCallback != null) fileCallback.onReceiveValue(null);
+                    fileCallback = callback;
+                    try { startActivityForResult(params.createIntent(), PICK_FILE); return true; }
+                    catch (RuntimeException ex) { fileCallback.onReceiveValue(null); fileCallback = null; return false; }
+                }
+            });
+            web.setDownloadListener((url,ua,disposition,mime,size) -> {
+                Uri uri = Uri.parse(url);
+                if ("https".equals(uri.getScheme())) openExternal(uri);
+                else Toast.makeText(this,"Tệp này cần mở bằng trình duyệt. Chọn Mở bằng trình duyệt nếu cần.",Toast.LENGTH_LONG).show();
+            });
+            page.addView(web, 0, new FrameLayout.LayoutParams(-1,-1));
+        } catch (RuntimeException ex) {
+            web = null;
+            showError("Android System WebView chưa sẵn sàng. Hãy cập nhật WebView hoặc mở bằng trình duyệt.");
+        }
+    }
+
+    private boolean route(Uri uri) {
+        if (internal(uri)) return false;
+        String scheme = uri.getScheme();
+        if ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme)
+                || "tel".equalsIgnoreCase(scheme) || "mailto".equalsIgnoreCase(scheme)) openExternal(uri);
+        return true;
+    }
+
+    private void openExternal(Uri uri) {
+        try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); }
+        catch (RuntimeException ex) { Toast.makeText(this,"Không có ứng dụng phù hợp để mở liên kết.",Toast.LENGTH_LONG).show(); }
+    }
+
+    private void loadPage(String url) {
+        if (errorPanel != null) { page.removeView(errorPanel); errorPanel = null; }
+        if (web == null) initWebView();
+        if (web != null) { web.setVisibility(View.VISIBLE); progress.setVisibility(View.VISIBLE); web.loadUrl(url); }
+    }
+
+    private void showError(String message) {
+        if (isFinishing() || isDestroyed() || page == null) return;
+        if (web != null) web.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
+        if (errorPanel != null) page.removeView(errorPanel);
+        errorPanel = new LinearLayout(this);
+        errorPanel.setOrientation(LinearLayout.VERTICAL);
+        errorPanel.setGravity(Gravity.CENTER);
+        errorPanel.setPadding(dp(28), dp(24), dp(28), dp(24));
+        errorPanel.setBackgroundColor(Color.WHITE);
+        ImageView logo = new ImageView(this);
+        logo.setImageResource(R.mipmap.ic_launcher);
+        errorPanel.addView(logo,new LinearLayout.LayoutParams(dp(86),dp(86)));
+        TextView title = new TextView(this);
+        title.setText("Học lái xe cùng Đạt");
+        title.setTextSize(21);
+        title.setTextColor(Color.rgb(7,24,47));
+        title.setGravity(Gravity.CENTER);
+        errorPanel.addView(title);
+        status = new TextView(this);
+        status.setText(message);
+        status.setGravity(Gravity.CENTER);
+        status.setTextSize(15);
+        status.setPadding(0,dp(14),0,dp(14));
+        errorPanel.addView(status);
+        Button retry = new Button(this);
+        retry.setText("Thử lại");
+        retry.setOnClickListener(v -> loadPage(retryUrl));
+        errorPanel.addView(retry,new LinearLayout.LayoutParams(-1,-2));
+        Button browser = new Button(this);
+        browser.setText("Mở bằng trình duyệt");
+        browser.setOnClickListener(v -> openExternal(Uri.parse(retryUrl)));
+        errorPanel.addView(browser,new LinearLayout.LayoutParams(-1,-2));
+        page.addView(errorPanel,new FrameLayout.LayoutParams(-1,-1));
+    }
+
     private void openWebsite() {
         if (isFinishing() || isDestroyed()) return;
         resolved = true;
         main.removeCallbacks(timeout);
-        startActivity(new Intent(this, LauncherActivity.class));
-        finish();
+        // Only the Play and debug variants use the TWA launcher.
+        if (BuildConfig.APK_UPDATES) return;
+        try { startActivity(new Intent(this, LauncherActivity.class)); finish(); }
+        catch (RuntimeException ex) { createBrowser(); loadPage(HOME); }
     }
-    @Override protected void onDestroy() { main.removeCallbacks(timeout); super.onDestroy(); }
+
+    @Override public void onBackPressed() {
+        if (web != null && web.canGoBack()) {
+            if (errorPanel != null) { page.removeView(errorPanel); errorPanel = null; web.setVisibility(View.VISIBLE); }
+            web.goBack();
+        } else super.onBackPressed();
+    }
+    @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if (requestCode == PICK_FILE && fileCallback != null) {
+            fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode,data));
+            fileCallback = null;
+        }
+    }
+    @Override protected void onDestroy() {
+        resolved = true;
+        main.removeCallbacks(timeout);
+        if (fileCallback != null) { fileCallback.onReceiveValue(null); fileCallback = null; }
+        if (web != null) { page.removeView(web); web.destroy(); web = null; }
+        super.onDestroy();
+    }
 }

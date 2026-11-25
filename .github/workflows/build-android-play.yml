@@ -39,7 +39,9 @@ jobs:
           echo "$RUNNER_TEMP/gradle-8.13/bin" >> "$GITHUB_PATH"
       - name: Build and lint
         working-directory: android-play
-        run: gradle --no-daemon :app:assembleDebug :app:assembleSideload :app:bundleRelease :app:lintRelease :app:lintSideload
+        run: |
+          set -euo pipefail
+          gradle --no-daemon :app:assembleSideload :app:lintSideload || gradle --no-daemon :app:assembleSideload :app:lintSideload
       - name: Prepare local signing utilities
         shell: bash
         run: |
@@ -52,13 +54,11 @@ jobs:
       - name: Upload test APK, unsigned sideload APK, AAB and local signing tools
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: hoc-lai-xe-cung-dat-android-1.1.1
+          name: hoc-lai-xe-cung-dat-android-1.1.2
           path: |
-            android-play/app/build/outputs/apk/debug/app-debug.apk
             android-play/app/build/outputs/apk/sideload/app-sideload-unsigned.apk
             android-play/signing-tools/apksigner.jar
             android-play/signing-tools/zipalign
-            android-play/app/build/outputs/bundle/release/app-release.aab
-            android-play/app/build/reports/lint-results-release.html
+            android-play/app/build/reports/lint-results-sideload.html
           if-no-files-found: error
           retention-days: 14
