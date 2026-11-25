@@ -76,27 +76,16 @@ function ensureNotificationBadge(){
 function updatePermissionButton(){
   const button=$("newStudentEnableNotifications");
   if(!button)return;
-  if(!("Notification" in window)){
-    button.hidden=true;
-    return;
-  }
   button.hidden=false;
-  if(Notification.permission==="granted"){
-    button.textContent="✓ Thông báo trình duyệt đã bật";
-    button.disabled=true;
-  }else if(Notification.permission==="denied"){
-    button.textContent="Thông báo trình duyệt đang bị chặn";
-    button.disabled=true;
-  }else{
-    button.textContent="Bật thông báo trình duyệt";
-    button.disabled=false;
-  }
+  const toggle=$("pushNotificationToggle");
+  button.textContent=toggle?.dataset.enabled==="true"?"✓ Thông báo điện thoại đã bật":"Cài đặt thông báo điện thoại";
+  button.disabled=false;
 }
 
 async function requestBrowserNotification(){
-  if(!("Notification" in window))return;
-  try{await Notification.requestPermission()}catch{}
-  updatePermissionButton();
+  const dialog=$("newStudentAdminDialog");
+  if(dialog?.open)dialog.close();
+  $("notificationBtn")?.click();
 }
 
 function ensureUi(){
@@ -252,13 +241,7 @@ function showNewRegistrationToast(items){
   document.body.append(toast);
   setTimeout(()=>toast.remove(),12000);
 
-  if("Notification" in window&&Notification.permission==="granted"){
-    const notice=new Notification(items.length===1?"Đăng ký học lái xe mới":`${items.length} đăng ký học lái xe mới`,{
-      body:`${latest.full_name} · ${latest.license_class} · ${latest.phone}`,
-      tag:"new-student-registration"
-    });
-    notice.onclick=()=>{window.focus();openAdminDialog(true);notice.close()};
-  }
+  // The server now sends Web Push even when this dashboard is closed; keep only the in-page toast.
 }
 
 async function load({manual=false,notify=true}={}){

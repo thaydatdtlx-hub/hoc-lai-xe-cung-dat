@@ -206,7 +206,7 @@ $("publicRegisterForm").onsubmit=async event=>{
       :message;
   }finally{button.disabled=false;button.textContent="Tạo tài khoản & bắt đầu học"}
 };
-$("logoutBtn").onclick=async()=>{busy(true);try{await rpc("app_logout",{p_token:token})}catch{}clearAuth();location.reload()};
+$("logoutBtn").onclick=async()=>{busy(true);try{await window.hvDisablePhonePush?.(token)}catch{}try{await rpc("app_logout",{p_token:token})}catch{}clearAuth();location.reload()};
 
 async function loadStudents(){
   try{

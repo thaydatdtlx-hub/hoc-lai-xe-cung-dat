@@ -493,6 +493,7 @@ $("studentPasswordForm").onsubmit=async event=>{
   finally{$("studentSavePasswordBtn").disabled=false}
 };
 $("studentLogoutBtn").onclick=async()=>{
+  try{await window.hvDisablePhonePush?.(token)}catch{}
   try{await rpc("app_student_logout",{p_token:token})}catch{}
   clearAuth();location.replace("/?login=1");
 };
