@@ -16,6 +16,9 @@ self.addEventListener("fetch",event=>{
   if(!sameOrigin)return;
   // API, login, student and admin responses must never be stored or served from Cache Storage.
   // All normal requests use the browser's network path. Only failed navigations use the public offline page.
+  if(url.pathname.startsWith("/api/")||url.pathname==="/lich-dao-tao.html"||url.pathname==="/hoc-vien.html"||url.pathname==="/index.html"||url.pathname==="/dang-nhap.html"||url.pathname==="/"){
+    if(request.mode!=="navigate"){event.respondWith(fetch(request,{cache:"no-store"}));return}
+  }
   if(request.mode==="navigate"){
     event.respondWith(fetch(request,{cache:"no-store"}).catch(async()=>await caches.match("/offline.html")||new Response("Không có kết nối Internet.",{status:503,headers:{"Content-Type":"text/plain; charset=utf-8"}})));
     return;

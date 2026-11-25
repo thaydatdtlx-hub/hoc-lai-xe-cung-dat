@@ -30,6 +30,8 @@ for(const file of ["dang-ky-hoc-lai-xe.html","index.html","hoc-vien.html","lich-
   }
 }
 const landing=await readFile(new URL("dang-ky-hoc-lai-xe.html",root),"utf8");
+const schedule=await readFile(new URL("lich-dao-tao.html",root),"utf8");
+if(schedule.includes("registration.unregister()"))throw new Error("Lịch đào tạo không được hủy cài đặt PWA.");
 if(!landing.includes("data-pwa-install-action")||!installer.includes("refreshPublicInstall")||installer.includes("clearPublicPwaState")||installer.includes('addEventListener("controllerchange"'))throw new Error("Luồng cài trang chủ chưa an toàn.");
 if(sw.includes('"/?login=1",')||sw.includes("cache.put("))throw new Error("Service worker không được lưu nội dung đăng nhập hoặc API.");
 if(manifest.name!=="Học lái xe cùng Đạt"||!manifest.shortcuts.some(item=>item.url.startsWith("/250-cau-hoi.html")))throw new Error("Tên ứng dụng hoặc lối tắt xe máy chưa đúng.");

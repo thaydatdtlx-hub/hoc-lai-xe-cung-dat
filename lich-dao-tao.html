@@ -21,32 +21,10 @@
   <link rel="stylesheet" href="/contact-footer.css?v=1">
   <link rel="stylesheet" href="/professional.css?v=15">
   <link rel="stylesheet" href="/mobile-viewport-lock.css?v=3">
-  <script id="schedule-safe-mode">
-    (()=>{
-      const RESET_KEY="hoclaixecungdat_schedule_isolated_v2";
-      if(!("serviceWorker" in navigator))return;
-      const clearLegacyState=async()=>{
-        try{
-          const registrations=await navigator.serviceWorker.getRegistrations();
-          await Promise.all(registrations.map(registration=>registration.unregister()));
-        }catch{}
-        try{
-          if("caches" in window){
-            const keys=await caches.keys();
-            await Promise.all(keys.filter(name=>name.startsWith("thay-dat-pwa-")||name.startsWith("hoclaixecungdat-pwa-")).map(name=>caches.delete(name)));
-          }
-        }catch{}
-      };
-      if(navigator.serviceWorker.controller&&sessionStorage.getItem(RESET_KEY)!=="done"){
-        sessionStorage.setItem(RESET_KEY,"done");
-        Promise.race([clearLegacyState(),new Promise(resolve=>setTimeout(resolve,1200))]).finally(()=>location.replace(location.href));
-      }else{
-        void clearLegacyState();
-      }
-    })();
-  </script>
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="stylesheet" href="/pwa-install.css?v=2">
 </head>
-<body data-schedule-safe-mode="isolated">
+<body data-schedule-safe-mode="network-only">
   <a class="skip-link" href="#scheduleMain">Chuyển đến lịch đào tạo</a>
   <header class="schedule-topbar">
     <a class="schedule-brand" href="/?login=1" aria-label="Về Dashboard">
@@ -264,5 +242,6 @@
   <div id="loading" class="loading hidden" role="status" aria-live="polite">Đang xử lý…</div>
   <div id="toast" role="status" aria-live="polite"></div>
   <script type="module" src="/schedule.js?v=staff-owner-20261123"></script>
+  <script type="module" src="/pwa-install.js?v=4"></script>
 </body>
 </html>
