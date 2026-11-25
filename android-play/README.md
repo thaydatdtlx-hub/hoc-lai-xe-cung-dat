@@ -21,3 +21,6 @@ Mặc định mở cổng đăng nhập bằng TWA/Custom Tabs để tận dụn
 
 ### Sửa lỗi từ kiểm thử emulator
 Lượt 45609563328 đã cài và cập nhật đè thành công bằng khóa thử nhưng phát hiện crash khi LauncherActivity gọi ManageDataLauncherActivity chưa khai báo. Đã bổ sung thành phần quản lý dữ liệu và yêu cầu quyền thông báo trong manifest. Workflow build gọi trực tiếp workflow smoke với APK cùng lượt build, không dùng lại APK 1.1.3 cũ. Chỉ đánh dấu khởi động đạt nếu không phát hiện crash và Chrome được mở. Chưa xác nhận ký chính thức, liên kết domain và Web Push đầu cuối.
+
+### Sửa lỗi truyền ảnh khởi động (lượt 45610412267)
+Kiểm thử xác nhận cài và nâng cấp thành công, nhưng SplashImageTransferTask bị IllegalArgumentException vì FileProvider chưa có root cho files/twa_splash/splash_image.png. Bổ sung files-path chỉ cho thư mục twa_splash/; không mở rộng quyền đọc toàn bộ dữ liệu ứng dụng. Bổ sung kiểm tra tĩnh và quan sát crash sau khi Chrome đã mở để tránh bỏ sót lỗi nền. Chưa coi kiểm thử mới là đạt cho tới khi workflow hoàn thành.

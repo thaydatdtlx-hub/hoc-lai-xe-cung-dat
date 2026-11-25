@@ -101,7 +101,23 @@ jobs:
             grep -E 'mResumedActivity|topResumedActivity' activities.txt || true
             echo 'FAIL: Chrome is not resumed'; exit 1
           fi
-          echo 'PASS: native startup and Chrome handoff on Android 14'
+          # Keep observing after the first browser handoff: splash transfer is asynchronous.
+          for attempt in $(seq 1 8); do
+            sleep 2
+            adb logcat -d -b crash -v brief > crash.txt
+            if grep -Fq "Process: $pkg," crash.txt; then
+              cat crash.txt
+              adb exec-out screencap -p > launch.png
+              echo 'FAIL: delayed native crash after Chrome handoff'; exit 1
+            fi
+          done
+          adb shell dumpsys activity activities > activities.txt
+          adb logcat -d -v brief > logcat.txt
+          adb exec-out screencap -p > launch.png
+          if ! grep -E 'mResumedActivity|topResumedActivity' activities.txt | grep -q 'com.android.chrome'; then
+            echo 'FAIL: Chrome did not remain resumed'; exit 1
+          fi
+          echo 'PASS: native startup and Chrome handoff on Android 14 with post-launch observation'
           adb shell am force-stop "$pkg"
           HLD_SMOKE
       - name: Run Android 14 emulator using reviewed pinned runner

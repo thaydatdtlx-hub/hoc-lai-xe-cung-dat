@@ -10,6 +10,10 @@ assert.ok(j.includes("allowedApk(url)")&&j.includes("BuildConfig.VERSION_CODE"))
 assert.ok(j.includes("https://www.hoclaixecungdat.com/?login=1")&&m.includes("https://www.hoclaixecungdat.com/?login=1"));
 assert.ok(m.includes("POST_NOTIFICATIONS")&&m.includes("trusted.DelegationService")&&m.includes("TRUSTED_WEB_ACTIVITY_SERVICE"));
 assert.ok(!j.includes("addJavascriptInterface"));
+const filepaths=read("app/src/main/res/xml/filepaths.xml");
+assert.ok(filepaths.includes('<files-path name="twa_splash" path="twa_splash/"/>'),"Missing narrowly scoped splash FileProvider root");
+assert.ok(m.includes('android:exported="false" android:grantUriPermissions="true"'),"FileProvider must remain private");
+assert.ok(!filepaths.includes("<root-path")&&!filepaths.includes('path="."' )&&!filepaths.includes('path="/"' ),"Do not expose broader file roots");
 for(const component of ["ManageDataLauncherActivity","NotificationPermissionRequestActivity"]) {
   assert.ok(m.includes('android:name="com.google.androidbrowserhelper.trusted.'+component+'"'),"Missing Android Browser Helper activity: "+component);
 }
