@@ -46,7 +46,7 @@ function progressStep(label,keywords){
 }
 function roadmapData(){
   const source=normalize(document.getElementById("studentProgress")?.innerText||"");
-  return[
+  const steps=[
     progressStep("Online",["online","lý thuyết"]),
     progressStep("Cabin",["cabin"]),
     progressStep("DAT",["dat"]),
@@ -54,6 +54,8 @@ function roadmapData(){
     progressStep("Sát hạch",["sát hạch"]),
     {label:"Nhận bằng",state:/da nhan bang/.test(source)?"done":"pending"}
   ];
+  const motorcycle=/^(a1|a)$/.test(normalize(text("#studentLicense")));
+  return motorcycle?steps.slice(4):steps;
 }
 function nextAction(){
   const mobileTitle=text("#mobileStudentActionTitle"),mobileDetail=text("#mobileStudentActionDetail");
@@ -72,7 +74,7 @@ function renderPriority(){
   const host=document.getElementById("studentPriorityCenter");if(!host)return;
   const action=nextAction(),steps=roadmapData();
   const signature=JSON.stringify({action,steps});if(signature===lastPrioritySignature)return;lastPrioritySignature=signature;
-  host.innerHTML=`<div class="student-priority-head"><div><p>ƯU TIÊN HÔM NAY</p><h2>Việc cần làm tiếp theo</h2></div><span>Tự động theo hồ sơ</span></div><div class="student-priority-grid"><a class="student-next-action" href="${esc(action.href)}"><span class="student-next-icon">→</span><div><strong>${esc(action.title)}</strong><small>${esc(action.detail)}</small></div><b>${esc(action.cta)}</b></a><div class="student-roadmap" aria-label="Lộ trình đào tạo">${steps.map((step,index)=>`<div class="student-roadmap-step ${step.state}"><i>${step.state==="done"?"✓":index+1}</i><span><strong>${esc(step.label)}</strong><small>${step.state==="done"?"Hoàn tất":step.state==="doing"?"Đang thực hiện":step.state==="warning"?"Cần chú ý":"Chưa tới"}</small></span></div>`).join("")}</div></div>`;
+  host.innerHTML=`<div class="student-priority-head"><div><p>ƯU TIÊN HÔM NAY</p><h2>Việc cần làm tiếp theo</h2></div><span>Tự động theo hồ sơ</span></div><div class="student-priority-grid"><a class="student-next-action" href="${esc(action.href)}"><span class="student-next-icon">→</span><div><strong>${esc(action.title)}</strong><small>${esc(action.detail)}</small></div><b>${esc(action.cta)}</b></a><div class="student-roadmap" data-step-count="${steps.length}" aria-label="Lộ trình đào tạo">${steps.map((step,index)=>`<div class="student-roadmap-step ${step.state}"><i>${step.state==="done"?"✓":index+1}</i><span><strong>${esc(step.label)}</strong><small>${step.state==="done"?"Hoàn tất":step.state==="doing"?"Đang thực hiện":step.state==="warning"?"Cần chú ý":"Chưa tới"}</small></span></div>`).join("")}</div></div>`;
 }
 function mountPriority(){
   if(document.getElementById("studentPriorityCenter"))return;
