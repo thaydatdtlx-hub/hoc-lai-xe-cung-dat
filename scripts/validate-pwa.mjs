@@ -23,10 +23,14 @@ for(const token of ["serviceWorker.register","beforeinstallprompt","appinstalled
   if(!installer.includes(token))throw new Error(`Luồng cài ứng dụng thiếu: ${token}`);
 }
 
-for(const file of ["index.html","hoc-vien.html","lich-dao-tao.html","250-cau-hoi.html","600-cau-hoi.html","bo-tuc-tay-lai.html"]){
+for(const file of ["dang-ky-hoc-lai-xe.html","index.html","hoc-vien.html","lich-dao-tao.html","250-cau-hoi.html","600-cau-hoi.html","bo-tuc-tay-lai.html"]){
   const html=await readFile(new URL(file,root),"utf8");
   for(const token of ["/site.webmanifest","/apple-touch-icon-180.png","mobile-web-app-capable","/pwa-install.css","/pwa-install.js"]){
     if(!html.includes(token))throw new Error(`${file} thiếu ${token}.`);
   }
 }
+const landing=await readFile(new URL("dang-ky-hoc-lai-xe.html",root),"utf8");
+if(!landing.includes("data-pwa-install-action")||!installer.includes("refreshPublicInstall")||installer.includes("clearPublicPwaState")||installer.includes('addEventListener("controllerchange"'))throw new Error("Luồng cài trang chủ chưa an toàn.");
+if(sw.includes('"/?login=1",')||sw.includes("cache.put("))throw new Error("Service worker không được lưu nội dung đăng nhập hoặc API.");
+if(manifest.name!=="Học lái xe cùng Đạt"||!manifest.shortcuts.some(item=>item.url.startsWith("/250-cau-hoi.html")))throw new Error("Tên ứng dụng hoặc lối tắt xe máy chưa đúng.");
 console.log("PWA hợp lệ: cài iPhone/Android, biểu tượng chuẩn, toàn màn hình, màn hình khởi động và ngoại tuyến.");

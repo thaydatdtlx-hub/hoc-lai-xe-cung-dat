@@ -1,17 +1,23 @@
 {
   "id": "/",
-  "name": "Hệ thống quản lý đào tạo học viên lái xe · Thầy Đạt",
-  "short_name": "Thầy Đạt",
-  "description": "Quản lý hồ sơ, tiến độ, học phí, lịch đào tạo và học lý thuyết 600 câu.",
+  "name": "Học lái xe cùng Đạt",
+  "short_name": "Học lái xe",
+  "description": "Ôn tập 250 câu xe máy, 600 câu ô tô, đăng ký học lái xe và theo dõi lịch học, học phí, tiến độ đào tạo.",
   "lang": "vi",
   "start_url": "/?login=1",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#07182f",
   "theme_color": "#07182f",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/app-icon-192.png",
@@ -34,9 +40,14 @@
   ],
   "shortcuts": [
     {
-      "name": "Học 600 câu",
+      "name": "Học 250 câu xe máy",
+      "short_name": "250 câu",
+      "url": "/250-cau-hoi.html?hang=A1"
+    },
+    {
+      "name": "Học 600 câu ô tô",
       "short_name": "600 câu",
-      "url": "/600-cau-hoi.html"
+      "url": "/600-cau-hoi.html?hang=B"
     },
     {
       "name": "Cổng học viên",
@@ -44,9 +55,9 @@
       "url": "/hoc-vien.html"
     },
     {
-      "name": "Lịch đào tạo",
-      "short_name": "Lịch học",
-      "url": "/lich-dao-tao.html"
+      "name": "Bổ túc tay lái",
+      "short_name": "Bổ túc",
+      "url": "/bo-tuc-tay-lai.html"
     }
   ]
 }

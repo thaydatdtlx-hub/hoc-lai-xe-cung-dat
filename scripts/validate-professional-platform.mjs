@@ -64,7 +64,7 @@ if(adminHome.includes('observe(document.documentElement'))throw new Error("Liên
 
 for(const required of [
   'import("./platform-professional.js?v=20260825-1")',
-  'hoclaixecungdat_sw_refresh_v52',
+  'updateViaCache:"none"',
   'HỌC LÁI XE CÙNG ĐẠT'
 ])if(!pwa.includes(required))throw new Error(`PWA chưa tích hợp nâng cấp: ${required}`);
 if(pwa.includes('import("./brand-wording-cleanup.js")'))throw new Error("PWA vẫn tải trình theo dõi thương hiệu toàn DOM cũ.");

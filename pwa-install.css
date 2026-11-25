@@ -35,3 +35,18 @@
   .pwa-install-action{grid-column:2;width:100%;margin-top:4px}.pwa-install-close{grid-column:3;grid-row:1}
   .push-notification-panel{grid-template-columns:38px minmax(0,1fr)}.push-notification-panel>span{width:38px;height:38px}.push-notification-panel>button{grid-column:2;width:100%}
 }
+
+/* Public install card: normal flow; no fixed positioning or modal overlays. */
+.pwa-public-install[hidden],.pwa-public-install [hidden]{display:none!important}
+.pwa-public-install{box-sizing:border-box;display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:14px;align-items:center;max-width:1120px;width:calc(100% - 32px);margin:20px auto;padding:18px 22px;border:1px solid #d5e2f1;border-radius:16px;background:#f4f8fd;color:#123458;text-align:left;box-shadow:0 5px 20px #1234580a}
+.pwa-public-install>img{width:56px;height:56px;border-radius:14px;object-fit:contain}
+.pwa-public-install__copy{min-width:0;display:grid;gap:4px}
+.pwa-public-install__copy strong{font-size:15px;font-weight:800;line-height:1.4}
+.pwa-public-install__copy p,.pwa-public-install__help,.pwa-public-install__status{font-size:13px;line-height:1.55;margin:0;color:#405c78}
+.pwa-public-install__button{min-height:44px;padding:10px 17px;border:0;border-radius:10px;background:#075aaa;color:#fff;font:inherit;font-size:13px;font-weight:800;cursor:pointer}
+.pwa-public-install__button:focus-visible{outline:3px solid #d9ad4f;outline-offset:3px}
+.pwa-public-install__help,.pwa-public-install__status{grid-column:2/-1;overflow-wrap:anywhere}
+.pwa-public-install__status:empty{display:none}
+html[data-hv-theme=dark] .pwa-public-install{background:#13253c;border-color:#35506d;color:#f1f6ff}
+html[data-hv-theme=dark] .pwa-public-install__copy p,html[data-hv-theme=dark] .pwa-public-install__help,html[data-hv-theme=dark] .pwa-public-install__status{color:#bfd1e7}
+@media(max-width:620px){.pwa-public-install{grid-template-columns:46px minmax(0,1fr);padding:14px;gap:10px;margin:14px auto}.pwa-public-install>img{width:46px;height:46px}.pwa-public-install__button,.pwa-public-install__help,.pwa-public-install__status{grid-column:1/-1}.pwa-public-install__button{width:100%}}
