@@ -6,6 +6,12 @@
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements"/>
         <meta-data android:name="web_manifest_url" android:value="https://www.hoclaixecungdat.com/site.webmanifest"/>
+        <activity android:name=".UpdateActivity" android:exported="true" android:theme="@android:style/Theme.Material.Light.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name="com.google.androidbrowserhelper.trusted.LauncherActivity" android:exported="true" android:label="@string/app_label">
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL" android:value="https://www.hoclaixecungdat.com/"/>
             <meta-data android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR" android:resource="@color/brand"/>
@@ -17,10 +23,7 @@
             <meta-data android:name="android.support.customtabs.trusted.SPLASH_SCREEN_FADE_OUT_DURATION" android:value="300"/>
             <meta-data android:name="android.support.customtabs.trusted.FALLBACK_STRATEGY" android:value="customtabs"/>
             <meta-data android:name="android.support.customtabs.trusted.FILE_PROVIDER_AUTHORITY" android:value="${applicationId}.fileprovider"/>
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.DEFAULT"/>

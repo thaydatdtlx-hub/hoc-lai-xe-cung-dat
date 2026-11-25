@@ -1,0 +1,8 @@
+{
+  "packageName": "com.hoclaixecungdat.app",
+  "versionCode": 2,
+  "minimumVersionCode": 2,
+  "versionName": "1.1.0",
+  "apkUrl": "",
+  "notes": "Bổ sung kiểm tra phiên bản APK khi khởi động."
+}

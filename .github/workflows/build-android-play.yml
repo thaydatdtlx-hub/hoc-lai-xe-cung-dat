@@ -39,13 +39,25 @@ jobs:
           echo "$RUNNER_TEMP/gradle-8.13/bin" >> "$GITHUB_PATH"
       - name: Build and lint
         working-directory: android-play
-        run: gradle --no-daemon :app:assembleDebug :app:bundleRelease :app:lintRelease
-      - name: Upload test APK and unsigned AAB
+        run: gradle --no-daemon :app:assembleDebug :app:assembleSideload :app:bundleRelease :app:lintRelease :app:lintSideload
+      - name: Prepare local signing utilities
+        shell: bash
+        run: |
+          set -euo pipefail
+          SDK="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-/usr/local/lib/android/sdk}}"
+          mkdir -p android-play/signing-tools
+          cp "$SDK/build-tools/35.0.0/lib/apksigner.jar" android-play/signing-tools/
+          cp "$SDK/build-tools/35.0.0/zipalign" android-play/signing-tools/
+          ldd "$SDK/build-tools/35.0.0/zipalign" || true
+      - name: Upload test APK, unsigned sideload APK, AAB and local signing tools
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: hoc-lai-xe-cung-dat-android-1.0.0
+          name: hoc-lai-xe-cung-dat-android-1.1.0
           path: |
             android-play/app/build/outputs/apk/debug/app-debug.apk
+            android-play/app/build/outputs/apk/sideload/app-sideload-unsigned.apk
+            android-play/signing-tools/apksigner.jar
+            android-play/signing-tools/zipalign
             android-play/app/build/outputs/bundle/release/app-release.aab
             android-play/app/build/reports/lint-results-release.html
           if-no-files-found: error
