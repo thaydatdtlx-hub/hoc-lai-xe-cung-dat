@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+import {runInNewContext} from "node:vm";
+const read=path=>readFileSync(new URL("../"+path,import.meta.url),"utf8");
+const schedule=read("schedule.js"),student=read("student.js"),api=read("api/student-rpc.js"),sql=read("supabase/migrations/20261125_individual_training_time_slots.sql");
+const context={};runInNewContext(schedule.slice(schedule.indexOf("export function splitTrainingMinutes("),schedule.indexOf("function renderSlotTimePreview(")).replace("export function","function"),context);
+assert.deepEqual(JSON.parse(JSON.stringify(context.splitTrainingMinutes(240,4))),[{offset:0,minutes:60},{offset:60,minutes:60},{offset:120,minutes:60},{offset:180,minutes:60}]);
+assert.equal(context.splitTrainingMinutes(90,4).reduce((sum,s)=>sum+s.minutes,0),90);
+assert.equal(context.splitTrainingMinutes(30,31).length,0);
+assert.ok(student.includes("Ca học đã được đăng ký")&&student.includes('p_segment_index:choice.index')&&student.includes('choice.available?"":"disabled"'));
+assert.ok(api.includes('"app_student_create_training_request_segment"'));
+assert.ok(sql.includes("for update")&&sql.includes("training_requests_pending_segment_unique")&&sql.includes("training_sessions_segment_unique")&&sql.includes("v_request.slot_segment_minutes"));
+console.log("PASS: tự chia ca theo số học viên, mỗi khung giờ một chỗ, khóa thời gian đã đăng ký.");

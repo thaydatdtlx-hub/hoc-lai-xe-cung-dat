@@ -104,16 +104,20 @@ export function studentNotifications(student,trainingSlots=[]){
     action:"Xem chương trình đào tạo"
   });
 
-  const datSlots=trainingSlots
-    .filter(slot=>slot.session_type==="dat_practice"&&slot.status==="open"&&new Date(slot.starts_at)>=today&&Number(slot.available_count)>0)
-    .sort((a,b)=>new Date(a.starts_at)-new Date(b.starts_at));
-  if(datSlots.length){
-    const nearest=datSlots[0];
+  // The RPC returns only slots this learner is allowed to register for.
+  // Local invitations also cover an eligible learner whose account was created after the invite.
+  const activeRequestSlots=new Set((student.training_requests||[]).filter(r=>r.status==="pending"||r.status==="approved").map(r=>String(r.slot_id)));
+  const bookedSlots=new Set((student.training_sessions||[]).map(s=>String(s.slot_id)));
+  for(const slot of trainingSlots.filter(s=>s.status==="open"&&new Date(s.ends_at||s.starts_at)>new Date()&&Number(s.available_count)>0&&!s.student_registered&&!activeRequestSlots.has(String(s.id))&&!bookedSlots.has(String(s.id)))){
+    const field=SCHEDULE_FIELDS.find(item=>item.key===slot.session_type),label=field?.label||"Buổi thực hành";
+    const end=slot.ends_at?new Date(slot.ends_at):new Date(new Date(slot.starts_at).getTime()+(Number(slot.duration_minutes)||120)*60000);
+    const time=new Intl.DateTimeFormat("vi-VN",{hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZone:"Asia/Ho_Chi_Minh"});
+    const day=new Intl.DateTimeFormat("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",timeZone:"Asia/Ho_Chi_Minh"});
+    const startDate=new Date(slot.starts_at),startDay=day.format(startDate),endDay=day.format(end);
     notices.push({
-      id:`student-dat-slots-${datSlots.map(slot=>`${slot.id}-${slot.updated_at||slot.starts_at}`).join("-")}`,
-      category:"schedule",tone:"blue",icon:"🛰️",title:`Có ${datSlots.length} ca Thực hành DAT đang mở`,
-      body:`Ca gần nhất: ${formatDate(nearest.starts_at)} · ${formatDuration(nearest.duration_minutes)}${nearest.location?` · ${nearest.location}`:" · Chưa cập nhật địa điểm"}.`,
-      href:"/hoc-vien.html#trainingBooking",action:"Chọn khung giờ DAT"
+      id:`training-slot-invite:${slot.id}`,category:"schedule",tone:"blue",icon:"📅",title:`Mời đăng ký: ${label}`,
+      body:`Ngày ${startDay} · ${time.format(startDate)} – ${time.format(end)}${startDay!==endDay?" ngày "+endDay:""}${slot.location?" · Địa điểm: "+slot.location:""}. Vui lòng chọn khung giờ còn trống và gửi yêu cầu đăng ký.`,
+      href:`/hoc-vien.html?training_slot=${encodeURIComponent(slot.id)}#trainingBooking`,action:"Đăng ký ngay"
     });
   }
   if(debt)notices.push({

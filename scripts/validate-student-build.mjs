@@ -12,7 +12,7 @@ const source=(await Promise.all([...new Set(assets)].map(asset=>readFile(new URL
 for(const token of [
   "/api/student-rpc",
   "app_list_training_requests",
-  "app_student_create_training_request_slot",
+  "app_student_create_training_request_segment",
   "app_mark_notifications_read",
   "app_student_change_password",
   "student-profile-ready",
