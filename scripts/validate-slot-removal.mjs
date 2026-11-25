@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const read=path=>readFileSync(new URL("../"+path,import.meta.url),"utf8");
+const sql=read("supabase/migrations/20261125_safe_training_slot_removal.sql"),schedule=read("schedule.js"),html=read("lich-dao-tao.html");
+for(const id of ["slotRemovalDialog","slotRemovalForm","slotRemovalNotify","slotRemovalSubmit","cancelSlotBtn","deleteSlotBtn"])assert.ok(html.includes('id="'+id+'"')&&schedule.includes('"'+id+'"'),id);
+assert.ok(sql.includes("perform public.app_require_admin(p_token)")&&sql.includes("for update")&&sql.includes("app_attendance_records a where a.training_session_id=any(v_sessions)")&&sql.includes("p_expected_booked is distinct from cardinality(v_sessions)"));
+assert.ok(sql.includes("set status='cancelled'")&&sql.includes("delete from public.training_slots where id=v_slot.id")&&sql.includes("if coalesce(p_notify,true)")&&sql.includes("training-slot-cancelled:"));
+assert.ok(sql.includes("perform public.app_record_audit")&&sql.includes("current_setting('app.training_slot_removal',true)"));
+assert.ok(read("api/student-rpc.js").includes('"app_admin_remove_training_slot"'));
+console.log("PASS: phân biệt đóng/hủy/xóa ca, xác nhận số người, kiểm tra điểm danh, quyền admin và thông báo tùy chọn.");

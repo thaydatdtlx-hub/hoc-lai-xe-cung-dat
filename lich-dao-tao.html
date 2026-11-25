@@ -204,7 +204,7 @@
           <select id="slotStatus" required>
             <option value="open">Đang mở đăng ký</option>
             <option value="closed">Đã đóng đăng ký</option>
-            <option value="cancelled">Đã hủy</option>
+            <option value="cancelled" disabled>Đã hủy</option>
           </select>
         </label>
         <label class="slot-note">Ghi chú
@@ -225,11 +225,25 @@
       <p class="slot-help">Hệ thống tự động chặn giáo viên hoặc xe bị xếp trùng giờ và không cho duyệt vượt quá số lượng.</p>
       <p id="slotError" class="form-error" role="alert"></p>
       <div class="dialog-actions">
+        <button id="cancelSlotBtn" class="danger-action hidden" type="button">Hủy ca học</button>
         <button id="deleteSlotBtn" class="danger-action hidden" type="button">Xóa ca học</button>
         <span class="dialog-actions-spacer"></span>
         <button class="dialog-close" type="button">Hủy</button>
         <button id="saveSlotBtn" class="primary" type="submit">Lưu ca học</button>
       </div>
+    </form>
+  </dialog>
+
+  <dialog id="slotRemovalDialog" class="slot-removal-dialog" aria-labelledby="slotRemovalTitle">
+    <form id="slotRemovalForm">
+      <div class="dialog-head"><div><p>QUẢN LÝ CA HỌC</p><h2 id="slotRemovalTitle">Xác nhận xóa ca học</h2></div><button class="dialog-close" type="button" aria-label="Đóng">×</button></div>
+      <p id="slotRemovalDetail" class="slot-removal-detail"></p>
+      <div class="slot-removal-counts"><div><span>Đã duyệt</span><strong id="slotRemovalBooked">0</strong></div><div><span>Chờ duyệt</span><strong id="slotRemovalPending">0</strong></div></div>
+      <p id="slotRemovalExplanation" class="slot-removal-warning"></p>
+      <label class="slot-removal-notify"><input id="slotRemovalNotify" type="checkbox" checked><span>Gửi thông báo hủy lịch đến học viên liên quan</span></label>
+      <p class="slot-help">Ca có dữ liệu điểm danh được bảo vệ. Đóng đăng ký không hủy lịch đã duyệt.</p>
+      <p id="slotRemovalError" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button class="dialog-close" type="button">Quay lại</button><button id="slotRemovalSubmit" class="slot-removal-confirm" type="submit">Xác nhận xóa</button></div>
     </form>
   </dialog>
 

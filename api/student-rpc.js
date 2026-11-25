@@ -15,7 +15,7 @@ const ALLOWED=new Set([
   "app_list_notifications","app_mark_notifications_read","app_student_get_theory_progress",
   "app_student_cancel_training_request","app_student_create_training_request","app_student_create_training_request_slot","app_student_create_training_request_segment","app_student_change_password",
   "app_record_audit","app_save_student","app_admin_set_student_tuition_total","app_admin_save_student_schedule","app_admin_save_training_session",
-  "app_admin_delete_training_session","app_admin_save_training_slot","app_admin_save_training_slot_audience","app_admin_delete_training_slot","app_admin_review_training_request","app_admin_review_training_request_slot"
+  "app_admin_delete_training_session","app_admin_save_training_slot","app_admin_save_training_slot_audience","app_admin_delete_training_slot","app_admin_remove_training_slot","app_admin_review_training_request","app_admin_review_training_request_slot"
 ]);
 async function upstream(fn,serializedBody,timeoutMs=8000){
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);

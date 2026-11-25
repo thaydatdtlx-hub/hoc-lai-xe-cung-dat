@@ -305,7 +305,7 @@ function renderTrainingSlots(){
         return `<span class="slot-segment-${esc(segment.status)}"><b>${esc(formatTimeRange(segment.starts_at,segment.duration_minutes))}</b><small>${esc(label)}${person?" · "+esc(person.name):""}</small></span>`;
       }).join("")}</div>`:""}
       <p class="slot-audience-summary">${Array.isArray(slot.allowed_student_ids)?`Chỉ ${slot.allowed_student_ids.length} học viên được đăng ký`:"Tất cả học viên phù hợp được đăng ký"}</p>
-      <div class="training-slot-actions"><button class="edit-slot" type="button" data-edit-slot="${slot.id}">Sửa ca học</button>${slot.status==="open"?`<button class="close-slot" type="button" data-close-slot="${slot.id}">Đóng đăng ký</button>`:""}</div>
+      <div class="training-slot-actions"><button class="edit-slot" type="button" data-edit-slot="${slot.id}">${slot.status==="cancelled"?"Xem ca học":"Sửa ca học"}</button>${slot.status==="open"?`<button class="close-slot" type="button" data-close-slot="${slot.id}">Đóng đăng ký</button>`:""}${slot.status!=="cancelled"||booked||Number(slot.pending_count)?`<button class="danger-action" type="button" data-cancel-slot="${slot.id}">Hủy ca học</button>`:""}<button class="danger-action" type="button" data-remove-slot="${slot.id}">Xóa ca học</button></div>
     </article>`;
   }).join(""):`<div class="slot-empty">Chưa có ca học thực hành. Bấm “Tạo ca học” để mở lịch cho học viên đăng ký.</div>`;
 }
@@ -370,6 +370,10 @@ function openSlotEditor(slotId=""){
   $("slotDialogTitle").textContent=slot?"Sửa ca học thực hành":"Tạo ca học thực hành";
   $("saveSlotBtn").textContent=slot?"Lưu thay đổi":"Tạo ca học";
   $("deleteSlotBtn").classList.toggle("hidden",!slot);
+  $("cancelSlotBtn").classList.toggle("hidden",!slot||(slot.status==="cancelled"&&!Number(slot.booked_count)&&!Number(slot.pending_count)));
+  $("saveSlotBtn").disabled=slot?.status==="cancelled";
+  $("slotStatus").disabled=slot?.status==="cancelled";
+  if(slot?.status==="cancelled")$("slotError").textContent="Ca đã hủy. Có thể xóa ca nếu chưa có dữ liệu điểm danh.";
   $("slotDialog").showModal();
 }
 async function closeTrainingSlot(slotId){
@@ -558,6 +562,7 @@ $("slotForm").onsubmit=async event=>{
   const startsAt=$("slotStartsAt").value;
   if(!startsAt)return $("slotError").textContent="Vui lòng chọn ngày và giờ bắt đầu.";
   const editingSlot=trainingSlots.find(s=>String(s.id)===String($("trainingSlotId").value));
+  if(editingSlot?.status==="cancelled")return $("slotError").textContent="Ca đã hủy. Vui lòng tạo ca mới hoặc xóa ca cũ.";
   if(editingSlot?.split_enabled!==false&&!splitTrainingMinutes(Number($("slotDuration").value),Number($("slotCapacity").value)).length)return $("slotError").textContent="Mỗi khung giờ học phải có ít nhất 15 phút.";
   const allowedIds=$("slotAudienceMode").value==="all"?null:[...slotSelectedStudentIds];
   if(allowedIds!==null&&!allowedIds.length)return $("slotError").textContent="Vui lòng chọn ít nhất một học viên hoặc mở đăng ký cho tất cả học viên phù hợp.";
@@ -601,16 +606,52 @@ $("slotStartsAt").oninput=renderSlotTimePreview;
 $("slotDuration").onchange=renderSlotTimePreview;
 $("slotCapacity").oninput=renderSlotTimePreview;
 
-$("deleteSlotBtn").onclick=async()=>{
-  const slot=trainingSlots.find(item=>String(item.id)===String($("trainingSlotId").value));
-  if(!slot||!confirm(`Xóa ca học ${formatDate(slot.starts_at)}?`))return;
-  $("deleteSlotBtn").disabled=true;busy(true);$("slotError").textContent="";
+// The confirmation snapshot is checked again inside the locked server transaction.
+let removalSnapshot=null,removalBusy=false;
+function openSlotRemoval(slotId,mode){
+  if(me?.role!=="admin"||removalBusy||!["cancel","delete"].includes(mode))return;
+  const slot=trainingSlots.find(item=>String(item.id)===String(slotId));
+  if(!slot)return;
+  const booked=Number(slot.booked_count)||0,pending=Number(slot.pending_count)||0;
+  const hasAttendance=trainingSessions.some(session=>String(session.slot_id)===String(slot.id)&&session.attendance);
+  const field=SCHEDULE_FIELDS.find(item=>item.key===slot.session_type);
+  removalSnapshot={slotId:String(slot.id),mode,booked,pending};
+  $("slotRemovalForm").reset();
+  $("slotRemovalTitle").textContent=mode==="delete"?"Xác nhận xóa ca học":"Xác nhận hủy ca học";
+  $("slotRemovalDetail").textContent=(field?.label||"Ca thực hành")+" · "+formatDate(slot.starts_at)+" · "+formatTimeRange(slot.starts_at,slot.duration_minutes);
+  $("slotRemovalBooked").textContent=String(booked);
+  $("slotRemovalPending").textContent=String(pending);
+  $("slotRemovalExplanation").textContent=mode==="delete"?"Xóa vĩnh viễn ca học và các yêu cầu, lịch học liên quan. Thao tác không thể hoàn tác.":"Hủy toàn bộ lịch đã duyệt và yêu cầu đang chờ. Ca học và lịch sử yêu cầu vẫn được giữ với trạng thái Đã hủy.";
+  $("slotRemovalNotify").checked=true;
+  $("slotRemovalError").textContent=hasAttendance?"Ca đã có điểm danh, không thể hủy hoặc xóa. Hãy đóng đăng ký để giữ lịch sử.":"";
+  $("slotRemovalSubmit").textContent=mode==="delete"?"Xác nhận xóa":"Xác nhận hủy ca";
+  $("slotRemovalSubmit").disabled=hasAttendance;
+  $("slotRemovalDialog").showModal();
+}
+$("deleteSlotBtn").onclick=()=>openSlotRemoval($("trainingSlotId").value,"delete");
+$("cancelSlotBtn").onclick=()=>openSlotRemoval($("trainingSlotId").value,"cancel");
+$("slotRemovalDialog").addEventListener("cancel",event=>{if(removalBusy)event.preventDefault()});
+$("slotRemovalForm").onsubmit=async event=>{
+  event.preventDefault();
+  if(!removalSnapshot||removalBusy||me?.role!=="admin")return;
+  const {slotId,mode,booked,pending}=removalSnapshot;
+  removalBusy=true;$("slotRemovalSubmit").disabled=true;
+  $("slotRemovalDialog").querySelectorAll(".dialog-close").forEach(button=>button.disabled=true);
+  $("slotRemovalError").textContent="";busy(true);
   try{
-    await rpc("app_admin_delete_training_slot",{p_token:token,p_slot_id:slot.id});
-    await recordAudit("schedule_changed","training_slot",slot.id,slot.location||"Ca học",{operation:"deleted",starts_at:slot.starts_at});
-    await loadTrainingSlots();$("slotDialog").close();renderTrainingSlots();toast("Đã xóa ca học");
-  }catch(error){$("slotError").textContent=error?.message||"Không thể xóa ca học."}
-  finally{$("deleteSlotBtn").disabled=false;busy(false)}
+    const result=await rpc("app_admin_remove_training_slot",{p_token:token,p_slot_id:slotId,p_mode:mode,p_notify:$("slotRemovalNotify").checked,p_expected_booked:booked,p_expected_pending:pending});
+    await Promise.all([loadTrainingSlots(),loadTrainingSessions(),loadTrainingRequests()]);
+    $("slotRemovalDialog").close();
+    if($("slotDialog").open)$("slotDialog").close();
+    renderTrainingSlots();renderTrainingRequests();renderAll();
+    toast((mode==="delete"?"Đã xóa ca học":"Đã hủy ca học")+(Number(result?.notifications)>0?` · Đã tạo ${result.notifications} thông báo`:""));
+  }catch(error){
+    $("slotRemovalError").textContent=error?.message||"Không thể thực hiện thao tác. Vui lòng kiểm tra lại dữ liệu.";
+  }finally{
+    removalBusy=false;$("slotRemovalSubmit").disabled=false;
+    $("slotRemovalDialog").querySelectorAll(".dialog-close").forEach(button=>button.disabled=false);
+    busy(false);
+  }
 };
 
 $("scheduleForm").onsubmit=async event=>{
@@ -714,9 +755,11 @@ $("eventList").onclick=event=>{
   if(deleteId&&fieldKey)return deleteOneSchedule(deleteId,fieldKey);
 };
 $("trainingSlotList").onclick=event=>{
-  const editSlotId=event.target.dataset.editSlot,closeSlotId=event.target.dataset.closeSlot;
-  if(editSlotId)return openSlotEditor(editSlotId);
-  if(closeSlotId)return closeTrainingSlot(closeSlotId);
+  const {editSlot,closeSlot,cancelSlot,removeSlot}=event.target.dataset;
+  if(editSlot)return openSlotEditor(editSlot);
+  if(closeSlot)return closeTrainingSlot(closeSlot);
+  if(cancelSlot)return openSlotRemoval(cancelSlot,"cancel");
+  if(removeSlot)return openSlotRemoval(removeSlot,"delete");
 };
 $("adminRequestList").onclick=event=>{
   const approveId=event.target.dataset.approveRequest,rejectId=event.target.dataset.rejectRequest;
