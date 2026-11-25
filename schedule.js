@@ -290,18 +290,58 @@ function renderTrainingSlots(){
         <span>🚘 ${esc(slot.vehicle_plate||"Chưa gán xe")}</span>
       </div>
       <div class="training-slot-capacity"><div class="capacity-bar"><i style="width:${percent}%"></i></div><strong>${booked}/${capacity} học viên${Number(slot.pending_count)?` · ${Number(slot.pending_count)} chờ duyệt`:""}</strong></div>
+      <p class="slot-audience-summary">${Array.isArray(slot.allowed_student_ids)?`Chỉ ${slot.allowed_student_ids.length} học viên được đăng ký`:"Tất cả học viên phù hợp được đăng ký"}</p>
       <div class="training-slot-actions"><button class="edit-slot" type="button" data-edit-slot="${slot.id}">Sửa ca học</button>${slot.status==="open"?`<button class="close-slot" type="button" data-close-slot="${slot.id}">Đóng đăng ký</button>`:""}</div>
     </article>`;
   }).join(""):`<div class="slot-empty">Chưa có ca học thực hành. Bấm “Tạo ca học” để mở lịch cho học viên đăng ký.</div>`;
 }
+// The audience is independent of capacity. Selected IDs survive filtering.
+export function eligibleSlotStudents(students){
+  return (Array.isArray(students)?students:[]).filter(student=>student?.id&&!student.deleted_at&&String(student.license_class||"").trim()&&!isMotorcycleLicense(student.license_class));
+}
+export function filterSlotStudents(students,{search="",license="",course=""}={}){
+  const query=normalize(search);
+  return eligibleSlotStudents(students).filter(student=>(!license||student.license_class===license)&&(!course||(student.course||"")===course)&&(!query||normalize([student.name,student.student_code,student.course,student.license_class].filter(Boolean).join(" ")).includes(query)));
+}
+let slotSelectedStudentIds=new Set();
+function slotAudienceOptions(){
+  const eligible=eligibleSlotStudents(students);
+  const options=(values,placeholder)=>`<option value="">${placeholder}</option>`+[...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"vi")).map(value=>`<option value="${esc(value)}">${esc(value)}</option>`).join("");
+  $("slotAudienceLicense").innerHTML=options(eligible.map(student=>student.license_class),"Tất cả hạng");
+  $("slotAudienceCourse").innerHTML=options(eligible.map(student=>student.course),"Tất cả khóa");
+}
+function visibleSlotStudents(){
+  return filterSlotStudents(students,{search:$("slotAudienceSearch").value,license:$("slotAudienceLicense").value,course:$("slotAudienceCourse").value});
+}
+function renderSlotAudience(){
+  const restricted=$("slotAudienceMode").value==="selected";
+  $("slotAudiencePicker").classList.toggle("hidden",!restricted);
+  const eligible=eligibleSlotStudents(students);
+  const visible=visibleSlotStudents();
+  $("slotAudienceCount").textContent=restricted?`Đã chọn ${slotSelectedStudentIds.size}/${eligible.length} học viên`:`Mở cho ${eligible.length} học viên phù hợp hiện tại`;
+  $("slotAudienceList").innerHTML=visible.length?visible.map(student=>`<label class="slot-audience-row"><input type="checkbox" value="${esc(student.id)}" ${slotSelectedStudentIds.has(String(student.id))?"checked":""}><span><strong>${esc(student.name||"Học viên")}</strong><small>${esc(student.student_code||"Chưa có mã")} · ${esc(student.license_class)} · ${esc(student.course||"Chưa có khóa")}</small></span></label>`).join(""):'<p class="slot-audience-empty">Không có học viên phù hợp với bộ lọc.</p>';
+  $("slotAudienceSelectAll").disabled=!visible.length;
+  $("slotAudienceClear").disabled=!slotSelectedStudentIds.size;
+}
+function resetSlotAudience(slot){
+  // Existing unrestricted slots stay unrestricted. New slots default to explicit selection.
+  $("slotAudienceMode").value=slot&&slot.allowed_student_ids===null?"all":"selected";
+  slotSelectedStudentIds=new Set(Array.isArray(slot?.allowed_student_ids)?slot.allowed_student_ids.map(String):[]);
+  $("slotAudienceSearch").value="";
+  slotAudienceOptions();
+  renderSlotAudience();
+}
+
 function openSlotEditor(slotId=""){
   if(me.role!=="admin")return;
   if(!slotFeatureAvailable){
     return alert("Admin cần chạy file CAP-NHAT-CA-HOC-CHONG-TRUNG-LICH.sql trong Supabase trước khi tạo ca học.");
   }
   const slot=trainingSlots.find(item=>String(item.id)===String(slotId));
+  if(slot&&!Object.prototype.hasOwnProperty.call(slot,"allowed_student_ids"))return alert("Chưa tải được quyền đăng ký của ca học. Vui lòng tải lại trang.");
   $("slotForm").reset();
   $("slotError").textContent="";
+  resetSlotAudience(slot);
   $("trainingSlotId").value=slot?.id||"";
   $("slotType").value=slot?.session_type||"familiar";
   $("slotStartsAt").value=toDatetimeLocal(slot?.starts_at);
@@ -503,9 +543,11 @@ $("slotForm").onsubmit=async event=>{
   event.preventDefault();$("slotError").textContent="";
   const startsAt=$("slotStartsAt").value;
   if(!startsAt)return $("slotError").textContent="Vui lòng chọn ngày và giờ bắt đầu.";
+  const allowedIds=$("slotAudienceMode").value==="all"?null:[...slotSelectedStudentIds];
+  if(allowedIds!==null&&!allowedIds.length)return $("slotError").textContent="Vui lòng chọn ít nhất một học viên hoặc mở đăng ký cho tất cả học viên phù hợp.";
   $("saveSlotBtn").disabled=true;busy(true);
   try{
-    await rpc("app_admin_save_training_slot",{
+    const savedSlotId=await rpc("app_admin_save_training_slot_audience",{
       p_token:token,
       p_slot_id:$("trainingSlotId").value||null,
       p_session_type:$("slotType").value,
@@ -516,14 +558,28 @@ $("slotForm").onsubmit=async event=>{
       p_vehicle_plate:$("slotVehicle").value.trim(),
       p_capacity:Number($("slotCapacity").value),
       p_note:$("slotNote").value.trim(),
-      p_status:$("slotStatus").value
+      p_status:$("slotStatus").value,
+      p_allowed_student_ids:allowedIds
     });
-    await recordAudit("schedule_changed","training_slot",$("trainingSlotId").value||"",$("slotLocation").value.trim()||"Ca học",{operation:$("trainingSlotId").value?"updated":"created",session_type:$("slotType").value,starts_at:new Date(startsAt).toISOString()});
+    await recordAudit("schedule_changed","training_slot",savedSlotId||$("trainingSlotId").value||"",$("slotLocation").value.trim()||"Ca học",{operation:$("trainingSlotId").value?"updated":"created",session_type:$("slotType").value,starts_at:new Date(startsAt).toISOString()});
     await Promise.all([loadTrainingSlots(),loadTrainingSessions(),loadTrainingRequests()]);
     $("slotDialog").close();renderTrainingSlots();renderTrainingRequests();renderAll();
     toast($("trainingSlotId").value?"Đã cập nhật ca học":"Đã tạo ca học");
   }catch(error){$("slotError").textContent=error?.message||"Không thể lưu ca học."}
   finally{$("saveSlotBtn").disabled=false;busy(false)}
+};
+$("slotAudienceMode").onchange=renderSlotAudience;
+$("slotAudienceSearch").oninput=renderSlotAudience;
+$("slotAudienceLicense").onchange=renderSlotAudience;
+$("slotAudienceCourse").onchange=renderSlotAudience;
+$("slotAudienceSelectAll").onclick=()=>{visibleSlotStudents().forEach(student=>slotSelectedStudentIds.add(String(student.id)));renderSlotAudience()};
+$("slotAudienceClear").onclick=()=>{slotSelectedStudentIds.clear();renderSlotAudience()};
+$("slotAudienceList").onchange=event=>{
+  const input=event.target;
+  if(input.type!=="checkbox")return;
+  if(input.checked)slotSelectedStudentIds.add(input.value);else slotSelectedStudentIds.delete(input.value);
+  $("slotAudienceCount").textContent=`Đã chọn ${slotSelectedStudentIds.size}/${eligibleSlotStudents(students).length} học viên`;
+  $("slotAudienceClear").disabled=!slotSelectedStudentIds.size;
 };
 $("slotStartsAt").oninput=renderSlotTimePreview;
 $("slotDuration").onchange=renderSlotTimePreview;

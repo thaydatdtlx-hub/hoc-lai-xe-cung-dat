@@ -211,6 +211,16 @@
           <textarea id="slotNote" rows="3" placeholder="Nội dung cần học viên chuẩn bị…"></textarea>
         </label>
       </div>
+      <section class="slot-audience" aria-labelledby="slotAudienceTitle">
+        <div class="slot-audience-heading"><div><h3 id="slotAudienceTitle">Học viên được phép đăng ký</h3><p>Chọn người được đăng ký, không phải xếp lịch chính thức.</p></div><strong id="slotAudienceCount" aria-live="polite">Đã chọn 0 học viên</strong></div>
+        <label>Phạm vi đăng ký<select id="slotAudienceMode"><option value="selected">Chỉ học viên được lựa chọn</option><option value="all">Tất cả học viên phù hợp</option></select></label>
+        <div id="slotAudiencePicker">
+          <div class="slot-audience-filters"><input id="slotAudienceSearch" type="search" placeholder="Tìm tên, mã học viên…" aria-label="Tìm học viên"><select id="slotAudienceLicense" aria-label="Lọc hạng đào tạo"></select><select id="slotAudienceCourse" aria-label="Lọc khóa học"></select></div>
+          <div class="slot-audience-actions"><button id="slotAudienceSelectAll" type="button">Chọn tất cả kết quả lọc</button><button id="slotAudienceClear" type="button">Bỏ chọn tất cả</button></div>
+          <div id="slotAudienceList" class="slot-audience-list" aria-label="Danh sách học viên"></div>
+        </div>
+        <p class="slot-audience-note">Hạng A1/A không tham gia ca thực hành ô tô. Số người được chọn có thể lớn hơn số chỗ tối đa của ca.</p>
+      </section>
       <p id="slotTimePreview" class="slot-time-preview">Khung giờ sẽ hiển thị sau khi chọn ngày, giờ bắt đầu và thời lượng.</p>
       <p class="slot-help">Hệ thống tự động chặn giáo viên hoặc xe bị xếp trùng giờ và không cho duyệt vượt quá số lượng.</p>
       <p id="slotError" class="form-error" role="alert"></p>

@@ -3,7 +3,8 @@ const SUPABASE_KEY="sb_publishable_rrQ2fAG7ZpIKizN3-tss1w_4xPxq3Vo";
 const DEFAULT_MAX_BODY_CHARS=20000;
 const LARGE_BODY_LIMITS=new Map([
   ["app_save_student",1200000],
-  ["app_student_update_profile",1000000]
+  ["app_student_update_profile",1000000],
+  ["app_admin_save_training_slot_audience",200000]
 ]);
 const ALLOWED=new Set([
   "app_student_login","app_login","app_me","app_list_students","app_list_users","app_list_student_accounts",
@@ -14,7 +15,7 @@ const ALLOWED=new Set([
   "app_list_notifications","app_mark_notifications_read","app_student_get_theory_progress",
   "app_student_cancel_training_request","app_student_create_training_request","app_student_create_training_request_slot","app_student_change_password",
   "app_record_audit","app_save_student","app_admin_set_student_tuition_total","app_admin_save_student_schedule","app_admin_save_training_session",
-  "app_admin_delete_training_session","app_admin_save_training_slot","app_admin_delete_training_slot","app_admin_review_training_request","app_admin_review_training_request_slot"
+  "app_admin_delete_training_session","app_admin_save_training_slot","app_admin_save_training_slot_audience","app_admin_delete_training_slot","app_admin_review_training_request","app_admin_review_training_request_slot"
 ]);
 async function upstream(fn,serializedBody,timeoutMs=8000){
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),timeoutMs);
