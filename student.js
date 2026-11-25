@@ -170,8 +170,9 @@ function segmentTimeRange(start,end){
   const f=new Intl.DateTimeFormat("vi-VN",{hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
   return f.format(new Date(start))+" – "+f.format(new Date(end));
 }
+let bookingSlotFilter="";
 function availableSlots(type){
-  return trainingSlots.filter(slot=>slot.session_type===type&&slot.status==="open"&&new Date(slot.ends_at||slot.starts_at)>new Date());
+  return trainingSlots.filter(slot=>slot.session_type===type&&slot.status==="open"&&new Date(slot.ends_at||slot.starts_at)>new Date()&&(!bookingSlotFilter||String(slot.id)===bookingSlotFilter));
 }
 function slotChoices(type){
   return availableSlots(type).flatMap(slot=>{
@@ -236,8 +237,9 @@ function renderTrainingRequests(){
     </article>`;
   }).join(""):`<div class="booking-empty">Chưa có yêu cầu đăng ký lịch thực hành.</div>`;
 }
-function openTrainingRequest(type){
+function openTrainingRequest(type,slotId=""){
   if(!bookingFeatureAvailable)return alert("Chức năng đăng ký đang được Admin cập nhật. Vui lòng thử lại sau.");
+  bookingSlotFilter=String(slotId||"");
   $("trainingRequestForm").reset();
   $("requestType").value=type;
   $("requestType").disabled=true;
@@ -255,6 +257,18 @@ function openTrainingRequest(type){
   }
   $("trainingRequestDialog").showModal();
   void refreshBookingChoices();
+}
+function openInvitedTrainingSlot(){
+  const url=new URL(location.href);
+  const slotId=url.searchParams.get("training_slot");
+  if(!slotId)return;
+  if(me?.force_change_password)return;
+  if(!slotFeatureAvailable){toast("Chưa tải được ca học. Vui lòng thử lại.");return}
+  url.searchParams.delete("training_slot");
+  history.replaceState(history.state,"",url.pathname+url.search+url.hash);
+  const slot=trainingSlots.find(item=>String(item.id)===slotId&&item.status==="open");
+  if(!slot){toast("Ca học không còn mở hoặc anh/chị không thuộc danh sách được đăng ký.");return}
+  openTrainingRequest(slot.session_type,slotId);
 }
 function renderPortal(){
   $("studentUsername").textContent=`${me.username} · Học viên`;
@@ -387,8 +401,8 @@ function notificationCategory(notice){
 }
 function noticeTime(notice){return notice.event_at||notice.created_at?date(notice.event_at||notice.created_at,true):""}
 function renderStudentNotifications(){
-  const local=studentNotifications(student,trainingSlots),serverKeys=new Set(serverNotices.map(notice=>`${notice.title}|${notice.body}`));
-  studentNotices=[...serverNotices,...local.filter(notice=>!serverKeys.has(`${notice.title}|${notice.body}`))];
+  const local=studentNotifications(student,trainingSlots),serverKeys=new Set(serverNotices.map(notice=>`${notice.title}|${notice.body}`)),serverIds=new Set(serverNotices.map(notice=>notice.key).filter(Boolean));
+  studentNotices=[...serverNotices,...local.filter(notice=>!serverIds.has(notice.id)&&!serverKeys.has(`${notice.title}|${notice.body}`))];
   const read=readNoticeIds(me),unread=studentNotices.filter(notice=>!isNoticeRead(notice,read)).length;
   const query=normalize($("studentNotificationSearch").value),visible=studentNotices.filter(notice=>(studentNotificationFilter==="all"||notificationCategory(notice)===studentNotificationFilter)&&(!query||normalize(`${notice.title} ${notice.body}`).includes(query)));
   $("studentNotificationBadge").textContent=unread;$("studentNotificationBadge").classList.toggle("hidden",unread===0);
@@ -427,9 +441,13 @@ $("trainingRequestForm").onsubmit=async event=>{
   slotSubmitBusy=true;
   try{
     if(slotFeatureAvailable){
-      await rpc("app_student_create_training_request_segment",{
-        p_token:token,p_slot_id:choice.slot.id,p_segment_index:choice.index,p_note:$("requestNote").value.trim()
-      });
+      if(choice.index===null&&!choice.slot.split_enabled){
+        await rpc("app_student_create_training_request_slot",{p_token:token,p_slot_id:choice.slot.id,p_note:$("requestNote").value.trim()});
+      }else{
+        await rpc("app_student_create_training_request_segment",{
+          p_token:token,p_slot_id:choice.slot.id,p_segment_index:choice.index,p_note:$("requestNote").value.trim()
+        });
+      }
     }else{
       await rpc("app_student_create_training_request",{
         p_token:token,p_request_type:$("requestType").value,
@@ -522,9 +540,14 @@ async function boot(){
   showRuntimeWarning(failedCount?`Đã khôi phục hồ sơ; ${failedCount} mục dữ liệu đang tạm thời tải lại. Các chức năng còn lại vẫn sử dụng bình thường.`:"");
   notificationTimer=setInterval(async()=>{
     if(document.visibilityState!=="visible")return;
-    try{await loadServerNotifications();renderStudentNotifications()}catch{}
+    try{
+      if(!slotSubmitBusy&&!slotRefreshBusy)await Promise.allSettled([loadServerNotifications(),loadTrainingSlots()]);
+      else await loadServerNotifications();
+      renderStudentNotifications();
+    }catch{}
   },60000);
   if(me.force_change_password)openPassword(true);
+  else openInvitedTrainingSlot();
 }
 boot().catch(error=>{
   console.error("[student-portal] Boot failed",error);
