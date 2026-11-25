@@ -35,6 +35,9 @@ jobs:
           test -x "$manager"
           "$manager" --sdk_root="$SDK" "platform-tools" "emulator" "build-tools;35.0.0" "system-images;android-34;google_apis_playstore;x86_64"
           echo no | "$(dirname "$manager")/avdmanager" create avd --force --name hld-qa --package "system-images;android-34;google_apis_playstore;x86_64"
+          test -x "$SDK/platform-tools/adb"
+          echo "$SDK/platform-tools" >> "$GITHUB_PATH"
+          echo "$SDK/emulator" >> "$GITHUB_PATH"
           test -e /dev/kvm
           sudo chmod 666 /dev/kvm
       - name: Sign both versions with one disposable test key
