@@ -8,6 +8,7 @@
     </queries>
     <application android:label="@string/app_label" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher"
         android:allowBackup="false" android:supportsRtl="true" android:usesCleartextTraffic="false"
+        android:manageSpaceActivity="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity"
         android:theme="@android:style/Theme.Translucent.NoTitleBar">
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements"/>
         <meta-data android:name="web_manifest_url" android:value="https://www.hoclaixecungdat.com/site.webmanifest"/>
@@ -37,6 +38,11 @@
             </intent-filter>
         </activity>
         <activity android:name="com.google.androidbrowserhelper.trusted.FocusActivity" android:exported="false"/>
+        <!-- Android Browser Helper enables its site-settings component during launch. -->
+        <activity android:name="com.google.androidbrowserhelper.trusted.ManageDataLauncherActivity" android:exported="false">
+            <meta-data android:name="android.support.customtabs.trusted.MANAGE_SPACE_URL" android:value="https://www.hoclaixecungdat.com/?login=1"/>
+        </activity>
+        <activity android:name="com.google.androidbrowserhelper.trusted.NotificationPermissionRequestActivity" android:exported="false"/>
         <service android:name="com.google.androidbrowserhelper.trusted.DelegationService" android:exported="true" tools:ignore="ExportedService">
             <intent-filter>
                 <action android:name="android.support.customtabs.trusted.TRUSTED_WEB_ACTIVITY_SERVICE"/>

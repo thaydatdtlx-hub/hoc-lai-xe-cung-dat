@@ -5,9 +5,11 @@ on:
     paths:
       - 'android-play/**'
       - '.github/workflows/build-android-play.yml'
+      - '.github/workflows/test-android-emulator.yml'
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -71,3 +73,9 @@ jobs:
           path: android-play/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
+  smoke:
+    needs: build
+    permissions:
+      contents: read
+      actions: read
+    uses: ./.github/workflows/test-android-emulator.yml
