@@ -1,0 +1,124 @@
+name: Android emulator smoke test
+on:
+  push:
+    branches: [android-play-release-20261125]
+    paths:
+      - '.github/workflows/test-android-emulator.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Retrieve the two successful builds
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/old-apk" "$RUNNER_TEMP/new-apk" "$RUNNER_TEMP/qa"
+          gh run download 45530983277 --repo "$GITHUB_REPOSITORY" --name hoc-lai-xe-cung-dat-android-1.1.2 --dir "$RUNNER_TEMP/old-apk"
+          gh run download 45602386320 --repo "$GITHUB_REPOSITORY" --name hoc-lai-xe-cung-dat-android-1.1.3-unsigned --dir "$RUNNER_TEMP/new-apk"
+          old="$(find "$RUNNER_TEMP/old-apk" -name app-sideload-unsigned.apk -type f -print -quit)"
+          new="$(find "$RUNNER_TEMP/new-apk" -name app-sideload-unsigned.apk -type f -print -quit)"
+          test -s "$old"
+          test -s "$new"
+          cp "$old" "$RUNNER_TEMP/qa/old-unsigned.apk"
+          cp "$new" "$RUNNER_TEMP/qa/new-unsigned.apk"
+      - name: Install Android emulator and SDK tools
+        run: |
+          set -euo pipefail
+          SDK="$ANDROID_HOME"
+          manager="$(find "$SDK/cmdline-tools" -path '*/bin/sdkmanager' -type f | sort -V | tail -1)"
+          test -x "$manager"
+          "$manager" --sdk_root="$SDK" "platform-tools" "emulator" "build-tools;35.0.0" "system-images;android-34;google_apis_playstore;x86_64"
+          echo no | "$(dirname "$manager")/avdmanager" create avd --force --name hld-qa --package "system-images;android-34;google_apis_playstore;x86_64"
+          test -e /dev/kvm
+          sudo chmod 666 /dev/kvm
+      - name: Sign both versions with one disposable test key
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/qa"
+          keytool -genkeypair -keystore qa.p12 -storetype PKCS12 -storepass temporaryqa123 -keypass temporaryqa123 -alias qa -keyalg RSA -keysize 2048 -validity 2 -dname "CN=HLD emulator QA only"
+          tools="$ANDROID_HOME/build-tools/35.0.0"
+          for version in old new; do
+            "$tools/zipalign" -f 4 "$version-unsigned.apk" "$version-aligned.apk"
+            "$tools/apksigner" sign --ks qa.p12 --ks-key-alias qa --ks-pass pass:temporaryqa123 --key-pass pass:temporaryqa123 --out "$version-test.apk" "$version-aligned.apk"
+            "$tools/apksigner" verify --verbose "$version-test.apk"
+          done
+          "$tools/aapt" dump badging old-test.apk > old-badging.txt
+          "$tools/aapt" dump badging new-test.apk > new-badging.txt
+          grep -q "name='com.hoclaixecungdat.app' versionCode='4' versionName='1.1.2'" old-badging.txt
+          grep -q "name='com.hoclaixecungdat.app' versionCode='5' versionName='1.1.3'" new-badging.txt
+          rm -f qa.p12
+      - name: Boot Android 14 emulator
+        run: |
+          set -euo pipefail
+          "$ANDROID_HOME/emulator/emulator" -avd hld-qa -no-window -no-audio -no-boot-anim -no-snapshot -gpu swiftshader_indirect -memory 3072 -netdelay none -netspeed full > "$RUNNER_TEMP/qa/emulator.log" 2>&1 &
+          timeout 300 adb wait-for-device
+          for i in $(seq 1 120); do
+            if [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1" ]; then break; fi
+            sleep 3
+          done
+          test "$(adb shell getprop sys.boot_completed | tr -d '\r')" = "1"
+          adb shell input keyevent 82
+          adb shell pm path com.android.chrome
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+      - name: Install 1.1.2 and upgrade without uninstalling
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/qa"
+          pkg=com.hoclaixecungdat.app
+          adb install old-test.apk | tee install-old.txt
+          grep -q Success install-old.txt
+          adb shell dumpsys package "$pkg" > old-installed.txt
+          grep -q 'versionName=1.1.2' old-installed.txt
+          adb install -r new-test.apk | tee upgrade.txt
+          grep -q Success upgrade.txt
+          adb shell dumpsys package "$pkg" > new-installed.txt
+          grep -q 'versionName=1.1.3' new-installed.txt
+          grep -q 'versionCode=5' new-installed.txt
+          echo 'PASS: install and upgrade using identical disposable signing certificate'
+      - name: Launch and inspect Chrome handoff
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/qa"
+          pkg=com.hoclaixecungdat.app
+          adb logcat -c
+          adb shell am force-stop "$pkg"
+          adb shell am start -W -n "$pkg/.UpdateActivity" | tee launch.txt
+          grep -q 'Status: ok' launch.txt
+          sleep 12
+          adb shell dumpsys activity activities > activities.txt
+          adb logcat -d -v brief > logcat.txt
+          adb exec-out screencap -p > launch.png
+          if grep -A 8 'FATAL EXCEPTION' logcat.txt | grep -q "Process: $pkg,"; then
+            echo 'FAIL: native crash after startup'; exit 1
+          fi
+          if ! grep -E 'mResumedActivity|topResumedActivity' activities.txt | grep -q 'com.android.chrome'; then
+            echo 'FAIL: Chrome is not resumed'; exit 1
+          fi
+          echo 'PASS: native startup and Chrome handoff on Android 14'
+          adb shell am force-stop "$pkg"
+      - name: Record scope of evidence
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/qa"
+          printf '%s\n' 'Android 14 emulator only. Upgrade used an ephemeral QA key, NOT the original signing key. No real user credentials or production writes. Login, delivery and original signing compatibility are not certified.' > "$RUNNER_TEMP/qa/limitations.txt"
+      - name: Upload emulator evidence (no APK or signing key)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: android-1.1.3-emulator-evidence
+          path: |
+            ${{ runner.temp }}/qa/limitations.txt
+            ${{ runner.temp }}/qa/install-old.txt
+            ${{ runner.temp }}/qa/upgrade.txt
+            ${{ runner.temp }}/qa/launch.txt
+            ${{ runner.temp }}/qa/launch.png
+          if-no-files-found: warn
+          retention-days: 7
