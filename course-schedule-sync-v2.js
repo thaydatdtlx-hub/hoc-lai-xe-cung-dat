@@ -438,7 +438,7 @@ function installUi(){
   const kicker=form.querySelector(".dialog-head p");
   if(kicker)kicker.textContent="LỊCH CHUNG TOÀN KHÓA";
   const openButton=$("openEditorBtn");
-  if(openButton)openButton.textContent="＋ Lập lịch theo khóa học";
+  if(openButton)openButton.textContent="Lập lịch theo khóa";
   const emptyText=$("emptyState")?.querySelector("p");
   if(emptyText)emptyText.textContent="Admin có thể bấm “Lập lịch theo khóa học” để cập nhật đồng thời cho toàn bộ học viên trong khóa.";
 
