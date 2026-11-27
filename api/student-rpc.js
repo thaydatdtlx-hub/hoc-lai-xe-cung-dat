@@ -13,7 +13,7 @@ const ALLOWED=new Set([
   "app_list_training_hour_targets","app_student_portal","app_student_me","app_student_update_profile","app_student_logout","app_logout",
   "app_student_list_attendance","app_student_list_payments","app_list_training_sessions","app_list_training_requests","app_list_training_slots",
   "app_list_exam_schedule_attempts","app_save_exam_schedule_attempt",
-  "app_list_notifications","app_mark_notifications_read","app_student_get_theory_progress",
+  "app_list_notifications","app_mark_notifications_read","app_notice_v5","app_student_get_theory_progress",
   "app_save_push_subscription","app_disable_push_subscription","app_create_push_test_notification","app_get_push_subscription_status","app_get_push_test_status",
   "app_student_cancel_training_request","app_student_create_training_request","app_student_create_training_request_slot","app_student_create_training_request_segment","app_student_change_password",
   "app_record_audit","app_save_student","app_admin_set_student_tuition_total","app_admin_save_student_schedule","app_admin_save_training_session",

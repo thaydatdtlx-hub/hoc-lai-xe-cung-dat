@@ -3,6 +3,7 @@ import {markNoticesRead,readNoticeIds,studentNotifications} from "./account-noti
 import {openPaymentReceipt,paymentMethodLabel} from "./payment-receipt.js";
 import {attendanceStatusLabel,attendanceSummary,attendanceTypeLabel,formatAttendanceDuration} from "./attendance-utils.js";
 import {studentRpc} from "./student-rpc-client.js";
+import {createStudentNoticeCenter} from "./notice-v5.js";
 import {fetchExamAttempts,examAttemptEvents} from "./exam-attempt-schedule.js";
 import {isStudentAuthError,normalizeCoreRpcPayload} from "./student-payload.js";
 
@@ -12,6 +13,7 @@ let token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||
 async function rpc(fn,body={}){
   return studentRpc(fn,body,{proxyTimeoutMs:9500,directTimeoutMs:6500});
 }
+const noticeV5=createStudentNoticeCenter({rpc,getToken:()=>token,getMe:()=>me,onChange:()=>{if(student&&me)renderStudentNotifications()},toast});
 function clearAuth(){for(const store of [localStorage,sessionStorage]){store.removeItem("hv_token");store.removeItem("hv_auth_kind")}}
 function showRuntimeWarning(message=""){
   let box=$("studentRuntimeWarning");
@@ -382,13 +384,13 @@ async function copyPaymentValue(value,successMessage){
 }
 async function loadServerNotifications(){
   try{
-    const rows=await rpc("app_list_notifications",{p_token:token})||[];
-    serverNotices=rows.map(notice=>({...notice,title:fixNoticeText(notice.title),body:fixNoticeText(notice.body),id:`server-${notice.id}`,server_id:String(notice.id)}));
+    const [rows]=await Promise.all([rpc("app_list_notifications",{p_token:token}),noticeV5.load()]);
+    serverNotices=(rows||[]).map(notice=>({...notice,title:fixNoticeText(notice.title),body:fixNoticeText(notice.body),id:`server-${notice.id}`,server_id:String(notice.id)}));
   }catch(error){
     serverNotices=[];
   }
 }
-function isNoticeRead(notice,read){return notice.server_id?Boolean(notice.read_at):read.has(notice.id)}
+function isNoticeRead(notice,read){return notice.server_id||notice.manual_id?Boolean(notice.read_at):read.has(notice.id)}
 const notificationCategoryLabels={general:"Hệ thống",schedule:"Lịch học",attendance:"Điểm danh",training:"Giờ học",theory:"Kết quả thi",finance:"Học phí",profile:"Hồ sơ"};
 function notificationCategory(notice){
   if(notice.category&&notice.category!=="general")return notice.category;
@@ -404,19 +406,21 @@ function notificationCategory(notice){
 function noticeTime(notice){return notice.event_at||notice.created_at?date(notice.event_at||notice.created_at,true):""}
 function renderStudentNotifications(){
   const local=studentNotifications(student,trainingSlots),serverKeys=new Set(serverNotices.map(notice=>`${notice.title}|${notice.body}`)),serverIds=new Set(serverNotices.map(notice=>notice.key).filter(Boolean));
-  studentNotices=[...serverNotices,...local.filter(notice=>!serverIds.has(notice.id)&&!serverKeys.has(`${notice.title}|${notice.body}`))];
+  studentNotices=[...noticeV5.list(),...serverNotices,...local.filter(notice=>!serverIds.has(notice.id)&&!serverKeys.has(`${notice.title}|${notice.body}`))];
   const read=readNoticeIds(me),unread=studentNotices.filter(notice=>!isNoticeRead(notice,read)).length;
-  const query=normalize($("studentNotificationSearch").value),visible=studentNotices.filter(notice=>(studentNotificationFilter==="all"||notificationCategory(notice)===studentNotificationFilter)&&(!query||normalize(`${notice.title} ${notice.body}`).includes(query)));
+  const query=normalize($("studentNotificationSearch").value),source=studentNotificationFilter==="history"?noticeV5.list(true):studentNotices,visible=source.filter(notice=>(studentNotificationFilter==="all"||studentNotificationFilter==="history"||notificationCategory(notice)===studentNotificationFilter)&&(!query||normalize(`${notice.title} ${notice.body} ${notice.manual?.place||""} ${notice.manual?.address||""}`).includes(query)));
   $("studentNotificationBadge").textContent=unread;$("studentNotificationBadge").classList.toggle("hidden",unread===0);
   if(unread&&"setAppBadge" in navigator)navigator.setAppBadge(unread).catch(()=>{});else if(!unread&&"clearAppBadge" in navigator)navigator.clearAppBadge().catch(()=>{});
-  $("studentNotificationSummary").textContent=`${visible.length}/${studentNotices.length} thông báo · ${unread} chưa đọc`;
+  const pendingAck=studentNotices.filter(n=>n.pending_ack).length;
+  $("studentNotificationSummary").textContent=`${visible.length} thông báo · ${unread} chưa xem${pendingAck?" · "+pendingAck+" cần xác nhận":""}`;
   document.querySelectorAll("[data-student-notification-filter]").forEach(button=>button.classList.toggle("active",button.dataset.studentNotificationFilter===studentNotificationFilter));
   $("studentNotificationList").innerHTML=visible.length?visible.map(notice=>`
     <article class="notification-item tone-${esc(notice.tone||"blue")} ${isNoticeRead(notice,read)?"is-read":""}">
       <span class="notification-icon">${esc(notice.icon||"•")}</span>
-      <div><div class="notification-item-meta"><span>${esc(notificationCategoryLabels[notificationCategory(notice)]||"Hệ thống")}</span>${noticeTime(notice)?`<time>${esc(noticeTime(notice))}</time>`:""}${!isNoticeRead(notice,read)?"<b>Mới</b>":""}</div><strong>${esc(notice.title)}</strong><p>${esc(notice.body)}</p>${notice.href?`<a href="${esc(notice.href)}">${esc(notice.action||"Xem chi tiết")} →</a>`:""}</div>
+      <div><div class="notification-item-meta"><span>${esc(notificationCategoryLabels[notificationCategory(notice)]||"Hệ thống")}</span>${noticeTime(notice)?`<time>${esc(noticeTime(notice))}</time>`:""}${!isNoticeRead(notice,read)?"<b>Mới</b>":""}</div><strong>${esc(notice.title)}</strong><p>${esc(notice.body)}</p>${notice.manual_id?`<div>${notice.pending_ack?'<span class="hv5-bell-pending">Cần xác nhận</span>':notice.ack_at?'<span class="hv5-bell-ok">Đã xác nhận</span>':""} ${notice.manual?.reminded&&!notice.ack_at?'<span class="hv5-bell-pending"> · Đã nhắc lại</span>':""}</div><button type="button" class="hv5-bell-open" data-hv5-open="${esc(notice.manual_id)}">Xem thông báo</button>`:""}${notice.href?`<a href="${esc(notice.href)}">${esc(notice.action||"Xem chi tiết")} →</a>`:""}</div>
     </article>`).join(""):`<div class="notification-empty"><span>🔔</span><strong>Chưa có thông báo</strong><p>Các cập nhật của trung tâm sẽ hiển thị tại đây.</p></div>`;
 }
+$("studentNotificationList").addEventListener("click",event=>{const button=event.target.closest("[data-hv5-open]");if(button)void noticeV5.openById(button.dataset.hv5Open)});
 $("studentNotificationBtn").onclick=async()=>{
   await loadServerNotifications();renderStudentNotifications();
   $("studentNotificationDialog").showModal();
@@ -425,9 +429,10 @@ $("studentMarkNotificationsRead").onclick=async()=>{
   const serverIds=serverNotices.filter(notice=>!notice.read_at).map(notice=>notice.server_id);
   try{
     if(serverIds.length)await rpc("app_mark_notifications_read",{p_token:token,p_ids:serverIds});
+    await noticeV5.seenAll();
     const now=new Date().toISOString();serverNotices.forEach(notice=>notice.read_at=notice.read_at||now);
-    markNoticesRead(me,studentNotices.filter(notice=>!notice.server_id));
-    renderStudentNotifications();toast("Đã đánh dấu tất cả thông báo là đã đọc");
+    markNoticesRead(me,studentNotices.filter(notice=>!notice.server_id&&!notice.manual_id));
+    renderStudentNotifications();toast("Đã đánh dấu đã xem; tin cần xác nhận vẫn phải xác nhận riêng");
   }catch(error){toast(error?.message||"Không thể cập nhật thông báo.")}
 };
 $("studentNotificationSearch").oninput=renderStudentNotifications;
@@ -490,7 +495,7 @@ $("studentPasswordForm").onsubmit=async event=>{
   $("studentSavePasswordBtn").disabled=true;
   try{
     await rpc("app_student_change_password",{p_token:token,p_old_password:$("studentOldPassword").value,p_new_password:$("studentNewPassword").value});
-    forcePasswordChange=false;me.force_change_password=false;$("studentPasswordDialog").close();event.target.reset();toast("Đã đổi mật khẩu thành công");
+    forcePasswordChange=false;me.force_change_password=false;$("studentPasswordDialog").close();event.target.reset();toast("Đã đổi mật khẩu thành công");void noticeV5.load().then(()=>{renderStudentNotifications();noticeV5.claim()});
   }catch(error){$("studentPasswordError").textContent=error?.message||"Không thể đổi mật khẩu."}
   finally{$("studentSavePasswordBtn").disabled=false}
 };
@@ -551,7 +556,7 @@ async function boot(){
     }catch{}
   },60000);
   if(me.force_change_password)openPassword(true);
-  else openInvitedTrainingSlot();
+  else {openInvitedTrainingSlot();noticeV5.claim()}
 }
 boot().catch(error=>{
   console.error("[student-portal] Boot failed",error);

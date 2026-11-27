@@ -1,5 +1,6 @@
 import {embedScheduleInNotes,parseScheduleFromNotes,stripScheduleFromNotes} from "./schedule-data.js";
 import {managerNotifications,markNoticesRead,readNoticeIds} from "./account-notifications.js";
+import {installAdminNoticeCenter} from "./notice-v5.js";
 import {analyzeStudentImport,importSummary} from "./import-dedup.js";
 import {openPaymentReceipt,paymentMethodLabel} from "./payment-receipt.js";
 import {attendanceStatusLabel,attendanceSummary,attendanceTypeLabel,calculateAttendanceMinutes,formatAttendanceDuration} from "./attendance-utils.js";
@@ -559,6 +560,7 @@ $("markNotificationsRead").onclick=async()=>{
     renderAccountNotifications();toast("Đã đánh dấu tất cả thông báo là đã đọc");
   }catch(error){toast(errText(error))}
 };
+installAdminNoticeCenter({rpc,getToken:()=>token,getMe:()=>me,toast});
 $("notificationSearch").oninput=renderAccountNotifications;
 document.querySelectorAll("[data-notification-filter]").forEach(button=>button.onclick=()=>{notificationFilter=button.dataset.notificationFilter;renderAccountNotifications()});
 async function loadNotificationTargets(){
