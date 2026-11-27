@@ -1,6 +1,7 @@
 import {SCHEDULE_FIELDS,embedScheduleInNotes,parseScheduleFromNotes,isMotorcycleLicense} from "./schedule-data.js";
 import {studentRpc} from "./student-rpc-client.js";
 import "./ai-chat.js";
+import {createExamScheduleManager} from "./exam-attempt-schedule.js";
 
 const $=id=>document.getElementById(id);
 const token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||"";
@@ -14,7 +15,7 @@ const DAT_RANGE_PAIRS=[
   ["dat_auto_start","dat_auto_end","DAT số tự động"],
   ["dat_manual_start","dat_manual_end","DAT số cơ khí"]
 ];
-let me=null,students=[],trainingSessions=[],trainingRequests=[],trainingSlots=[],events=[],sessionFeatureAvailable=true,requestFeatureAvailable=true,slotFeatureAvailable=true;
+let me=null,students=[],trainingSessions=[],trainingRequests=[],trainingSlots=[],events=[],sessionFeatureAvailable=true,requestFeatureAvailable=true,slotFeatureAvailable=true,examManager=null;
 
 async function rpc(fn,body={}){
   const started=performance.now();
@@ -103,9 +104,10 @@ function editorFieldsFor(student){
   return MILESTONE_FIELDS.filter(field=>field.onlyFor!=="b_manual"||isManualBStudent(student));
 }
 function createEvents(){
+  const knownExamRecords=examManager?.getRecords()||[];
   const fixedEvents=students.flatMap(student=>{
     const schedule=studentSchedule(student);
-    return scheduleFieldsForStudent(student).filter(field=>schedule.dates?.[field.key]).map(field=>({
+    return scheduleFieldsForStudent(student).filter(field=>schedule.dates?.[field.key]&&(!["graduation","exam"].includes(field.key)||!knownExamRecords.some(record=>String(record.student_id)===String(student.id)&&record.exam_type===field.key))).map(field=>({
       id:`${student.id}-${field.key}`,
       student,
       field,
@@ -129,7 +131,7 @@ function createEvents(){
     source:"session",
     session
   })).filter(event=>event.student&&event.field&&!isMotorcycleLicense(event.student.license_class));
-  events=[...fixedEvents,...repeatEvents].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  events=[...fixedEvents,...repeatEvents,...(examManager?.events()||[])].sort((a,b)=>new Date(a.date)-new Date(b.date));
 }
 
 function renderStats(){
@@ -163,11 +165,13 @@ function renderEvents(){
     const part=dateParts(event.date),past=new Date(event.date)<start;
     return `<article class="event-card ${past?"is-past":""}">
       <div class="event-date"><strong>${part.day}</strong><span>${part.month}</span><em>${part.time}</em></div>
-      <div class="event-type tone-${event.field.tone}"><span>${event.field.icon}</span><div><small>NỘI DUNG ĐÀO TẠO</small><strong>${esc(event.field.label)}</strong></div></div>
+      <div class="event-type tone-${event.field.tone}"><span>${event.field.icon}</span><div><small>NỘI DUNG ĐÀO TẠO</small><strong>${esc(event.field.label)}${event.source==="exam_attempt"?` · Lần ${event.attemptNo}`:""}</strong></div></div>
       <div class="event-student"><small>HỌC VIÊN</small><strong>${esc(event.student.name)}</strong><span>${esc(event.student.student_code||"Chưa có mã")} · ${esc(event.student.course||"Chưa có khóa")}</span></div>
-      <div class="event-detail">${event.source==="session"?`<span class="repeat-label">${event.session?.slot_id?"Ca học đã duyệt":"Buổi thực hành riêng"}</span>`:""}<span>◷ ${esc(formatDate(event.date))}${event.source==="session"?` · ${esc(formatDuration(event.durationMinutes))}`:""}</span><span>⌖ ${esc(event.location||"Chưa nhập địa điểm")}</span>${event.instructorName?`<span>👤 Giáo viên: ${esc(event.instructorName)}</span>`:""}${event.vehiclePlate?`<span>🚘 Xe: ${esc(event.vehiclePlate)}</span>`:""}${event.note?`<span>ⓘ ${esc(event.note)}</span>`:""}</div>
+      <div class="event-detail">${event.source==="session"?`<span class="repeat-label">${event.session?.slot_id?"Ca học đã duyệt":"Buổi thực hành riêng"}</span>`:""}<span>◷ ${esc(formatDate(event.date))}${event.source==="session"?` · ${esc(formatDuration(event.durationMinutes))}`:""}</span><span>⌖ ${esc(event.location||"Chưa nhập địa điểm")}</span>${event.source==="exam_attempt"?`<span class="repeat-label exam-result-${esc(event.attempt?.result||"scheduled")}">Kết quả: ${esc(event.statusText)}</span>${event.attempt?.failed_parts?.length?`<span>Phần chưa đạt: ${esc(event.attempt.failed_parts.map(k=>({theory:"Lý thuyết",simulation:"Mô phỏng",yard:"Sa hình",road:"Đường trường"}[k]||k)).join(", "))}</span>`:""}`:""}${event.instructorName?`<span>👤 Giáo viên: ${esc(event.instructorName)}</span>`:""}${event.vehiclePlate?`<span>🚘 Xe: ${esc(event.vehiclePlate)}</span>`:""}${event.note?`<span>ⓘ ${esc(event.note)}</span>`:""}</div>
       ${me.role==="admin"||me.role==="user"
-        ?event.source==="session"
+        ?event.source==="exam_attempt"
+          ?(event.attempt?.source==="saved"?`<div class="event-actions"><button class="edit-event" type="button" data-edit-exam="${esc(event.attempt.id)}">Sửa lịch thi</button></div>`:"")
+          :event.source==="session"
           ?event.session?.slot_id
             ?(me.role==="admin"?`<div class="event-actions"><button class="edit-event" type="button" data-edit-slot="${event.session.slot_id}">Sửa ca</button><button class="delete-event" type="button" data-delete-session="${event.id}">Xóa khỏi ca</button></div>`:"")
             :`<div class="event-actions"><button class="edit-event" type="button" data-edit-session="${event.id}">Sửa buổi</button><button class="delete-event" type="button" data-delete-session="${event.id}">Xóa buổi</button></div>`
@@ -748,6 +752,8 @@ $("periodFilter").onchange=renderEvents;
 $("eventList").onclick=event=>{
   const editId=event.target.dataset.editStudent,deleteId=event.target.dataset.deleteStudent,fieldKey=event.target.dataset.deleteKey;
   const editSessionId=event.target.dataset.editSession,deleteSessionId=event.target.dataset.deleteSession,editSlotId=event.target.dataset.editSlot;
+  const editExam=event.target.closest("[data-edit-exam]")?.dataset.editExam;
+  if(editExam)return examManager?.openById(editExam);
   if(editSlotId)return openSlotEditor(editSlotId);
   if(editSessionId)return openSessionEditor(editSessionId);
   if(deleteSessionId)return deleteTrainingSession(deleteSessionId);
@@ -843,6 +849,8 @@ async function boot(){
     $("typeFilter").innerHTML+=availableFields.map(field=>`<option value="${field.key}">${field.label}</option>`).join("");
     await loadTrainingSessions();
     if(me.role==="admin")await Promise.all([loadTrainingRequests(),loadTrainingSlots()]);
+    examManager=createExamScheduleManager({me,students,token,onReload:()=>renderAll()});
+    if(examManager)await examManager.load();
     if(students.length)renderEditorFields(students[0]);renderAll();renderTrainingRequests();renderTrainingSlots();
     if(coreLoadWarning)showScheduleLoadError(coreLoadWarning);else clearScheduleLoadError();
     if(me.role==="admin"&&!sessionFeatureAvailable)toast("Cần chạy file SQL cập nhật để mở chức năng nhiều buổi");
