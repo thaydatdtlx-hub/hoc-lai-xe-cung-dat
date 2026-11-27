@@ -350,3 +350,7 @@
   }
 
 }
+
+#scheduleDialog.course-schedule-dialog .course-dialog-error:not(:empty){flex:0 0 auto;margin:0;padding:8px 24px;max-height:75px;overflow-y:auto}
+#scheduleDialog.course-schedule-dialog .course-dialog-error:empty{display:none}
+#scheduleDialog.course-schedule-dialog .course-dialog-body [hidden]{display:none!important}
