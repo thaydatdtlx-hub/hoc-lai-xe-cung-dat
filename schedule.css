@@ -117,3 +117,53 @@ dialog label{display:grid;gap:6px;color:#365471;font-size:10px;font-weight:800}d
 .exam-result-failed{background:#ffe7df!important;color:#a23d28!important}
 .exam-result-absent,.exam-result-cancelled{background:#edf0f4!important;color:#697687!important}
 @media(max-width:720px){.exam-form-grid{grid-template-columns:1fr}.exam-wide{grid-column:1}.exam-open-button{white-space:normal}}
+
+
+/* Header: one title row, one balanced action grid. All existing IDs and behavior stay intact. */
+.schedule-main>.schedule-hero{
+  display:grid;grid-template-columns:minmax(0,1fr);align-items:start;
+  gap:18px;padding:25px 28px 22px;border-radius:22px;isolation:isolate
+}
+.schedule-main>.schedule-hero:after{pointer-events:none;right:6%;top:-125px;opacity:.75}
+.schedule-main>.schedule-hero>div:first-child{min-width:0;width:100%}
+.schedule-main>.schedule-hero .hero-kicker{margin:0 0 6px;font-size:10px;line-height:1.35;letter-spacing:.12em}
+.schedule-main>.schedule-hero h1{font-size:clamp(25px,2.8vw,36px);line-height:1.17;margin:0;letter-spacing:-.035em;overflow-wrap:anywhere}
+.schedule-main>.schedule-hero>div:first-child>p:last-child{margin:7px 0 0;font-size:13px;line-height:1.5;color:#e5f4ff;max-width:72ch}
+.schedule-main>.schedule-hero>.hero-actions{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr));
+  align-items:stretch;justify-items:stretch;gap:9px;width:100%;min-width:0;
+  padding-top:15px;border-top:1px solid #ffffff35
+}
+.schedule-main>.schedule-hero>.hero-actions>button{
+  grid-column:auto;display:flex;align-items:center;justify-content:center;
+  gap:7px;box-sizing:border-box;width:100%;min-width:0;min-height:48px;height:100%;
+  padding:10px 9px!important;border:1px solid #ffffff5c!important;border-radius:11px!important;
+  background:#ffffff15!important;color:#fff!important;box-shadow:none!important;
+  font-size:13px;font-weight:750;line-height:1.35;text-align:center;white-space:normal;
+  overflow-wrap:break-word;transition:background .15s ease,border-color .15s ease,transform .15s ease
+}
+.schedule-main>.schedule-hero>.hero-actions>button:hover{background:#ffffff2b!important;border-color:#ffffffa3!important}
+.schedule-main>.schedule-hero>.hero-actions>button:active{transform:translateY(1px)}
+.schedule-main>.schedule-hero>.hero-actions>button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.schedule-main>.schedule-hero>.hero-actions>#openRequestsBtn{order:1;color:#664200!important;background:#fff4d8!important;border-color:#ffdf96!important}
+.schedule-main>.schedule-hero>.hero-actions>#openSlotBtn{order:2}
+.schedule-main>.schedule-hero>.hero-actions>#openSessionBtn{order:3;color:#fff!important}
+.schedule-main>.schedule-hero>.hero-actions>#openCourseLookupBtn{order:4}
+.schedule-main>.schedule-hero>.hero-actions>#openEditorBtn{order:5;background:#fff!important;color:#0a57ab!important;border-color:#fff!important;font-weight:800}
+.schedule-main>.schedule-hero>.hero-actions>#openExamAttemptBtn{order:6;background:#e4f9f2!important;color:#0c6355!important;border-color:#cef0e3!important;font-weight:800}
+.schedule-main>.schedule-hero>.hero-actions>#openRequestsBtn:hover{background:#ffe9ba!important}
+.schedule-main>.schedule-hero>.hero-actions>#openEditorBtn:hover{background:#eaf4ff!important}
+.schedule-main>.schedule-hero>.hero-actions>#openExamAttemptBtn:hover{background:#c9f2e3!important}
+.schedule-main>.schedule-hero>.hero-actions>#openRequestsBtn b{flex:0 0 auto;min-width:21px;height:21px;font-size:10px}
+@media(max-width:1100px){
+  .schedule-main>.schedule-hero>.hero-actions{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+}
+@media(max-width:720px){
+  .schedule-main>.schedule-hero{gap:14px;padding:19px 16px 16px;border-radius:18px}
+  .schedule-main>.schedule-hero h1{font-size:clamp(23px,5.5vw,30px)}
+  .schedule-main>.schedule-hero>div:first-child>p:last-child{font-size:12px}
+  .schedule-main>.schedule-hero>.hero-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-top:12px}
+  .schedule-main>.schedule-hero>.hero-actions>button{min-height:48px;font-size:12px;padding:10px 7px!important}
+}
+@media(max-width:350px){.schedule-main>.schedule-hero>.hero-actions{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.schedule-main>.schedule-hero>.hero-actions>button{transition:none}}
