@@ -159,12 +159,20 @@ function renderFields(row,preferredStudentId=""){
   if(aCourse&&!dates.exam)draftSourceName="";
   host.style.gridTemplateColumns=aCourse||mixedCourse?"minmax(0,1fr)":"";
 
-  host.innerHTML=fields.map(field=>`
+  const renderField=field=>`
     <section class="schedule-field tone-${esc(field.tone)}">
       <div class="field-title"><span>${field.icon}</span><strong>${esc(field.label)}</strong></div>
       <label>${field.dateOnly?"Ngày":"Ngày và giờ"}<input id="date-${field.key}" type="${field.dateOnly?"date":"datetime-local"}" value="${esc(inputValue(field,dates[field.key]))}" ${aCourse&&field.key==="exam"?"required":""}></label>
       <label>Địa điểm / hình thức<input id="location-${field.key}" value="${esc(locations[field.key]||"")}" placeholder="${field.key==="exam"?"Ví dụ: Trung tâm sát hạch · Thi trực tiếp":field.key.startsWith("online_")?"Link hoặc nền tảng học":"Nhập địa điểm"}" ${aCourse&&field.key==="exam"?"required":""}></label>
-    </section>`).join("");
+    </section>`;
+  const phases=[
+    {title:"Lý thuyết online",keys:["online_start","online_end"]},
+    {title:"Học Cabin",keys:["cabin"]},
+    {title:"Thực hành DAT",keys:["dat_auto_start","dat_auto_end","dat_manual_start","dat_manual_end"]},
+    {title:"Lịch thi",keys:["graduation","exam"]}
+  ].map(phase=>({...phase,fields:fields.filter(field=>phase.keys.includes(field.key))})).filter(phase=>phase.fields.length);
+  const groupedKeys=new Set(phases.flatMap(phase=>phase.keys));
+  host.innerHTML=phases.map((phase,index)=>`<div class="course-phase-heading"><span>${String(index+1).padStart(2,"0")}</span><h3>${esc(phase.title)}</h3></div>${phase.fields.map(renderField).join("")}`).join("")+fields.filter(field=>!groupedKeys.has(field.key)).map(renderField).join("");
 
   const onlineRangeNote=aCourse||mixedCourse?"":`
     <div class="dat-range-note">
@@ -269,7 +277,7 @@ async function openCourseDialog(preferredKey=""){
     }
     prepareCourse(row);
     const dialog=$("scheduleDialog");
-    if(dialog&&!dialog.open)dialog.showModal();
+    if(dialog&&!dialog.open){dialog.showModal();const body=dialog.querySelector(".course-dialog-body");if(body)body.scrollTop=0;}
   }catch(error){
     alert(errorText(error));
   }finally{busy(false)}
@@ -289,7 +297,7 @@ async function openCourseForStudent(studentId){
     if(!row)throw new Error("Không tìm thấy khóa học của học viên.");
     prepareCourse(row,studentId);
     const dialog=$("scheduleDialog");
-    if(dialog&&!dialog.open)dialog.showModal();
+    if(dialog&&!dialog.open){dialog.showModal();const body=dialog.querySelector(".course-dialog-body");if(body)body.scrollTop=0;}
   }catch(error){alert(errorText(error))}
   finally{busy(false)}
 }
@@ -411,8 +419,20 @@ function installUi(){
     <p>Admin chỉ nhập lịch một lần. Hệ thống tự cập nhật cho mọi học viên hiện tại và những học viên được thêm vào khóa sau này.</p>`;
   originalLabel.insertAdjacentElement("afterend",picker);
 
+  // One scroll container: keep the heading and save controls outside it.
+  const body=document.createElement("div");
+  body.className="course-dialog-body";
+  const actions=form.querySelector(".dialog-actions");
+  const error=$("scheduleError");
+  form.insertBefore(body,error||actions);
+  for(const element of [originalLabel,picker,$("scheduleFields"),$("scheduleNote")?.closest("label")]){
+    if(element)body.append(element);
+  }
+  if(error){error.classList.add("course-dialog-error");error.setAttribute("aria-live","polite")}
+  dialog.setAttribute("aria-labelledby","courseScheduleDialogTitle");
+
   const heading=form.querySelector(".dialog-head h2");
-  if(heading)heading.textContent="Lập lịch đào tạo theo khóa học";
+  if(heading){heading.id="courseScheduleDialogTitle";heading.textContent="Lập lịch đào tạo theo khóa học"}
   const kicker=form.querySelector(".dialog-head p");
   if(kicker)kicker.textContent="LỊCH CHUNG TOÀN KHÓA";
   const openButton=$("openEditorBtn");
@@ -422,7 +442,7 @@ function installUi(){
 
   $("scheduleCourse").addEventListener("change",event=>{
     const row=courseRow(event.target.value);
-    if(row)prepareCourse(row);
+    if(row){prepareCourse(row);body.scrollTop=0}
   });
   form.addEventListener("submit",saveCourseSchedule,true);
 
