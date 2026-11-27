@@ -18,3 +18,5 @@
 .hv5-practice-popup [data-hv5-later]{background:transparent;border:0;color:var(--hv-muted);min-height:40px;font-size:14px;font-weight:500}
 .hv5-practice-popup .hv5-note{font-size:11px;margin:0}.hv5-practice-popup .hv5-note:empty{display:none}
 @media(max-width:420px){.hv5-practice-popup{padding:18px 16px 13px}.hv5-practice-popup .hv5-kicker{font-size:15px}.hv5-practice-popup h2{font-size:21px}.hv5-practice-row{font-size:15px;gap:10px}.hv5-practice-popup .hv5-map{font-size:14px}.hv5-practice-popup [data-hv5-ack]{font-size:15px}}
+
+.hv5-single-time{grid-template-columns:1fr}.hv5-exam-place strong{font-size:16px;line-height:1.45;font-weight:750;display:block}.hv5-exam-popup .hv5-practice-copy small{margin-top:5px}.hv5-exam-popup .hv5-note{display:none}.hv5-exam-popup .hv5-popup-head{margin-bottom:20px}.hv5-exam-popup .hv5-practice-rows{gap:16px}.hv5-exam-popup .hv5-popup-actions{margin-top:2px}.hv5-exam-popup .hv5-map{font-weight:650}@media(max-width:420px){.hv5-exam-place strong{font-size:15px}}
