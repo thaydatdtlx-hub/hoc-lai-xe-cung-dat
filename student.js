@@ -3,10 +3,11 @@ import {markNoticesRead,readNoticeIds,studentNotifications} from "./account-noti
 import {openPaymentReceipt,paymentMethodLabel} from "./payment-receipt.js";
 import {attendanceStatusLabel,attendanceSummary,attendanceTypeLabel,formatAttendanceDuration} from "./attendance-utils.js";
 import {studentRpc} from "./student-rpc-client.js";
+import {fetchExamAttempts,examAttemptEvents} from "./exam-attempt-schedule.js";
 import {isStudentAuthError,normalizeCoreRpcPayload} from "./student-payload.js";
 
 const $=id=>document.getElementById(id);
-let token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||"",me=null,student=null,trainingSessions=[],trainingRequests=[],trainingSlots=[],studentPayments=[],studentAttendance=[],studentNotices=[],serverNotices=[],theoryProgress=null,forcePasswordChange=false,bookingFeatureAvailable=true,slotFeatureAvailable=true,theoryFeatureAvailable=true,paymentHistoryAvailable=true,attendanceHistoryAvailable=true,studentNotificationFilter="all",notificationTimer=null;
+let token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||"",me=null,student=null,trainingSessions=[],trainingRequests=[],trainingSlots=[],studentPayments=[],studentAttendance=[],studentNotices=[],serverNotices=[],examAttempts=[],theoryProgress=null,forcePasswordChange=false,bookingFeatureAvailable=true,slotFeatureAvailable=true,theoryFeatureAvailable=true,paymentHistoryAvailable=true,attendanceHistoryAvailable=true,studentNotificationFilter="all",notificationTimer=null;
 
 async function rpc(fn,body={}){
   return studentRpc(fn,body,{proxyTimeoutMs:9500,directTimeoutMs:6500});
@@ -326,14 +327,15 @@ function renderPortal(){
   $("studentProfile").innerHTML=profile.map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("");
 
   const now=new Date();
-  const fixedEvents=SCHEDULE_FIELDS.filter(field=>schedule.dates?.[field.key]).map(field=>({field,date:schedule.dates[field.key],location:schedule.locations?.[field.key]||""}));
+  const fixedEvents=SCHEDULE_FIELDS.filter(field=>schedule.dates?.[field.key]&&(!["graduation","exam"].includes(field.key)||!examAttempts.some(record=>record.exam_type===field.key))).map(field=>({field,date:schedule.dates[field.key],location:schedule.locations?.[field.key]||""}));
   const repeatEvents=trainingSessions.map(session=>({
     field:SCHEDULE_FIELDS.find(field=>field.key===session.session_type),
     date:session.starts_at,
     location:session.location||""
   })).filter(event=>event.field);
-  const events=[...fixedEvents,...repeatEvents].filter(event=>new Date(event.date)>=now).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,3);
-  $("studentUpcoming").innerHTML=events.length?events.map(event=>`<article><span class="tone-${event.field.tone}">${event.field.icon}</span><div><strong>${esc(event.field.label)}</strong><small>${esc(date(event.date,true))}</small><em>${esc(event.location||"Chưa cập nhật địa điểm")}</em></div></article>`).join(""):`<div class="no-schedule"><span>📅</span><strong>Chưa có lịch sắp tới</strong><small>Lịch mới sẽ hiển thị tại đây khi được cập nhật.</small></div>`;
+  const examEvents=examAttemptEvents(examAttempts,[student]);
+  const events=[...fixedEvents,...repeatEvents,...examEvents.filter(item=>item.attempt?.result!=="cancelled")].filter(event=>new Date(event.date)>=now).sort((a,b)=>new Date(a.date)-new Date(b.date)).slice(0,3);
+  $("studentUpcoming").innerHTML=events.length?events.map(event=>`<article><span class="tone-${event.field.tone}">${event.field.icon}</span><div><strong>${esc(event.field.label)}${event.source==="exam_attempt"?` · Lần ${event.attemptNo}`:""}</strong><small>${esc(date(event.date,true))}</small><em>${esc(event.location||"Chưa cập nhật địa điểm")}</em></div></article>`).join(""):`<div class="no-schedule"><span>📅</span><strong>Chưa có lịch sắp tới</strong><small>Lịch mới sẽ hiển thị tại đây khi được cập nhật.</small></div>`;
   renderTrainingRequests();
   renderStudentNotifications();
   $("studentLoading").classList.add("hidden");$("studentPortal").classList.remove("hidden");
@@ -526,6 +528,7 @@ async function boot(){
 
   const optionalResults=await Promise.allSettled([
     rpc("app_list_training_sessions",{p_token:token,p_student_id:student.id}).then(value=>{trainingSessions=Array.isArray(value)?value:[]}),
+    fetchExamAttempts(token,student.id).then(value=>{examAttempts=value}).catch(error=>{console.warn("[student] Lịch thi nhiều lần chưa sẵn sàng",error);examAttempts=[]}),
     loadTrainingRequests(),
     loadTrainingSlots(),
     loadServerNotifications(),
