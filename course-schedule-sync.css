@@ -134,21 +134,191 @@
 #scheduleDialog [data-course-sync-hidden="1"]{
   display:none!important
 }
-#scheduleDialog.course-schedule-dialog form{
-  width:min(980px,calc(100vw - 32px))
+/* Keep the dialog and its form within the same viewport. The body is the only scroll area. */
+#scheduleDialog.course-schedule-dialog{
+  box-sizing:border-box;
+  width:min(1080px,calc(100% - 32px));
+  max-width:calc(100% - 32px);
+  max-height:calc(100vh - 32px);
+  max-height:calc(100dvh - 32px);
+  padding:0;
+  overflow:hidden;
+  border-radius:20px
 }
-#scheduleDialog.course-schedule-dialog .schedule-fields{
-  max-height:min(56vh,620px);
-  overflow:auto;
-  padding-right:4px;
-  overscroll-behavior:contain
+#scheduleDialog.course-schedule-dialog form{
+  box-sizing:border-box;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  max-height:calc(100vh - 32px);
+  max-height:calc(100dvh - 32px);
+  display:flex;
+  flex-direction:column;
+  padding:0;
+  overflow:hidden
 }
 #scheduleDialog.course-schedule-dialog .dialog-head{
-  position:sticky;
-  top:0;
-  z-index:3;
+  position:static;
+  flex:0 0 auto;
+  margin:0;
+  padding:18px 24px;
+  gap:12px;
+  align-items:center;
+  border-bottom:1px solid var(--line,#dce7f2);
   background:inherit
 }
+#scheduleDialog.course-schedule-dialog .dialog-head>div{min-width:0}
+#scheduleDialog.course-schedule-dialog .dialog-head h2{
+  font-size:clamp(17px,2.1vw,24px);line-height:1.3;overflow-wrap:anywhere
+}
+#scheduleDialog.course-schedule-dialog .dialog-head p{font-size:10px}
+#scheduleDialog.course-schedule-dialog .dialog-head .dialog-close{
+  flex:0 0 42px;min-width:42px;min-height:42px
+}
+#scheduleDialog.course-schedule-dialog .course-dialog-body{
+  box-sizing:border-box;
+  flex:1 1 auto;
+  min-height:0;
+  min-width:0;
+  width:100%;
+  padding:16px 24px 20px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain
+}
+#scheduleDialog.course-schedule-dialog .schedule-fields{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  max-height:none;
+  width:100%;
+  min-width:0;
+  overflow:visible;
+  padding:0;
+  margin:0 0 16px
+}
+#scheduleDialog.course-schedule-dialog .course-schedule-picker{
+  grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,auto);
+  gap:10px;
+  padding:14px;
+  margin:0 0 14px
+}
+#scheduleDialog.course-schedule-dialog .course-schedule-picker>*,
+#scheduleDialog.course-schedule-dialog .schedule-fields>*,
+#scheduleDialog.course-schedule-dialog .schedule-field>*{
+  min-width:0;
+  max-width:100%
+}
+#scheduleDialog.course-schedule-dialog .course-schedule-summary span,
+#scheduleDialog.course-schedule-dialog .course-schedule-summary small,
+#scheduleDialog.course-schedule-dialog .course-schedule-status{
+  white-space:normal;overflow-wrap:anywhere;line-height:1.5
+}
+#scheduleDialog.course-schedule-dialog .course-schedule-status{max-width:190px}
+#scheduleDialog.course-schedule-dialog .schedule-field{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:10px;
+  padding:14px;
+  min-width:0;
+  overflow:visible
+}
+#scheduleDialog.course-schedule-dialog .field-title{
+  min-width:0;gap:9px
+}
+#scheduleDialog.course-schedule-dialog .field-title>span{flex:0 0 34px}
+#scheduleDialog.course-schedule-dialog .field-title strong{
+  font-size:13px;line-height:1.45;overflow-wrap:anywhere
+}
+#scheduleDialog.course-schedule-dialog label{font-size:12px;line-height:1.45;min-width:0}
+#scheduleDialog.course-schedule-dialog input,
+#scheduleDialog.course-schedule-dialog select,
+#scheduleDialog.course-schedule-dialog textarea{
+  box-sizing:border-box;
+  width:100%;min-width:0;max-width:100%;
+  min-height:44px;padding:10px 12px;font-size:13px
+}
+#scheduleDialog.course-schedule-dialog input[type="datetime-local"],
+#scheduleDialog.course-schedule-dialog input[type="date"]{min-inline-size:0}
+#scheduleDialog.course-schedule-dialog textarea{
+  min-height:76px;resize:vertical;display:block
+}
+#scheduleDialog.course-schedule-dialog .course-phase-heading{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:6px 0 0;
+  padding:0 0 6px;
+  border-bottom:1px solid var(--line,#dce7f2)
+}
+#scheduleDialog.course-schedule-dialog .course-phase-heading span{
+  display:grid;place-items:center;width:25px;height:25px;border-radius:8px;
+  background:#e4f1ff;color:#1763ba;font-size:11px;font-weight:900
+}
+#scheduleDialog.course-schedule-dialog .course-phase-heading h3{
+  margin:0;color:inherit;font-size:14px;font-weight:850
+}
+#scheduleDialog.course-schedule-dialog .dat-range-note{
+  flex-wrap:wrap;align-items:flex-start
+}
+#scheduleDialog.course-schedule-dialog .dat-range-note span{line-height:1.5}
+#scheduleDialog.course-schedule-dialog .dialog-actions{
+  position:static;
+  flex:0 0 auto;
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+  align-items:center;
+  margin:0;
+  padding:14px 24px calc(14px + env(safe-area-inset-bottom));
+  border-top:1px solid var(--line,#dce7f2);
+  background:inherit
+}
+#scheduleDialog.course-schedule-dialog .dialog-actions button{
+  min-height:44px;padding:10px 16px;font-size:12px;white-space:normal
+}
+#scheduleDialog.course-schedule-dialog .dialog-actions-spacer{display:block;flex:1}
+#scheduleDialog.course-schedule-dialog .form-error:not(:empty){
+  font-size:12px;line-height:1.5;padding:8px 0
+}
+#scheduleDialog.course-schedule-dialog .form-error:empty{min-height:0;margin:0}
+#scheduleDialog.course-schedule-dialog .course-dialog-body>*{min-width:0;max-width:100%}
+@media(max-width:980px){
+  #scheduleDialog.course-schedule-dialog .schedule-field{
+    grid-template-columns:minmax(0,1fr)
+  }
+  #scheduleDialog.course-schedule-dialog .schedule-field label{grid-column:1/-1}
+  #scheduleDialog.course-schedule-dialog .course-schedule-picker{
+    grid-template-columns:repeat(2,minmax(0,1fr))
+  }
+  #scheduleDialog.course-schedule-dialog .course-schedule-status{
+    grid-column:1/-1;justify-self:start;max-width:100%
+  }
+}
+@media(max-width:620px){
+  #scheduleDialog.course-schedule-dialog{
+    width:calc(100% - 16px);max-width:calc(100% - 16px);
+    max-height:calc(100dvh - 16px);border-radius:16px
+  }
+  #scheduleDialog.course-schedule-dialog form{max-height:calc(100dvh - 16px)}
+  #scheduleDialog.course-schedule-dialog .dialog-head{padding:13px 14px}
+  #scheduleDialog.course-schedule-dialog .course-dialog-body{padding:12px 14px 16px}
+  #scheduleDialog.course-schedule-dialog .course-schedule-picker,
+  #scheduleDialog.course-schedule-dialog .schedule-fields{grid-template-columns:minmax(0,1fr)}
+  #scheduleDialog.course-schedule-dialog .course-schedule-picker{padding:12px}
+  #scheduleDialog.course-schedule-dialog .schedule-field{padding:12px}
+  #scheduleDialog.course-schedule-dialog input,
+  #scheduleDialog.course-schedule-dialog select,
+  #scheduleDialog.course-schedule-dialog textarea{font-size:16px;min-height:46px}
+  #scheduleDialog.course-schedule-dialog .dialog-actions{
+    display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);
+    padding:10px 14px calc(10px + env(safe-area-inset-bottom))
+  }
+  #scheduleDialog.course-schedule-dialog .dialog-actions-spacer{display:none}
+  #scheduleDialog.course-schedule-dialog .dialog-actions .danger-action{grid-column:1/-1;margin:0;justify-self:stretch}
+  #scheduleDialog.course-schedule-dialog .dialog-actions button{min-width:0;font-size:12px}
+}
+
 
 @media(max-width:900px){
   .course-schedule-picker{
@@ -178,8 +348,5 @@
   .course-schedule-scope:before{
     left:13px
   }
-  #scheduleDialog.course-schedule-dialog .schedule-fields{
-    max-height:none;
-    overflow:visible
-  }
+
 }
