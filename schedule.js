@@ -107,7 +107,7 @@ function createEvents(){
   const knownExamRecords=examManager?.getRecords()||[];
   const fixedEvents=students.flatMap(student=>{
     const schedule=studentSchedule(student);
-    return scheduleFieldsForStudent(student).filter(field=>schedule.dates?.[field.key]&&(!["graduation","exam"].includes(field.key)||!knownExamRecords.some(record=>String(record.student_id)===String(student.id)&&record.exam_type===field.key))).map(field=>({
+    return scheduleFieldsForStudent(student).filter(field=>schedule.dates?.[field.key]).filter(field=>!["graduation","exam"].includes(field.key)||!knownExamRecords.some(record=>String(record.student_id)===String(student.id)&&record.exam_type===field.key)).map(field=>({
       id:`${student.id}-${field.key}`,
       student,
       field,
