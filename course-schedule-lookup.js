@@ -68,7 +68,7 @@ export function mountCourseLookup({getCourses,getStudents,refresh,loadExams,open
   if(hero){
     const button=document.createElement("button");
     button.id="openCourseLookupBtn";button.type="button";button.className="secondary-light course-lookup-hero-btn";
-    button.textContent="⌕ Tra cứu lịch khóa";
+    button.textContent="Tra cứu lịch khóa";
     const before=$("openEditorBtn");
     if(before?.parentElement===hero)hero.insertBefore(button,before);else hero.append(button);
     button.onclick=()=>{panel.scrollIntoView({behavior:"smooth",block:"start"});$("courseLookupSelect").focus({preventScroll:true})};
