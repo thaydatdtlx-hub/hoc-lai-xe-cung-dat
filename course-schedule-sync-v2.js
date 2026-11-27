@@ -1,6 +1,8 @@
 import {SCHEDULE_FIELDS,parseScheduleFromNotes} from "./schedule-data.js";
 import {studentRpc} from "./student-rpc-client.js";
 import "./course-schedule-sync.css";
+import {mountCourseLookup} from "./course-schedule-lookup.js";
+import {fetchExamAttempts} from "./exam-attempt-schedule.js";
 
 const $=id=>document.getElementById(id);
 const token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||"";
@@ -481,6 +483,7 @@ async function boot(){
     installUi();
     await refreshData(true);
     updateCourseOptions();
+    mountCourseLookup({getCourses:()=>courseRows,getStudents:()=>students,refresh:()=>refreshData(true),loadExams:()=>fetchExamAttempts(token),openEditor:openCourseDialog});
     restoreMessage();
   }catch(error){
     console.error("[course-schedule-sync]",error);
