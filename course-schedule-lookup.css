@@ -61,3 +61,17 @@ html[data-theme="dark"] .course-lookup-head,html[data-theme="dark"] .course-look
 html[data-color-mode="dark"] .course-lookup-head,html[data-color-mode="dark"] .course-lookup-summary,html[data-color-mode="dark"] .course-lookup-details summary{background:#1a2b40;color:#eaf3ff;border-color:#34495f}
 html[data-theme="dark"] .course-lookup-milestone,html[data-theme="dark"] .course-lookup-toolbar input,html[data-theme="dark"] .course-lookup-toolbar select,
 html[data-color-mode="dark"] .course-lookup-milestone,html[data-color-mode="dark"] .course-lookup-toolbar input,html[data-color-mode="dark"] .course-lookup-toolbar select{background:#192a3d;color:#edf5ff;border-color:#34495f}
+
+/* Quick student lookup, independent from course selection. */
+.course-lookup-student-results{display:grid;gap:6px;max-height:300px;overflow-y:auto;margin-top:12px;padding:10px;border:1px solid var(--line,#dce7f2);border-radius:12px;background:var(--card,#fff)}
+.course-lookup-student-results[hidden]{display:none!important}
+.course-lookup-student-count{margin:0 2px 3px;font-size:12px;color:var(--muted,#6f8399)}
+.course-lookup-student-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:52px;width:100%;padding:10px 12px;text-align:left;border:1px solid var(--line,#dce7f2);border-radius:9px;background:transparent;color:var(--navy,#102f55)}
+.course-lookup-student-row>span:first-child{min-width:0;display:grid;gap:4px;overflow-wrap:anywhere}
+.course-lookup-student-row strong{font-size:13px}
+.course-lookup-student-row small{font-size:11px;line-height:1.4;color:var(--muted,#6f8399)}
+.course-lookup-student-row:hover,.course-lookup-student-row:focus-visible{border-color:#176bd8;background:#176bd812;outline:none}
+.course-lookup-student-action{flex:0 0 auto;color:#176bd8;font-size:12px;font-weight:800}
+html[data-theme="dark"] .course-lookup-student-results,html[data-color-mode="dark"] .course-lookup-student-results{background:#192a3d;border-color:#34495f}
+html[data-theme="dark"] .course-lookup-student-row,html[data-color-mode="dark"] .course-lookup-student-row{color:#edf5ff;border-color:#34495f}
+html[data-theme="dark"] .course-lookup-student-action,html[data-color-mode="dark"] .course-lookup-student-action{color:#a8ceff}
