@@ -72,7 +72,7 @@ export function createExamScheduleManager({me,students,token,onReload}){
     const student=eligibleStudents().find(s=>String(s.id)===$("examAttemptStudent").value);
     const bike=isMotorcycleLicense(student?.license_class);
     const type=$("examAttemptType");
-    [...type.options].forEach(opt=>{opt.disabled=bike&&opt.value==="graduation";opt.hidden=bike&&opt.value==="graduation"});
+    [...type.options].forEach(opt=>{opt.disabled=bike&&opt.value==="graduation";opt.hidden=false;opt.textContent=opt.value==="graduation"?(bike?"Thi tốt nghiệp (không áp dụng A1/A)":"Thi tốt nghiệp"):"Thi sát hạch"});
     if(bike&&type.value==="graduation")type.value="exam";
   }
   function computeNumber(studentId,type){
