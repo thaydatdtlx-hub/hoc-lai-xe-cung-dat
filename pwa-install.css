@@ -35,3 +35,13 @@
   .pwa-install-action{grid-column:2;width:100%;margin-top:4px}.pwa-install-close{grid-column:3;grid-row:1}
   .push-notification-panel{grid-template-columns:38px minmax(0,1fr)}.push-notification-panel>span{width:38px;height:38px}.push-notification-panel>button{grid-column:2;width:100%}
 }
+
+/* Use the existing official app icon and a compact, accessible install entry. */
+.pwa-install-entry{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:12px;border:1px solid #ccd9e4;background:#fff;color:#123b61;font:inherit;font-size:13px;font-weight:750;cursor:pointer;max-width:100%;white-space:normal}
+.pwa-install-entry img{width:28px;height:28px;border-radius:7px;object-fit:contain}
+.pwa-install-entry:focus-visible,.pwa-install-banner button:focus-visible{outline:3px solid #e9bd64;outline-offset:2px}
+.pwa-install-banner .pwa-ios-help{font-size:12px;line-height:1.5}
+.pwa-install-banner p{font-size:12px}
+.pwa-install-banner.show-instructions{grid-template-columns:44px minmax(0,1fr) 30px}
+@media(max-width:620px){.pwa-install-banner{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 8px);width:min(560px,calc(100vw - 24px));right:12px;box-sizing:border-box}.pwa-install-action{min-height:44px}.pwa-install-entry{flex:0 1 auto}}
+@media(display-mode:standalone){.pwa-install-entry,.pwa-install-banner{display:none!important}}

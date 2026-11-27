@@ -68,26 +68,14 @@ let deferredInstallPrompt=null;
 let installBanner=null;
 
 function isStandalone(){return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true}
-function isIos(){return /iphone|ipad|ipod/i.test(navigator.userAgent)}
+function isIos(){return /iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1)}
+function isAndroid(){return /android/i.test(navigator.userAgent)}
 function isPublicLanding(){return location.pathname==="/dang-ky-hoc-lai-xe.html"||(location.pathname==="/"&&Boolean(document.getElementById("registrationForm")))}
 function isPublicMarketingPage(){return PUBLIC_MARKETING_PATHS.has(location.pathname)||isPublicLanding()}
-function shouldOfferInstall(){return !isPublicLanding()}
-function recentlyDismissed(){const value=Number(localStorage.getItem(DISMISS_KEY)||0);return value&&Date.now()-value<DISMISS_DAYS*86400000}
+function shouldOfferInstall(){return true}
+function recentlyDismissed(){try{const value=Number(localStorage.getItem(DISMISS_KEY)||0);return value&&Date.now()-value<DISMISS_DAYS*86400000}catch{return false}}
 function removeInstallBanner(){installBanner?.remove();installBanner=null}
-function dismissInstallBanner(){localStorage.setItem(DISMISS_KEY,String(Date.now()));removeInstallBanner()}
-
-async function clearPublicPwaState(){
-  try{
-    const registrations=await navigator.serviceWorker.getRegistrations();
-    await Promise.all(registrations.map(registration=>registration.unregister()));
-  }catch{}
-  try{
-    if("caches" in window){
-      const keys=await caches.keys();
-      await Promise.all(keys.filter(name=>name.startsWith("thay-dat-pwa-")||name.startsWith("hoclaixecungdat-pwa-")).map(name=>caches.delete(name)));
-    }
-  }catch{}
-}
+function dismissInstallBanner(){try{localStorage.setItem(DISMISS_KEY,String(Date.now()))}catch{}removeInstallBanner()}
 
 function showLaunchScreen(){
   if(!isStandalone()||sessionStorage.getItem("hoclaixecungdat_pwa_launched"))return;
@@ -99,16 +87,42 @@ function showLaunchScreen(){
   window.setTimeout(()=>{splash.classList.add("leaving");window.setTimeout(()=>splash.remove(),320)},950);
 }
 
-function showInstallBanner(mode){
-  if(!shouldOfferInstall()||isStandalone()||recentlyDismissed()||installBanner)return;
-  installBanner=document.createElement("aside");installBanner.className="pwa-install-banner";installBanner.setAttribute("aria-label","Cài ứng dụng Học lái xe cùng Đạt");
-  installBanner.innerHTML=`<img src="/app-icon-192.png" alt=""><div><strong>Cài ứng dụng Học lái xe cùng Đạt</strong><p>${mode==="ios"?"Mở nhanh cổng học viên toàn màn hình ngay từ iPhone.":"Truy cập lịch học, học phí và tiến độ như một ứng dụng."}</p><small class="pwa-ios-help" hidden>Nhấn nút Chia sẻ <b>□↑</b>, sau đó chọn <b>Thêm vào MH chính</b>.</small></div><button class="pwa-install-action" type="button">${mode==="ios"?"Cách cài":"Cài ngay"}</button><button class="pwa-install-close" type="button" aria-label="Để sau">×</button>`;
+function showInstallBanner(mode,force=false){
+  if(!shouldOfferInstall()||isStandalone()||(!force&&recentlyDismissed())||installBanner)return;
+  const ios=mode==="ios";
+  installBanner=document.createElement("aside");
+  installBanner.className="pwa-install-banner";
+  installBanner.setAttribute("aria-label","Cài đặt ứng dụng Học lái xe cùng Đạt");
+  installBanner.innerHTML=`<img src="/app-icon-192.png" alt=""><div><strong>Học lái xe cùng Đạt</strong><p>${ios?"Cài trên iPhone/iPad, không cần App Store.":"Cài ứng dụng miễn phí, không cần tải APK."}</p><small class="pwa-ios-help" ${ios?"":"hidden"}>${ios?"<b>1.</b> Mở bằng Safari, nhấn Chia sẻ (□↑). <b>2.</b> Chọn Thêm vào MH chính. <b>3.</b> Nhấn Thêm (bật Mở dưới dạng ứng dụng web nếu có).":"Mở bằng Chrome, nhấn menu ⋮, chọn Cài đặt ứng dụng hoặc Thêm vào màn hình chính rồi xác nhận."}</small></div>${ios?"":'<button class="pwa-install-action" type="button">Cài đặt ứng dụng</button>'}<button class="pwa-install-close" type="button" aria-label="Để sau">×</button>`;
+  if(ios)installBanner.classList.add("show-instructions");
   document.body.append(installBanner);
   installBanner.querySelector(".pwa-install-close").addEventListener("click",dismissInstallBanner);
-  installBanner.querySelector(".pwa-install-action").addEventListener("click",async()=>{
-    if(mode==="ios"){const help=installBanner.querySelector(".pwa-ios-help");help.hidden=false;installBanner.classList.add("show-instructions");return}
-    if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();const {outcome}=await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;if(outcome==="accepted")removeInstallBanner();
+  installBanner.querySelector(".pwa-install-action")?.addEventListener("click",async()=>{
+    const banner=installBanner;
+    if(!deferredInstallPrompt){banner.querySelector(".pwa-ios-help").hidden=false;banner.classList.add("show-instructions");return}
+    const prompt=deferredInstallPrompt;
+    deferredInstallPrompt=null;
+    try{await prompt.prompt();const {outcome}=await prompt.userChoice;if(outcome==="accepted")removeInstallBanner()}
+    catch{if(banner.isConnected){banner.querySelector(".pwa-ios-help").hidden=false;banner.classList.add("show-instructions")}}
   });
+}
+function mountInstallEntry(){
+  if(isStandalone()||(!isIos()&&!isAndroid()))return;
+  const home=document.querySelector(".hero-actions");
+  const login=document.getElementById("loginCourseRegistrationBtn");
+  if(!home&&!login)return;
+  const button=document.createElement("button");button.type="button";button.className="pwa-install-entry";
+  button.innerHTML='<img src="/app-icon-192.png" alt=""><span>Cài đặt ứng dụng</span>';
+  button.addEventListener("click",async()=>{
+    if(deferredInstallPrompt&&!isIos()){
+      const prompt=deferredInstallPrompt;deferredInstallPrompt=null;
+      try{await prompt.prompt();const {outcome}=await prompt.userChoice;if(outcome==="accepted"){removeInstallBanner();button.remove()}return}catch{}
+    }
+    showInstallBanner(isIos()?"ios":"native",true);
+    if(!isIos()&&installBanner){installBanner.querySelector(".pwa-ios-help").hidden=false;installBanner.classList.add("show-instructions")}
+  });
+  if(home)home.append(button);else login.after(button);
+  window.addEventListener("appinstalled",()=>button.remove(),{once:true});
 }
 
 function activateWaitingWorker(registration){
@@ -123,13 +137,14 @@ function activateWaitingWorker(registration){
 }
 
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+  const hadController=Boolean(navigator.serviceWorker.controller);
   navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(sessionStorage.getItem(SW_REFRESH_KEY))return;
+    if(!hadController||isPublicMarketingPage()||sessionStorage.getItem(SW_REFRESH_KEY))return;
     sessionStorage.setItem(SW_REFRESH_KEY,"1");
     location.reload();
   });
   window.addEventListener("load",()=>{
-    if(isPublicMarketingPage()){void clearPublicPwaState();return}
+    // Public pages remain network-first in sw.js; keep the registration for installation and push.
     navigator.serviceWorker.register("/sw.js",{scope:"/",updateViaCache:"none"}).then(registration=>{
       activateWaitingWorker(registration);
       return registration.update();
@@ -137,6 +152,7 @@ if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostnam
   },{once:true});
 }
 showLaunchScreen();
+mountInstallEntry();
 window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();deferredInstallPrompt=event;if(shouldOfferInstall())showInstallBanner("native")});
-window.addEventListener("appinstalled",()=>{localStorage.removeItem(DISMISS_KEY);removeInstallBanner()});
-if(isIos()&&!isStandalone()&&shouldOfferInstall())window.setTimeout(()=>showInstallBanner("ios"),1400);
+window.addEventListener("appinstalled",()=>{try{localStorage.removeItem(DISMISS_KEY)}catch{}removeInstallBanner()});
+if(!isStandalone()&&shouldOfferInstall()&&(isIos()||isAndroid()))window.setTimeout(()=>showInstallBanner(isIos()?"ios":"native"),1200);

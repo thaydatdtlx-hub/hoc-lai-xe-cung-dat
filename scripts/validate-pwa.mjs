@@ -29,4 +29,8 @@ for(const file of ["index.html","hoc-vien.html","lich-dao-tao.html","250-cau-hoi
     if(!html.includes(token))throw new Error(`${file} thiếu ${token}.`);
   }
 }
+if(!installer.includes("mountInstallEntry")||installer.includes("clearPublicPwaState()"))throw new Error("Trang chủ phải có nút cài và giữ đăng ký PWA.");
+const home=await readFile(new URL("dang-ky-hoc-lai-xe.html",root),"utf8");
+for(const token of ["/site.webmanifest","/apple-touch-icon-180.png","mobile-web-app-capable","/pwa-install.js"])if(!home.includes(token))throw new Error("Trang chủ thiếu "+token);
+if(manifest.name!=="Học lái xe cùng Đạt")throw new Error("Tên thương hiệu PWA chưa đúng.");
 console.log("PWA hợp lệ: cài iPhone/Android, biểu tượng chuẩn, toàn màn hình, màn hình khởi động và ngoại tuyến.");

@@ -1,17 +1,23 @@
 {
   "id": "/",
-  "name": "Hệ thống quản lý đào tạo học viên lái xe · Thầy Đạt",
-  "short_name": "Thầy Đạt",
+  "name": "Học lái xe cùng Đạt",
+  "short_name": "Lái xe cùng Đạt",
   "description": "Quản lý hồ sơ, tiến độ, học phí, lịch đào tạo và học lý thuyết 600 câu.",
   "lang": "vi",
   "start_url": "/?login=1",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "orientation": "any",
   "background_color": "#07182f",
   "theme_color": "#07182f",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/app-icon-192.png",
