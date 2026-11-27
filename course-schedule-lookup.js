@@ -56,10 +56,11 @@ export function mountCourseLookup({getCourses,getStudents,refresh,loadExams,open
     <div class="panel-head course-lookup-head"><div><h2 id="courseLookupTitle">Tra cứu lịch theo khóa học</h2><p>Xem lịch chung, lịch thi và thi lại của từng khóa mà không cần mở biểu mẫu lập lịch.</p></div><span id="courseLookupCount">0 khóa học</span></div>
     <div class="course-lookup-body">
       <div class="course-lookup-toolbar">
-        <label>Tìm khóa học<input id="courseLookupSearch" type="search" placeholder="Nhập tên hoặc mã khóa học..." autocomplete="off"></label>
+        <label>Tra cứu học viên<input id="courseLookupSearch" type="search" placeholder="Nhập họ tên hoặc mã học viên..." autocomplete="off" aria-controls="courseLookupStudentResults"></label>
         <label>Chọn khóa học<select id="courseLookupSelect"><option value="">— Chọn khóa cần tra cứu —</option></select></label>
         <button id="courseLookupRefresh" type="button" class="course-lookup-btn" aria-label="Tải lại dữ liệu các khóa">↻ Tải lại</button>
       </div>
+      <div id="courseLookupStudentResults" class="course-lookup-student-results" hidden></div>
       <p id="courseLookupNotice" class="course-lookup-notice" role="status" aria-live="polite">Chọn khóa để xem lịch đào tạo.</p>
       <div id="courseLookupResult" hidden></div>
     </div>`;
@@ -77,8 +78,7 @@ export function mountCourseLookup({getCourses,getStudents,refresh,loadExams,open
   function getSelected(){return getCourses().find(row=>String(row.course_key)===selected)}
   function updateOptions(){
     const rows=getCourses().slice().sort((a,b)=>String(a.course||"").localeCompare(String(b.course||""),"vi",{numeric:true}));
-    const query=norm(search.value);
-    const filtered=rows.filter(row=>norm(row.course).includes(query)||norm(row.course_key).includes(query));
+    const filtered=rows;
     $("courseLookupCount").textContent=rows.length+" khóa học";
     select.innerHTML='<option value="">— Chọn khóa cần tra cứu —</option>'+filtered.map(row=>`<option value="${esc(row.course_key)}">${esc(row.course)} · ${Number(row.student_count)||0} học viên</option>`).join("");
     select.disabled=filtered.length===0;
@@ -86,7 +86,7 @@ export function mountCourseLookup({getCourses,getStudents,refresh,loadExams,open
     select.value=selected;
     if(!selected){
       result.hidden=true;result.innerHTML="";
-      notice.textContent=filtered.length?"Chọn khóa để xem lịch đào tạo.":rows.length?"Không tìm thấy khóa phù hợp.":"Chưa có khóa học để tra cứu.";
+      notice.textContent=filtered.length?"Chọn khóa để xem lịch đào tạo.":"Chưa có khóa học để tra cứu.";
     }
   }
   function render(){
@@ -127,15 +127,28 @@ export function mountCourseLookup({getCourses,getStudents,refresh,loadExams,open
     }
     render();
   }
-  search.oninput=()=>{
-    const previous=selected;updateOptions();
-    if(previous!==selected){++requestVersion;exams=[];examState="idle";}
+  const studentResults=$("courseLookupStudentResults");
+  function renderStudentResults(){
+    const words=norm(search.value).split(/\s+/).filter(Boolean);
+    if(!words.length){studentResults.hidden=true;studentResults.innerHTML="";return;}
+    const matched=getStudents().filter(student=>student.deleted_at==null&&student.id!=null&&words.every(word=>norm([student.name,student.student_code].join(" ")).includes(word))).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"vi"));
+    studentResults.hidden=false;
+    studentResults.innerHTML=`<p class="course-lookup-student-count" role="status">${matched.length?"Tìm thấy "+matched.length+" học viên"+(matched.length>20?" · Hiển thị 20 kết quả đầu":""):"Không tìm thấy học viên phù hợp."}</p>`+matched.slice(0,20).map(student=>`<button type="button" class="course-lookup-student-row" data-lookup-student="${esc(student.id)}"><span><strong>${esc(student.name||"Học viên")}</strong><small>${esc(student.student_code||"Chưa có mã")} · ${esc(student.course||"Chưa có khóa")} · ${esc(student.license_class||"Chưa rõ hạng")}</small></span><span class="course-lookup-student-action">Xem lịch →</span></button>`).join("");
+  }
+  search.oninput=renderStudentResults;
+  studentResults.onclick=event=>{
+    const button=event.target.closest("[data-lookup-student]");
+    if(!button)return;
+    const student=getStudents().find(item=>String(item.id)===button.dataset.lookupStudent);
+    if(!student)return;
+    document.dispatchEvent(new CustomEvent("course-lookup-filter",{detail:{studentId:String(student.id),name:student.name||"Học viên"}}));
+    document.querySelector(".schedule-toolbar")?.scrollIntoView({behavior:"smooth",block:"start"});
   };
   select.onchange=()=>void selectCourse(select.value);
   $("courseLookupRefresh").onclick=async()=>{
     if(refreshing)return;
     refreshing=true;$("courseLookupRefresh").disabled=true;
-    try{await refresh();updateOptions();if(selected)await selectCourse(selected)}
+    try{await refresh();updateOptions();renderStudentResults();if(selected)await selectCourse(selected)}
     catch(error){notice.textContent="Không thể tải lại dữ liệu: "+(error?.message||"Vui lòng thử lại.")}
     finally{refreshing=false;$("courseLookupRefresh").disabled=false}
   };
