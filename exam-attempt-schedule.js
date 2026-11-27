@@ -59,7 +59,7 @@ export function createExamScheduleManager({me,students,token,onReload}){
   if(manager){
     const button=document.createElement("button");
     button.type="button";button.id="openExamAttemptBtn";button.className="secondary-light exam-open-button";
-    button.textContent="＋ Lập lịch thi";
+    button.textContent="Lập lịch thi";
     document.querySelector(".hero-actions")?.append(button);
     button.onclick=()=>open();
   }
