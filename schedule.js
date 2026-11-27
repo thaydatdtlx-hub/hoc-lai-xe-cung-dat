@@ -2,6 +2,8 @@ import {SCHEDULE_FIELDS,embedScheduleInNotes,parseScheduleFromNotes,isMotorcycle
 import {studentRpc} from "./student-rpc-client.js";
 import "./ai-chat.js";
 import {createExamScheduleManager} from "./exam-attempt-schedule.js";
+import {lookupCourseKey} from "./course-schedule-lookup.js";
+let selectedLookupCourse="";
 
 const $=id=>document.getElementById(id);
 const token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||"";
@@ -149,6 +151,7 @@ function renderEvents(){
   const today=todayKey(),start=startOfToday(),weekEnd=endOfWeek();
   const filtered=events.filter(event=>{
     const eventDate=new Date(event.date),haystack=normalize([event.student.name,event.student.student_code,event.student.course,event.student.owner_username].join(" "));
+    if(selectedLookupCourse&&lookupCourseKey(event.student.course)!==selectedLookupCourse)return false;
     if(query&&!haystack.includes(query))return false;
     if(type&&event.field.key!==type)return false;
     if(period==="upcoming"&&eventDate<start)return false;
@@ -746,6 +749,21 @@ $("openEditorBtn").onclick=()=>openEditor();
 $("openSlotBtn").onclick=()=>openSlotEditor();
 $("openSessionBtn").onclick=()=>openSessionEditor();
 $("openRequestsBtn").onclick=()=>{$("trainingRequests").scrollIntoView({behavior:"smooth",block:"start"})};
+document.addEventListener("course-lookup-filter",event=>{
+  if(me?.role!=="admin")return;
+  selectedLookupCourse=String(event.detail?.key||"");
+  $("scheduleSearch").value="";$("typeFilter").value="";$("periodFilter").value="all";
+  let bar=$("courseLookupActiveFilter");
+  if(!bar){
+    bar=document.createElement("div");bar.id="courseLookupActiveFilter";bar.className="course-lookup-filter";
+    const label=document.createElement("span"),clear=document.createElement("button");
+    clear.type="button";clear.textContent="Bỏ lọc khóa";
+    clear.onclick=()=>{selectedLookupCourse="";bar.hidden=true;renderEvents()};
+    bar.append(label,clear);document.querySelector(".schedule-toolbar")?.prepend(bar);
+  }
+  bar.firstElementChild.textContent="Đang xem lịch khóa: "+String(event.detail?.name||"");
+  bar.hidden=!selectedLookupCourse;renderEvents();
+});
 $("scheduleSearch").oninput=renderEvents;
 $("typeFilter").onchange=renderEvents;
 $("periodFilter").onchange=renderEvents;

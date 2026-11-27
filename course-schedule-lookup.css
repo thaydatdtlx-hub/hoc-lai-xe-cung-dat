@@ -1,0 +1,63 @@
+/* Tra cứu lịch khóa: đọc dữ liệu chung, không thay đổi hồ sơ. */
+.course-lookup-panel{margin:0 0 15px;scroll-margin-top:16px;min-width:0;overflow:hidden;color:var(--navy,#102f55)}
+.course-lookup-head{background:linear-gradient(100deg,#f1f7ff,#f7fdfb);gap:14px}
+.course-lookup-head h2{font-size:20px;margin:0}
+.course-lookup-body{padding:16px;min-width:0}
+.course-lookup-toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr) auto;align-items:end;gap:12px}
+.course-lookup-toolbar label{display:grid;gap:6px;min-width:0;color:var(--navy,#102f55);font-weight:800;font-size:12px}
+.course-lookup-toolbar input,.course-lookup-toolbar select{width:100%;min-width:0;max-width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--line,#dce7f2);border-radius:11px;color:var(--navy,#102f55);background:var(--card,#fff);font-size:13px}
+.course-lookup-toolbar input:focus,.course-lookup-toolbar select:focus{outline:2px solid #176bd8;outline-offset:1px}
+.course-lookup-btn{padding:10px 14px;min-height:44px;border:1px solid #bfd6ee;background:#edf6ff;color:#145ba4;border-radius:10px;font-size:12px;font-weight:850;line-height:1.4;cursor:pointer}
+.course-lookup-btn:hover{background:#e0efff}.course-lookup-btn:disabled{opacity:.5;cursor:wait}
+.course-lookup-notice{margin:10px 0 0;color:var(--muted,#647a91);font-size:12px}
+.course-lookup-notice:empty{display:none}
+.course-lookup-panel [hidden]{display:none!important}
+#courseLookupResult{margin-top:16px;min-width:0}
+.course-lookup-summary{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:16px;border:1px solid #cfe0ef;border-radius:14px;background:linear-gradient(120deg,#f0f6ff,#f3fff9)}
+.course-lookup-summary>div{min-width:0}
+.course-lookup-summary small{display:block;font-size:10px;letter-spacing:.06em;font-weight:800;color:#466d96}
+.course-lookup-summary h3{font-size:21px;margin:4px 0;line-height:1.25;overflow-wrap:anywhere}
+.course-lookup-summary p,.course-lookup-section-head p{font-size:12px;margin:4px 0 0;color:var(--muted,#6f8399);line-height:1.5}
+.course-lookup-state{border-radius:999px;background:#fff2d7;color:#8b5a0a;padding:7px 10px;font-weight:850;font-size:11px}
+.course-lookup-state.is-synced{background:#e0f7e8;color:#176d4b}
+.course-lookup-section-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:16px 0 10px}
+.course-lookup-section-head h3{font-size:16px;margin:0}
+.course-lookup-milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.course-lookup-milestone{display:flex;gap:11px;align-items:flex-start;min-width:0;padding:12px;border:1px solid var(--line,#dce7f2);background:var(--card,#fff);border-radius:12px}
+.course-lookup-icon{width:33px;height:33px;display:grid;place-items:center;flex:0 0 33px;border-radius:9px;background:#e8f3ff;color:#176bd8}
+.course-lookup-milestone>div{min-width:0;display:grid;gap:5px}
+.course-lookup-milestone strong{font-size:12px;font-weight:850;line-height:1.4}
+.course-lookup-milestone b{font-size:15px;color:#176bd8;line-height:1.35}
+.course-lookup-milestone small,.course-lookup-exams small{display:block;color:var(--muted,#637b90);font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.course-lookup-empty,.course-lookup-note{margin:0;padding:12px;border:1px dashed var(--line,#dce7f2);border-radius:10px;color:var(--muted,#6f8399);font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.course-lookup-note{margin-top:10px;border-style:solid}
+.course-lookup-details{border:1px solid var(--line,#dce7f2);border-radius:12px;margin-top:14px;overflow:hidden}
+.course-lookup-details summary{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:14px;cursor:pointer;background:#f5f9ff;font-weight:850;font-size:13px;list-style:none}
+.course-lookup-details summary::-webkit-details-marker{display:none}
+.course-lookup-details summary>span:first-child:before{content:"▸";display:inline-block;margin-right:7px;color:#176bd8}
+.course-lookup-details[open] summary>span:first-child:before{content:"▾"}
+.course-lookup-details summary>span:last-child{font-size:11px;color:var(--muted,#647a91)}
+.course-lookup-details>.course-lookup-empty{border:0;border-radius:0}
+.course-lookup-exams{display:grid;max-height:360px;overflow-y:auto;overscroll-behavior:contain}
+.course-lookup-exams article{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,.65fr);gap:10px;padding:12px 14px;border-bottom:1px solid var(--line,#dce7f2)}
+.course-lookup-exams article:last-child{border-bottom:0}
+.course-lookup-exams article>div{min-width:0;display:grid;gap:4px;align-content:start;overflow-wrap:anywhere}
+.course-lookup-exams strong{font-size:12px;line-height:1.4}
+.course-lookup-result{justify-self:start;padding:4px 8px;border-radius:7px;font-size:11px;font-weight:800;background:#e9f2ff;color:#1b61a3}
+.course-lookup-result.result-passed{background:#dff6e6;color:#167449}
+.course-lookup-result.result-failed{background:#fce6e1;color:#a13b2c}
+.course-lookup-result.result-absent,.course-lookup-result.result-cancelled{background:#eef0f4;color:#626e82}
+.course-lookup-footer{display:flex;justify-content:flex-end;margin-top:12px}
+.course-lookup-primary{background:#176bd8;color:white;border-color:#176bd8}
+.course-lookup-primary:hover{background:#105bbd}
+.course-lookup-hero-btn{white-space:nowrap}
+.course-lookup-filter{display:flex;align-items:center;justify-content:space-between;gap:10px;grid-column:1/-1;padding:8px 10px;background:#edf6ff;border:1px solid #cde2f5;border-radius:10px;color:#155b9d;font-size:12px;font-weight:800;overflow-wrap:anywhere}
+.course-lookup-filter button{flex:0 0 auto;border:1px solid #c1d7ed;background:#fff;color:#145b9e;border-radius:7px;padding:8px 10px;font-size:11px;font-weight:850}
+.course-lookup-filter[hidden]{display:none!important}
+@media(max-width:900px){.course-lookup-milestones{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.course-lookup-body{padding:12px}.course-lookup-toolbar{grid-template-columns:minmax(0,1fr) auto;gap:8px}.course-lookup-toolbar label:first-child{grid-column:1/-1}.course-lookup-toolbar input,.course-lookup-toolbar select{font-size:16px}.course-lookup-milestones{grid-template-columns:minmax(0,1fr)}.course-lookup-summary{padding:13px}.course-lookup-summary h3{font-size:18px}.course-lookup-section-head{align-items:flex-start}.course-lookup-exams article{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.course-lookup-exams article>div:nth-child(2){grid-column:1/-1;grid-row:2}.course-lookup-exams article>div:nth-child(3){grid-column:2;grid-row:1;justify-items:end}.course-lookup-footer button{width:100%}.course-lookup-hero-btn{white-space:normal}}
+/* Match the existing theme's dark mode rather than forcing white panels. */
+html[data-theme="dark"] .course-lookup-head,html[data-theme="dark"] .course-lookup-summary,html[data-theme="dark"] .course-lookup-details summary,
+html[data-color-mode="dark"] .course-lookup-head,html[data-color-mode="dark"] .course-lookup-summary,html[data-color-mode="dark"] .course-lookup-details summary{background:#1a2b40;color:#eaf3ff;border-color:#34495f}
+html[data-theme="dark"] .course-lookup-milestone,html[data-theme="dark"] .course-lookup-toolbar input,html[data-theme="dark"] .course-lookup-toolbar select,
+html[data-color-mode="dark"] .course-lookup-milestone,html[data-color-mode="dark"] .course-lookup-toolbar input,html[data-color-mode="dark"] .course-lookup-toolbar select{background:#192a3d;color:#edf5ff;border-color:#34495f}
