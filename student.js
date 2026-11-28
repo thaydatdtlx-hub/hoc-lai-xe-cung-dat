@@ -13,7 +13,7 @@ let token=localStorage.getItem("hv_token")||sessionStorage.getItem("hv_token")||
 async function rpc(fn,body={}){
   return studentRpc(fn,body,{proxyTimeoutMs:9500,directTimeoutMs:6500});
 }
-const noticeV5=createStudentNoticeCenter({rpc,getToken:()=>token,getMe:()=>me,onChange:()=>{if(student&&me)renderStudentNotifications()},toast});
+const noticeV5=createStudentNoticeCenter({rpc,getToken:()=>token,getMe:()=>me,getStudentName:()=>student?.name||"",onChange:()=>{if(student&&me)renderStudentNotifications()},toast});
 function clearAuth(){for(const store of [localStorage,sessionStorage]){store.removeItem("hv_token");store.removeItem("hv_auth_kind")}}
 function showRuntimeWarning(message=""){
   let box=$("studentRuntimeWarning");
